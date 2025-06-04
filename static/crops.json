@@ -1,0 +1,25 @@
+{
+    "crops_data": [
+        {
+            "id": 0,
+            "name": "Carrot",
+            "time_to_grow": 3,
+            "buy_price": 5,
+            "sell_price": 10
+        },
+        {
+            "id": 1,
+            "name": "Cabbage",
+            "time_to_grow": 5,
+            "buy_price": 10,
+            "sell_price": 25
+        },
+        {
+            "id": 3,
+            "name": "Melon",
+            "time_to_grow": 9,
+            "buy_price": 20,
+            "sell_price": 50
+        }
+    ]
+}
