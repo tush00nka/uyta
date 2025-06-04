@@ -96,7 +96,10 @@ fn main() {
                         plant_crops(&canvas, &mut map, &selected_tile, &mut player);
                     }
                     MenuMode::Misc => {
-                        if player.money >= 100 && canvas.selected == 0 && map.tiles.contains_key(&selected_tile) {
+                        if player.money >= 100
+                            && canvas.selected == 0
+                            && map.tiles.contains_key(&selected_tile)
+                        {
                             workers.push(Worker::new(
                                 workers.len(),
                                 selected_tile.0,
@@ -109,6 +112,10 @@ fn main() {
                             let Some(tile) = map.tiles.get_mut(&selected_tile) else {
                                 return;
                             };
+
+                            if let Some(occ_tile) = map.occupation_map.get_mut(&selected_tile) {
+                                *occ_tile = false;
+                            }
 
                             match tile {
                                 TileType::Grass => {}
@@ -180,6 +187,10 @@ fn plant_crops(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), playe
     let Some(tile) = map.tiles.get_mut(selected_tile) else {
         return;
     };
+
+    if let Some(occ_tile) = map.occupation_map.get_mut(selected_tile) {
+        *occ_tile = false;
+    }
 
     match tile {
         TileType::Grass => {
