@@ -8,6 +8,9 @@ use crate::{
     texture_handler::TextureHandler,
 };
 
+const UI_BUTTON_SIZE: f32 = 60.;
+const UI_GAPS: f32 = 20.;
+
 #[derive(PartialEq)]
 pub enum MenuMode {
     Crops,
@@ -27,8 +30,8 @@ impl Canvas {
             mode: MenuMode::Crops,
             selected: 0,
             content: vec![
-                Rectangle::new(10., 70., 50., 50.),
-                Rectangle::new(70., 70., 50., 50.),
+                Rectangle::new(10., UI_BUTTON_SIZE + UI_GAPS, UI_BUTTON_SIZE, UI_BUTTON_SIZE),
+                Rectangle::new(UI_BUTTON_SIZE + UI_GAPS, UI_BUTTON_SIZE + UI_GAPS, UI_BUTTON_SIZE, UI_BUTTON_SIZE),
             ],
             subcontent: vec![],
         }
@@ -53,7 +56,7 @@ impl Canvas {
             texture_handler.textures.get("crop_menu").unwrap(),
             position,
             0.,
-            50. / TILE_PIXEL_SIZE as f32,
+            UI_BUTTON_SIZE / TILE_PIXEL_SIZE as f32,
             Color::WHITE,
         );
         rl.draw_rectangle_rec(
@@ -69,7 +72,7 @@ impl Canvas {
             texture_handler.textures.get("misc_menu").unwrap(),
             position,
             0.,
-            50. / TILE_PIXEL_SIZE as f32,
+            UI_BUTTON_SIZE / TILE_PIXEL_SIZE as f32,
             Color::WHITE,
         );
         let submenu_button_amount = match self.mode {
@@ -79,10 +82,10 @@ impl Canvas {
         self.subcontent.clear();
         for i in 0..submenu_button_amount {
             let rect = Rectangle {
-                x: (i * 60) as f32 + 10.,
-                y: 130.,
-                width: 50.,
-                height: 50.,
+                x: i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + 10.,
+                y: 2.*(UI_BUTTON_SIZE + UI_GAPS) - 10.,
+                width: UI_BUTTON_SIZE,
+                height: UI_BUTTON_SIZE,
             };
             let color = if self.selected == i {
                 Color::RAYWHITE

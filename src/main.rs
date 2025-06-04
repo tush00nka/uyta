@@ -48,21 +48,6 @@ fn main() {
 
     let mut canvas = Canvas::new();
 
-    // canvas.add_node(UiNode::new(
-    //     Rectangle {
-    //         x: 100.,
-    //         y: 100.,
-    //         width: 150.,
-    //         height: 150.,
-    //     },
-    //     Color::YELLOW,
-    //     Some(UiFeature::Button {
-    //         normal: Color::YELLOW,
-    //         hovered: Color::ORANGE,
-    //         pressed: Color::DARKORANGE,
-    //     }),
-    // ));
-
     rl.set_target_fps(
         get_monitor_refresh_rate(get_current_monitor())
             .try_into()
@@ -111,7 +96,7 @@ fn main() {
                         plant_crops(&canvas, &mut map, &selected_tile, &mut player);
                     }
                     MenuMode::Misc => {
-                        if player.money >= 100 && canvas.selected == 0 {
+                        if player.money >= 100 && canvas.selected == 0 && map.tiles.contains_key(&selected_tile) {
                             workers.push(Worker::new(
                                 workers.len(),
                                 selected_tile.0,
@@ -176,12 +161,12 @@ fn main() {
         //     &mut selected_crop,
         // );
 
-        d.draw_rectangle(10, 10, 24 * 4, 28 * 2, Color::BLACK.alpha(0.5));
-        d.draw_text(&format!("{} fps", d.get_fps()), 14, 14, 24, Color::GRAY);
+        d.draw_rectangle(10, 10, 24 * 4, 28, Color::BLACK.alpha(0.5));
+        // d.draw_text(&format!("{} fps", d.get_fps()), 14, 14, 24, Color::GRAY);
         d.draw_text(
             &format!("${}", player.display_money),
             14,
-            38,
+            14,
             24,
             Color::WHITE,
         );
