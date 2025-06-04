@@ -1,10 +1,14 @@
 use raylib::prelude::*;
 
-use crate::map::{MAP_HEIGHT, MAP_WIDTH, TILE_SIZE};
+use crate::{
+    SCREEN_HEIGHT, SCREEN_WIDTH,
+    map::{MAP_HEIGHT, MAP_WIDTH, TILE_SIZE},
+};
 
 pub struct CameraController {
     pub position: Vector2,
     pub speed: f32,
+    pub camera: Camera2D,
 }
 
 impl CameraController {
@@ -12,6 +16,15 @@ impl CameraController {
         Self {
             position: Vector2 { x: 0., y: 0. },
             speed: 500.0,
+            camera: Camera2D {
+                target: Vector2::zero(),
+                offset: Vector2 {
+                    x: SCREEN_WIDTH as f32 / 2.,
+                    y: SCREEN_HEIGHT as f32 / 2.,
+                },
+                zoom: 1.0,
+                rotation: 0.0,
+            },
         }
     }
 
@@ -44,5 +57,25 @@ impl CameraController {
             .y
             .min((MAP_HEIGHT as i32 / 2 * TILE_SIZE) as f32)
             .max((-(MAP_HEIGHT as i32) / 2 * TILE_SIZE) as f32);
+
+        self.camera.target = Vector2 {
+            x: lerp(
+                self.camera.target.x,
+                self.position.x,
+                10.0 * rl.get_frame_time(),
+            ),
+            y: lerp(
+                self.camera.target.y,
+                self.position.y,
+                10.0 * rl.get_frame_time(),
+            ),
+        };
+
+        if rl.is_window_resized() {
+            self.camera.offset = Vector2 {
+                x: rl.get_screen_width() as f32 / 2.,
+                y: rl.get_screen_height() as f32 / 2.,
+            };
+        }
     }
 }
