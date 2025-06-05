@@ -104,7 +104,7 @@ fn handle_input(
 
     if !canvas.blocks_mouse(rl.get_mouse_position())
         && rl.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT)
-    {
+    {   
         match canvas.mode {
             MenuMode::Crops => {
                 plant_crops(&canvas, map, &selected_tile, player);
@@ -113,6 +113,8 @@ fn handle_input(
                 perform_misc(player, &canvas, workers, &selected_tile, map);
             }
         }
+
+        map.buy_land(selected_tile, player);
     }
 }
 
@@ -139,7 +141,7 @@ fn draw(
     d.draw_rectangle(10, 10, 24 * 4, 28, Color::BLACK.alpha(0.5));
     // d.draw_text(&format!("{} fps", d.get_fps()), 14, 14, 24, Color::GRAY);
     d.draw_text(
-        &format!("${}", player.display_money),
+        &format!("{}", player.display_money),
         14,
         14,
         24,
@@ -191,7 +193,7 @@ fn perform_misc(
     selected_tile: &(i32, i32),
     map: &mut Map,
 ) {
-    if canvas.selected == 0 && player.money >= 100 && map.tiles.contains_key(selected_tile) {
+    if canvas.selected == 0 && player.money >= 100 {
         workers.push(Worker::new(workers.len(), selected_tile.0, selected_tile.1));
         player.money -= canvas.toolbar_data.misc[canvas.selected].price;
     }

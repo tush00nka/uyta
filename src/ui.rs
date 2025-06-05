@@ -16,8 +16,8 @@ const UI_GAPS: f32 = 20.;
 #[derive(Deserialize)]
 pub struct ToolbarItem {
     tooltip: String,
-    pub price: usize
-}   
+    pub price: usize,
+}
 
 #[derive(Deserialize)]
 pub struct ToolbarData {
@@ -131,47 +131,37 @@ impl Canvas {
             let tooltip_pool: &Vec<ToolbarItem>;
 
             // todo: refactor hardcoded ui
-            'mode_selection: {
-                match self.mode {
-                    MenuMode::Crops => {
-                        tooltip_pool = &self.toolbar_data.crops;
+            match self.mode {
+                MenuMode::Crops => {
+                    tooltip_pool = &self.toolbar_data.crops;
 
-                        let id = format!("crop{i}");
-                        rl.draw_texture_pro(
-                            texture_handler.textures.get(&id).unwrap(),
-                            Rectangle::new(
-                                map.crops_data[i].time_to_grow as f32 * TILE_PIXEL_SIZE as f32,
-                                0.0,
-                                TILE_PIXEL_SIZE as f32,
-                                TILE_PIXEL_SIZE as f32,
-                            ),
-                            rect,
-                            Vector2::zero(),
-                            0.,
-                            Color::WHITE,
-                        );
-                    }
-                    MenuMode::Misc => {
-                        tooltip_pool = &self.toolbar_data.misc;
+                    let id = format!("crop{i}");
+                    rl.draw_texture_pro(
+                        texture_handler.textures.get(&id).unwrap(),
+                        Rectangle::new(
+                            map.crops_data[i].time_to_grow as f32 * TILE_PIXEL_SIZE as f32,
+                            0.0,
+                            TILE_PIXEL_SIZE as f32,
+                            TILE_PIXEL_SIZE as f32,
+                        ),
+                        rect,
+                        Vector2::zero(),
+                        0.,
+                        Color::WHITE,
+                    );
+                }
+                MenuMode::Misc => {
+                    tooltip_pool = &self.toolbar_data.misc;
 
-                        if i != 0 {
-                            break 'mode_selection;
-                        }
-
-                        rl.draw_texture_pro(
-                            texture_handler.textures.get("worker").unwrap(),
-                            Rectangle::new(
-                                0.0,
-                                0.0,
-                                TILE_PIXEL_SIZE as f32,
-                                TILE_PIXEL_SIZE as f32,
-                            ),
-                            rect,
-                            Vector2::zero(),
-                            0.,
-                            Color::WHITE,
-                        );
-                    }
+                    let id = format!("misc{i}");
+                    rl.draw_texture_pro(
+                        texture_handler.textures.get(&id).unwrap(),
+                        Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32),
+                        rect,
+                        Vector2::zero(),
+                        0.,
+                        Color::WHITE,
+                    );
                 }
             }
 

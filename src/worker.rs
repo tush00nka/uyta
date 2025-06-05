@@ -5,7 +5,7 @@ use std::{
 
 use raylib::prelude::*;
 
-use crate::map::{MAP_HEIGHT, MAP_WIDTH, Map, TILE_PIXEL_SIZE, TILE_SIZE, TileType};
+use crate::map::{Map, TILE_PIXEL_SIZE, TILE_SIZE, TileType};
 
 pub struct Worker {
     #[allow(unused)]
@@ -35,7 +35,7 @@ impl Worker {
 
         match job {
             JobType::Harvest => {
-                let mut closest = (MAP_WIDTH as i32, MAP_HEIGHT as i32);
+                let mut closest = (INFINITY as i32, INFINITY as i32);
                 let mut shortest_distance = INFINITY;
 
                 // get closest crop tile

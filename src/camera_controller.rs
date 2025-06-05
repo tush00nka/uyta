@@ -2,7 +2,6 @@ use raylib::prelude::*;
 
 use crate::{
     SCREEN_HEIGHT, SCREEN_WIDTH,
-    map::{MAP_HEIGHT, MAP_WIDTH, TILE_SIZE},
 };
 
 pub struct CameraController {
@@ -47,16 +46,16 @@ impl CameraController {
         }
 
         self.position += direction.normalized() * self.speed * rl.get_frame_time();
-        self.position.x = self
-            .position
-            .x
-            .min((MAP_WIDTH as i32 / 2 * TILE_SIZE) as f32)
-            .max((-(MAP_WIDTH as i32) / 2 * TILE_SIZE) as f32);
-        self.position.y = self
-            .position
-            .y
-            .min((MAP_HEIGHT as i32 / 2 * TILE_SIZE) as f32)
-            .max((-(MAP_HEIGHT as i32) / 2 * TILE_SIZE) as f32);
+        // self.position.x = self
+        //     .position
+        //     .x
+        //     .min((MAP_WIDTH as i32 / 2 * TILE_SIZE) as f32)
+        //     .max((-(MAP_WIDTH as i32) / 2 * TILE_SIZE) as f32);
+        // self.position.y = self
+        //     .position
+        //     .y
+        //     .min((MAP_HEIGHT as i32 / 2 * TILE_SIZE) as f32)
+        //     .max((-(MAP_HEIGHT as i32) / 2 * TILE_SIZE) as f32);
 
         self.camera.target = Vector2 {
             x: lerp(
