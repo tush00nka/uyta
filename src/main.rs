@@ -61,6 +61,7 @@ fn main() {
         );
 
         player.update_money();
+        player.update_exp();
 
         // call on tick
         if timer >= tile_update_time {
@@ -70,7 +71,9 @@ fn main() {
 
             workers.iter_mut().for_each(|worker| {
                 // feels weird and illegal
-                player.money += worker.follow_path(&mut map);
+                let (money, exp) = worker.follow_path(&mut map);
+                player.money += money;
+                player.exp += exp;
             });
         }
 
@@ -104,7 +107,7 @@ fn handle_input(
 
     if !canvas.blocks_mouse(rl.get_mouse_position())
         && rl.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT)
-    {   
+    {
         match canvas.mode {
             MenuMode::Crops => {
                 plant_crops(&canvas, map, &selected_tile, player);
@@ -148,8 +151,25 @@ fn draw(
         Color::WHITE,
     );
 
-    canvas.update(&mut d);
-    canvas.draw(&mut d, &map, &texture_handler);
+    let exp_bar_fill = player.exp as f32 / player.exp_to_lvl_up as f32;
+    d.draw_rectangle(
+        d.get_screen_width() / 4,
+        10,
+        d.get_screen_width() / 2,
+        24,
+        Color::GRAY,
+    );
+    d.draw_rectangle(
+        d.get_screen_width() / 4,
+        10,
+        (exp_bar_fill * (d.get_screen_width() / 2) as f32) as i32,
+        24,
+        Color::DARKORANGE,
+    );
+    d.draw_text(&format!("Level {}", player.level), d.get_screen_width() / 4 + 10, 10, 24, Color::WHITE);
+
+    canvas.update(&mut d, player);
+    canvas.draw(&mut d, &map, &texture_handler, player);
 }
 
 fn plant_crops(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), player: &mut Player) {
@@ -174,7 +194,7 @@ fn plant_crops(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), playe
             }
 
             if crop.is_none() || crop.unwrap() != canvas.selected {
-                let price= canvas.toolbar_data.crops[canvas.selected].price;
+                let price = canvas.toolbar_data.crops[canvas.selected].price;
                 if player.money >= price {
                     player.money -= price;
                     // plant the seed
@@ -193,7 +213,7 @@ fn perform_misc(
     selected_tile: &(i32, i32),
     map: &mut Map,
 ) {
-    if canvas.selected == 0 && player.money >= 100 {
+    if canvas.selected == 0 && player.money >= 100 && map.tiles.contains_key(selected_tile) {
         workers.push(Worker::new(workers.len(), selected_tile.0, selected_tile.1));
         player.money -= canvas.toolbar_data.misc[canvas.selected].price;
     }

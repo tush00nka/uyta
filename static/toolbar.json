@@ -2,24 +2,29 @@
     "crops": [
         {
             "tooltip": "Carrot",
+            "unlock_level": 1,
             "price": 20
         },
         {
             "tooltip": "Cabbage",
+            "unlock_level": 3,
             "price": 50
         },
         {
             "tooltip": "Melon",
+            "unlock_level": 5,
             "price": 100
         }
     ],
     "misc": [
         {
             "tooltip": "Worker",
+            "unlock_level": 1,
             "price": 100
         },
         {
             "tooltip": "Remove plants",
+            "unlock_level": 5,
             "price": 0
         }
     ]

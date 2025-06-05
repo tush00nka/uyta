@@ -6,6 +6,7 @@ use serde::Deserialize;
 
 use crate::{
     map::{Map, TILE_PIXEL_SIZE},
+    player::Player,
     texture_handler::TextureHandler,
     utils::parse_json,
 };
@@ -16,6 +17,7 @@ const UI_GAPS: f32 = 20.;
 #[derive(Deserialize)]
 pub struct ToolbarItem {
     tooltip: String,
+    unlock_level: usize,
     pub price: usize,
 }
 
@@ -69,7 +71,13 @@ impl Canvas {
         }
     }
 
-    pub fn draw(&mut self, rl: &mut RaylibDrawHandle, map: &Map, texture_handler: &TextureHandler) {
+    pub fn draw(
+        &mut self,
+        rl: &mut RaylibDrawHandle,
+        map: &Map,
+        texture_handler: &TextureHandler,
+        player: &Player,
+    ) {
         // for node in self.content.iter() {
         //     rl.draw_rectangle_rec(node.rect, node.bg_color);
         // }
@@ -125,6 +133,7 @@ impl Canvas {
             } else {
                 Color::GRAY
             };
+
             rl.draw_rectangle_rec(rect, color);
             self.subcontent.push(rect);
 
@@ -134,6 +143,12 @@ impl Canvas {
             match self.mode {
                 MenuMode::Crops => {
                     tooltip_pool = &self.toolbar_data.crops;
+
+                    let color = if tooltip_pool[i].unlock_level > player.level {
+                        Color::GRAY
+                    } else {
+                        Color::WHITE
+                    };
 
                     let id = format!("crop{i}");
                     rl.draw_texture_pro(
@@ -147,11 +162,17 @@ impl Canvas {
                         rect,
                         Vector2::zero(),
                         0.,
-                        Color::WHITE,
+                        color,
                     );
                 }
                 MenuMode::Misc => {
                     tooltip_pool = &self.toolbar_data.misc;
+
+                    let color = if tooltip_pool[i].unlock_level > player.level {
+                        Color::GRAY
+                    } else {
+                        Color::WHITE
+                    };
 
                     let id = format!("misc{i}");
                     rl.draw_texture_pro(
@@ -160,7 +181,7 @@ impl Canvas {
                         rect,
                         Vector2::zero(),
                         0.,
-                        Color::WHITE,
+                        color,
                     );
                 }
             }
@@ -169,34 +190,23 @@ impl Canvas {
                 continue;
             }
 
-            let price = tooltip_pool[i].price;
+            let price = if tooltip_pool[i].price > 0 {
+                tooltip_pool[i].price.to_string()
+            } else {
+                "".to_string()
+            };
 
-            // name
             rl.draw_text(
-                &tooltip_pool[i].tooltip,
+                &format!("{}\n{}", tooltip_pool[i].tooltip, price),
                 2 * (UI_BUTTON_SIZE + UI_GAPS) as i32,
                 (i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS) as i32,
-                24,
-                Color::RAYWHITE,
-            );
-
-            // don't draw price if free
-            if price <= 0 {
-                continue;
-            }
-
-            rl.draw_text(
-                &format!("{price} RUB"),
-                2 * (UI_BUTTON_SIZE + UI_GAPS) as i32,
-                (i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS + 32.)
-                    as i32,
-                24,
+                UI_BUTTON_SIZE as i32 / 2,
                 Color::RAYWHITE,
             );
         }
     }
 
-    pub fn update(&mut self, rl: &mut RaylibDrawHandle) {
+    pub fn update(&mut self, rl: &mut RaylibDrawHandle, player: &Player) {
         for i in 0..self.content.len() {
             let rect = self.content[i];
             if unsafe {
@@ -241,9 +251,24 @@ impl Canvas {
                 };
                 CheckCollisionPointRec(mouse_pos, rect)
             } {
-                // node.bg_color = hovered;
-                if rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_LEFT) {
-                    self.selected = i;
+                let pool: &Vec<ToolbarItem> = match self.mode {
+                    MenuMode::Crops => &self.toolbar_data.crops,
+                    MenuMode::Misc => &self.toolbar_data.misc,
+                };
+
+                if pool[i].unlock_level <= player.level {
+                    if rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_LEFT) {
+                        self.selected = i;
+                    }
+                } else {
+                    rl.draw_text(
+                        &format!("Unlock at level {}", pool[i].unlock_level),
+                        2 * (UI_BUTTON_SIZE + UI_GAPS) as i32,
+                        (i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS)
+                            as i32,
+                        UI_BUTTON_SIZE as i32 / 2,
+                        Color::RAYWHITE,
+                    )
                 }
             }
         }

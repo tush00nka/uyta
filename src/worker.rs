@@ -77,19 +77,21 @@ impl Worker {
         target_position
     }
 
-    pub fn follow_path(&mut self, map: &mut Map) -> usize {
+    pub fn follow_path(&mut self, map: &mut Map) -> (usize, usize) {
         let Some(next_position) = self.path.get(0) else {
             let tile = map.tiles.get_mut(&self.position).unwrap();
             let mut money = 0;
+            let mut exp = 0;
 
             match tile {
                 TileType::Farmland { crop, stage } => {
                     if crop.is_none() {
                         self.find_path(map, JobType::Harvest);
-                        return 0;
+                        return (0,0);
                     } else if *stage >= map.crops_data[crop.unwrap()].time_to_grow {
                         // successfully complete task
                         money = map.crops_data[crop.unwrap()].sell_price;
+                        exp = crop.unwrap() + 1; // higher crop_id == more exp
                         *stage = 0;
                         // free this tile from work
                         if let Some(occupation_tile) = map.occupation_map.get_mut(&self.position) {
@@ -101,12 +103,12 @@ impl Worker {
             }
 
             self.find_path(map, JobType::Harvest);
-            return money;
+            return (money, exp);
         };
 
         self.position = *next_position;
         self.path.remove(0);
-        return 0;
+        return (0, 0);
     }
 
     pub fn find_path(&mut self, map: &mut Map, job: JobType) -> Option<Vec<(i32, i32)>> {
