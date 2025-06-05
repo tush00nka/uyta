@@ -1,0 +1,26 @@
+{
+    "crops": [
+        {
+            "tooltip": "Carrot",
+            "price": 20
+        },
+        {
+            "tooltip": "Cabbage",
+            "price": 50
+        },
+        {
+            "tooltip": "Melon",
+            "price": 100
+        }
+    ],
+    "misc": [
+        {
+            "tooltip": "Worker",
+            "price": 100
+        },
+        {
+            "tooltip": "Remove plants",
+            "price": 0
+        }
+    ]
+}

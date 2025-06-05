@@ -14,14 +14,20 @@ const UI_BUTTON_SIZE: f32 = 60.;
 const UI_GAPS: f32 = 20.;
 
 #[derive(Deserialize)]
-struct TooltipData {
-    crops: Vec<String>,
-    misc: Vec<String>,
+pub struct ToolbarItem {
+    tooltip: String,
+    pub price: usize
+}   
+
+#[derive(Deserialize)]
+pub struct ToolbarData {
+    pub crops: Vec<ToolbarItem>,
+    pub misc: Vec<ToolbarItem>,
 }
 
-impl TooltipData {
+impl ToolbarData {
     fn new() -> Self {
-        parse_json("static/tooltips.json")
+        parse_json("static/toolbar.json")
     }
 }
 
@@ -36,7 +42,7 @@ pub struct Canvas {
     pub selected: usize,
     content: Vec<Rectangle>,
     subcontent: Vec<Rectangle>,
-    tooltip_data: TooltipData,
+    pub toolbar_data: ToolbarData,
 }
 
 impl Canvas {
@@ -59,7 +65,7 @@ impl Canvas {
                 ),
             ],
             subcontent: vec![],
-            tooltip_data: TooltipData::new(),
+            toolbar_data: ToolbarData::new(),
         }
     }
 
@@ -122,15 +128,13 @@ impl Canvas {
             rl.draw_rectangle_rec(rect, color);
             self.subcontent.push(rect);
 
-            let tooltip_pool: &Vec<String>;
-            let price: usize;
+            let tooltip_pool: &Vec<ToolbarItem>;
 
             // todo: refactor hardcoded ui
             'mode_selection: {
                 match self.mode {
                     MenuMode::Crops => {
-                        tooltip_pool = &self.tooltip_data.crops;
-                        price = map.crops_data[i].buy_price;
+                        tooltip_pool = &self.toolbar_data.crops;
 
                         let id = format!("crop{i}");
                         rl.draw_texture_pro(
@@ -148,14 +152,11 @@ impl Canvas {
                         );
                     }
                     MenuMode::Misc => {
-                        tooltip_pool = &self.tooltip_data.misc;
+                        tooltip_pool = &self.toolbar_data.misc;
 
                         if i != 0 {
-                            price = 0;
                             break 'mode_selection;
                         }
-
-                        price = 100;
 
                         rl.draw_texture_pro(
                             texture_handler.textures.get("worker").unwrap(),
@@ -178,9 +179,11 @@ impl Canvas {
                 continue;
             }
 
+            let price = tooltip_pool[i].price;
+
             // name
             rl.draw_text(
-                &tooltip_pool[i],
+                &tooltip_pool[i].tooltip,
                 2 * (UI_BUTTON_SIZE + UI_GAPS) as i32,
                 (i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS) as i32,
                 24,

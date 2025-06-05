@@ -13,11 +13,7 @@ pub const TILE_SIZE: i32 = TILE_PIXEL_SIZE * TILE_SCALE;
 
 #[derive(Deserialize)]
 pub struct Crop {
-    // pub id: usize,
-    #[allow(unused)]
-    pub name: String,
     pub time_to_grow: usize,
-    pub buy_price: usize,
     pub sell_price: usize,
 }
 

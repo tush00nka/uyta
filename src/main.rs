@@ -172,9 +172,9 @@ fn plant_crops(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), playe
             }
 
             if crop.is_none() || crop.unwrap() != canvas.selected {
-                let crop_datum = &map.crops_data[canvas.selected];
-                if player.money >= crop_datum.buy_price {
-                    player.money -= crop_datum.buy_price;
+                let price= canvas.toolbar_data.crops[canvas.selected].price;
+                if player.money >= price {
+                    player.money -= price;
                     // plant the seed
                     *crop = Some(canvas.selected);
                     *stage = 0;
@@ -193,7 +193,7 @@ fn perform_misc(
 ) {
     if canvas.selected == 0 && player.money >= 100 && map.tiles.contains_key(selected_tile) {
         workers.push(Worker::new(workers.len(), selected_tile.0, selected_tile.1));
-        player.money -= 100;
+        player.money -= canvas.toolbar_data.misc[canvas.selected].price;
     }
 
     if canvas.selected == 1 {
