@@ -1,7 +1,8 @@
 use raylib::prelude::*;
 use serde::Deserialize;
-use serde_json;
-use std::{collections::HashMap, fs};
+use std::collections::HashMap;
+
+use crate::utils::parse_json;
 
 pub const MAP_WIDTH: usize = 8;
 pub const MAP_HEIGHT: usize = 8;
@@ -37,13 +38,7 @@ pub struct Map {
 
 impl Map {
     pub fn new() -> Self {
-        let res = fs::read_to_string("static/crops.json");
-        let s = match res {
-            Ok(s) => s,
-            Err(e) => panic!("Can't read file! {e}"),
-        };
-
-        let mut map: Self = serde_json::from_str(&s).expect("Can't parse json!");
+        let mut map: Self = parse_json("static/crops.json");
 
         map.tiles = HashMap::new();
         map.occupation_map = HashMap::new();

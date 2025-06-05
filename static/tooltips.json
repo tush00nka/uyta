@@ -1,0 +1,11 @@
+{
+    "crops": [
+        "Carrot",
+        "Cabbage",
+        "Melon"
+    ],
+    "misc": [
+        "Worker",
+        "Remove plants"
+    ]
+}

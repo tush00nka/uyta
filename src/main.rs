@@ -21,6 +21,8 @@ use crate::worker::Worker;
 
 mod ui;
 
+mod utils;
+
 fn main() {
     let (mut rl, thread) = raylib::init()
         .size(SCREEN_WIDTH, SCREEN_HEIGHT)

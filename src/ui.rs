@@ -2,14 +2,28 @@ use raylib::{
     ffi::{CheckCollisionPointRec, MouseButton},
     prelude::{Color, RaylibDraw, RaylibDrawHandle, Rectangle, Vector2},
 };
+use serde::Deserialize;
 
 use crate::{
     map::{Map, TILE_PIXEL_SIZE},
     texture_handler::TextureHandler,
+    utils::parse_json,
 };
 
 const UI_BUTTON_SIZE: f32 = 60.;
 const UI_GAPS: f32 = 20.;
+
+#[derive(Deserialize)]
+struct TooltipData {
+    crops: Vec<String>,
+    misc: Vec<String>,
+}
+
+impl TooltipData {
+    fn new() -> Self {
+        parse_json("static/tooltips.json")
+    }
+}
 
 #[derive(PartialEq)]
 pub enum MenuMode {
@@ -22,6 +36,7 @@ pub struct Canvas {
     pub selected: usize,
     content: Vec<Rectangle>,
     subcontent: Vec<Rectangle>,
+    tooltip_data: TooltipData,
 }
 
 impl Canvas {
@@ -30,10 +45,21 @@ impl Canvas {
             mode: MenuMode::Crops,
             selected: 0,
             content: vec![
-                Rectangle::new(10., UI_BUTTON_SIZE + UI_GAPS, UI_BUTTON_SIZE, UI_BUTTON_SIZE),
-                Rectangle::new(UI_BUTTON_SIZE + UI_GAPS, UI_BUTTON_SIZE + UI_GAPS, UI_BUTTON_SIZE, UI_BUTTON_SIZE),
+                Rectangle::new(
+                    10.,
+                    UI_BUTTON_SIZE + UI_GAPS,
+                    UI_BUTTON_SIZE,
+                    UI_BUTTON_SIZE,
+                ),
+                Rectangle::new(
+                    10.,
+                    2. * UI_BUTTON_SIZE + UI_GAPS * 1.5,
+                    UI_BUTTON_SIZE,
+                    UI_BUTTON_SIZE,
+                ),
             ],
             subcontent: vec![],
+            tooltip_data: TooltipData::new(),
         }
     }
 
@@ -82,11 +108,12 @@ impl Canvas {
         self.subcontent.clear();
         for i in 0..submenu_button_amount {
             let rect = Rectangle {
-                x: i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + 10.,
-                y: 2.*(UI_BUTTON_SIZE + UI_GAPS) - 10.,
+                x: (UI_BUTTON_SIZE + UI_GAPS),
+                y: i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS,
                 width: UI_BUTTON_SIZE,
                 height: UI_BUTTON_SIZE,
             };
+
             let color = if self.selected == i {
                 Color::RAYWHITE
             } else {
@@ -95,43 +122,84 @@ impl Canvas {
             rl.draw_rectangle_rec(rect, color);
             self.subcontent.push(rect);
 
-            // todo: refactor hardcoded ui 
-            match self.mode {
-                MenuMode::Crops => {
-                    let id = format!("crop{i}");
-                    rl.draw_texture_pro(
-                        texture_handler.textures.get(&id).unwrap(),
-                        Rectangle::new(
-                            map.crops_data[i].time_to_grow as f32 * TILE_PIXEL_SIZE as f32,
-                            0.0,
-                            TILE_PIXEL_SIZE as f32,
-                            TILE_PIXEL_SIZE as f32,
-                        ),
-                        rect,
-                        Vector2::zero(),
-                        0.,
-                        Color::WHITE,
-                    );
-                }
-                MenuMode::Misc => {
-                    if i != 0 {
-                        continue;
+            let tooltip_pool: &Vec<String>;
+            let price: usize;
+
+            // todo: refactor hardcoded ui
+            'mode_selection: {
+                match self.mode {
+                    MenuMode::Crops => {
+                        tooltip_pool = &self.tooltip_data.crops;
+                        price = map.crops_data[i].buy_price;
+
+                        let id = format!("crop{i}");
+                        rl.draw_texture_pro(
+                            texture_handler.textures.get(&id).unwrap(),
+                            Rectangle::new(
+                                map.crops_data[i].time_to_grow as f32 * TILE_PIXEL_SIZE as f32,
+                                0.0,
+                                TILE_PIXEL_SIZE as f32,
+                                TILE_PIXEL_SIZE as f32,
+                            ),
+                            rect,
+                            Vector2::zero(),
+                            0.,
+                            Color::WHITE,
+                        );
                     }
-                    rl.draw_texture_pro(
-                        texture_handler.textures.get("worker").unwrap(),
-                        Rectangle::new(
-                            0.0,
-                            0.0,
-                            TILE_PIXEL_SIZE as f32,
-                            TILE_PIXEL_SIZE as f32,
-                        ),
-                        rect,
-                        Vector2::zero(),
-                        0.,
-                        Color::WHITE,
-                    );
+                    MenuMode::Misc => {
+                        tooltip_pool = &self.tooltip_data.misc;
+
+                        if i != 0 {
+                            price = 0;
+                            break 'mode_selection;
+                        }
+
+                        price = 100;
+
+                        rl.draw_texture_pro(
+                            texture_handler.textures.get("worker").unwrap(),
+                            Rectangle::new(
+                                0.0,
+                                0.0,
+                                TILE_PIXEL_SIZE as f32,
+                                TILE_PIXEL_SIZE as f32,
+                            ),
+                            rect,
+                            Vector2::zero(),
+                            0.,
+                            Color::WHITE,
+                        );
+                    }
                 }
             }
+
+            if self.selected != i {
+                continue;
+            }
+
+            // name
+            rl.draw_text(
+                &tooltip_pool[i],
+                2 * (UI_BUTTON_SIZE + UI_GAPS) as i32,
+                (i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS) as i32,
+                24,
+                Color::RAYWHITE,
+            );
+
+            // don't draw price if free
+            if price <= 0 {
+                continue;
+            }
+
+            rl.draw_text(
+                &format!("{price} RUB"),
+                2 * (UI_BUTTON_SIZE + UI_GAPS) as i32,
+                (i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS + 32.)
+                    as i32,
+                24,
+                Color::RAYWHITE,
+            );
         }
     }
 
