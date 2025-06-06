@@ -166,10 +166,16 @@ fn draw(
         24,
         Color::DARKORANGE,
     );
-    d.draw_text(&format!("Level {}", player.level), d.get_screen_width() / 4 + 10, 10, 24, Color::WHITE);
+    d.draw_text(
+        &format!("Level {}", player.level),
+        d.get_screen_width() / 4 + 10,
+        10,
+        24,
+        Color::WHITE,
+    );
 
-    canvas.update(&mut d, player);
     canvas.draw(&mut d, &map, &texture_handler, player);
+    canvas.update(&mut d, player);
 }
 
 fn plant_crops(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), player: &mut Player) {

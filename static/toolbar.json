@@ -19,7 +19,7 @@
     "misc": [
         {
             "tooltip": "Worker",
-            "unlock_level": 1,
+            "unlock_level": 2,
             "price": 100
         },
         {

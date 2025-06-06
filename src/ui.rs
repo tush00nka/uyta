@@ -108,12 +108,17 @@ impl Canvas {
             },
         );
         let position = Vector2::new(self.content[1].x, self.content[1].y);
+        let color = if self.toolbar_data.misc[0].unlock_level > player.level {
+            Color::GRAY
+        } else {
+            Color::WHITE
+        };
         rl.draw_texture_ex(
             texture_handler.textures.get("misc_menu").unwrap(),
             position,
             0.,
             UI_BUTTON_SIZE / TILE_PIXEL_SIZE as f32,
-            Color::WHITE,
+            color,
         );
         let submenu_button_amount = match self.mode {
             MenuMode::Crops => map.crops_data.len(),
@@ -225,12 +230,41 @@ impl Canvas {
             } {
                 // node.bg_color = hovered;
                 if rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_LEFT) {
-                    self.mode = match i {
-                        0 => MenuMode::Crops,
-                        1 => MenuMode::Misc,
-                        _ => MenuMode::Misc,
-                    };
-                    self.selected = 0;
+                    match i {
+                        0 => {
+                            self.mode = MenuMode::Crops;
+                            self.selected = 0;
+                        },
+                        1 => {
+                            if self.toolbar_data.misc[0].unlock_level <= player.level {
+                                self.mode = MenuMode::Misc;
+                                self.selected = 0;
+                            }
+                        },
+                        _ => {}
+                    }
+                }
+
+                // todo: hardcoded
+                if i == 1 && self.toolbar_data.misc[0].unlock_level > player.level {
+                    let x = rl.get_mouse_position().x as i32;
+                    let y = rl.get_mouse_position().y as i32 - UI_BUTTON_SIZE as i32 / 2;
+                    rl.draw_rectangle(
+                        x,
+                        y,
+                        format!("Unlock at level {}", self.toolbar_data.misc[0].unlock_level).len()
+                            as i32
+                            * (UI_BUTTON_SIZE as i32 / 3),
+                        UI_BUTTON_SIZE as i32 / 2,
+                        Color::BLACK.alpha(0.5),
+                    );
+                    rl.draw_text(
+                        &format!("Unlock at level {}", self.toolbar_data.misc[0].unlock_level),
+                        x + 5,
+                        y,
+                        UI_BUTTON_SIZE as i32 / 2,
+                        Color::RAYWHITE,
+                    );
                 }
             }
         }
@@ -261,14 +295,23 @@ impl Canvas {
                         self.selected = i;
                     }
                 } else {
+                    let x = rl.get_mouse_position().x as i32;
+                    let y = rl.get_mouse_position().y as i32 - UI_BUTTON_SIZE as i32 / 2;
+                    rl.draw_rectangle(
+                        x,
+                        y,
+                        format!("Unlock at level {}", pool[i].unlock_level).len() as i32
+                            * (UI_BUTTON_SIZE as i32 / 3),
+                        UI_BUTTON_SIZE as i32 / 2,
+                        Color::BLACK.alpha(0.5),
+                    );
                     rl.draw_text(
                         &format!("Unlock at level {}", pool[i].unlock_level),
-                        2 * (UI_BUTTON_SIZE + UI_GAPS) as i32,
-                        (i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS)
-                            as i32,
+                        x + 5,
+                        y,
                         UI_BUTTON_SIZE as i32 / 2,
                         Color::RAYWHITE,
-                    )
+                    );
                 }
             }
         }
