@@ -13,43 +13,88 @@ pub enum ButtonState {
     Pressed,
 }
 
+pub enum PauseMenuState {
+    Main,
+    Settings,
+}
+
 pub struct PauseMenu {
     pub is_paused: bool,
     pub buttons: Vec<Button>,
+    pub state: PauseMenuState,
 }
 
 impl PauseMenu {
     pub fn new(rl: &mut RaylibHandle) -> Self {
+        let mut menu = Self {
+            is_paused: false,
+            buttons: vec![],
+            state: PauseMenuState::Main,
+        };
+
+        menu.switch_state(rl, PauseMenuState::Main);
+
+        menu
+    }
+
+    pub fn switch_state(&mut self, rl: &mut RaylibHandle, state: PauseMenuState) {
         let screen_width = rl.get_screen_width() as f32;
         let screen_height = rl.get_screen_height() as f32;
         let menu_width = screen_width as f32 * 0.5;
         let menu_height = screen_height as f32 * 0.75;
 
-        let settings = Button {
-            rect: Rectangle::new(
-                screen_width / 2. - menu_width / 4.,
-                screen_height / 2. - menu_height / 2. + 60.,
-                menu_width / 2.,
-                50.,
-            ),
-            label: "Settings".to_string(),
-            state: ButtonState::Normal,
-        };
-        let quit = Button {
-            rect: Rectangle::new(
-                screen_width / 2. - menu_width / 4.,
-                screen_height / 2. - menu_height / 2. + 120.,
-                menu_width / 2.,
-                50.,
-            ),
-            label: "Quit".to_string(),
-            state: ButtonState::Normal,
-        };
+        match state {
+            PauseMenuState::Main => {
+                let settings = Button {
+                    rect: Rectangle::new(
+                        screen_width / 2. - menu_width / 4.,
+                        screen_height / 2. - menu_height / 2. + 60.,
+                        menu_width / 2.,
+                        50.,
+                    ),
+                    label: "Settings".to_string(),
+                    state: ButtonState::Normal,
+                };
+                let quit = Button {
+                    rect: Rectangle::new(
+                        screen_width / 2. - menu_width / 4.,
+                        screen_height / 2. - menu_height / 2. + 120.,
+                        menu_width / 2.,
+                        50.,
+                    ),
+                    label: "Quit".to_string(),
+                    state: ButtonState::Normal,
+                };
 
-        Self {
-            is_paused: false,
-            buttons: vec![settings, quit],
+                self.buttons = vec![settings, quit];
+            }
+            PauseMenuState::Settings => {
+                let fullscreen_toggle = Button {
+                    rect: Rectangle::new(
+                        screen_width / 2. - menu_width / 4.,
+                        screen_height / 2. - menu_height / 2. + 60.,
+                        menu_width / 2.,
+                        50.,
+                    ),
+                    label: "Toggle fullscreen".to_string(),
+                    state: ButtonState::Normal,
+                };
+                let save = Button {
+                    rect: Rectangle::new(
+                        screen_width / 2. - menu_width / 4.,
+                        screen_height / 2. - menu_height / 2. + 120.,
+                        menu_width / 2.,
+                        50.,
+                    ),
+                    label: "Save".to_string(),
+                    state: ButtonState::Normal,
+                };
+
+                self.buttons = vec![fullscreen_toggle, save];
+            }
         }
+
+        self.state = state;
     }
 
     pub fn toggle_pause(&mut self, rl: &mut RaylibHandle) {
@@ -83,7 +128,7 @@ impl PauseMenu {
                 CheckCollisionPointRec(mouse_pos, rect)
             } {
                 button.state = ButtonState::Hovered;
-                if rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_LEFT) {
+                if rl.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT) {
                     button.state = ButtonState::Pressed;
                 }
                 blocks_mouse = true;

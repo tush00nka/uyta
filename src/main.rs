@@ -4,7 +4,7 @@ const SCREEN_WIDTH: i32 = 1280;
 const SCREEN_HEIGHT: i32 = 720;
 
 mod texture_handler;
-use crate::pause_menu::{ButtonState, PauseMenu};
+use crate::pause_menu::{ButtonState, PauseMenu, PauseMenuState};
 use crate::texture_handler::TextureHandler;
 
 mod map;
@@ -55,9 +55,25 @@ fn main() {
         pause_menu.toggle_pause(&mut rl);
         let pause_blocks_mouse = pause_menu.update_buttons(&mut rl);
 
-        // todo: replace with a map maybe
-        if pause_menu.buttons[1].state == ButtonState::Pressed {
-            break;
+        match pause_menu.state {
+            PauseMenuState::Main => {
+                // todo: replace with a map maybe
+                if pause_menu.buttons[1].state == ButtonState::Pressed {
+                    break;
+                }
+
+                if pause_menu.buttons[0].state == ButtonState::Pressed {
+                    pause_menu.switch_state(&mut rl, PauseMenuState::Settings);
+                }
+            }
+            PauseMenuState::Settings => {
+                if pause_menu.buttons[0].state == ButtonState::Pressed {
+                    rl.toggle_fullscreen();
+                }
+                if pause_menu.buttons[1].state == ButtonState::Pressed {
+                    pause_menu.switch_state(&mut rl, PauseMenuState::Main);
+                }
+            },
         }
 
         timer += rl.get_frame_time();
