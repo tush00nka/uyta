@@ -19,8 +19,8 @@
     "trees": [
         {
             "tooltip": "Apple Tree",
-            "unlock_level": 5,
-            "price": 1000
+            "unlock_level": 1,
+            "price": 10
         },
         {
             "tooltip": "Orange Tree",

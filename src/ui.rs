@@ -1,5 +1,3 @@
-use std::f32::MIN_POSITIVE;
-
 use raylib::{
     ffi::{CheckCollisionPointRec, MouseButton},
     prelude::{Color, RaylibDraw, RaylibDrawHandle, Rectangle, Vector2},
@@ -200,7 +198,7 @@ impl Canvas {
                         0.,
                         color,
                     );
-                },
+                }
                 MenuMode::Trees => {
                     tooltip_pool = &self.toolbar_data.trees;
                     let color = if tooltip_pool[i].unlock_level > player.level {
@@ -218,7 +216,7 @@ impl Canvas {
                         0.,
                         color,
                     );
-                },
+                }
                 MenuMode::Misc => {
                     tooltip_pool = &self.toolbar_data.misc;
 

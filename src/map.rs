@@ -1,3 +1,4 @@
+use itertools::Itertools;
 use raylib::prelude::*;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -17,15 +18,24 @@ pub struct Crop {
     pub sell_price: usize,
 }
 
-#[derive(PartialEq)]
+#[derive(Deserialize)]
+pub struct Tree {
+    pub time_to_grow: usize,
+    pub time_to_fruit: usize,
+    pub sell_price: usize
+}
+
+#[derive(PartialEq, PartialOrd, Eq, Ord)]
 pub enum TileType {
     Grass,
+    Tree { tree: usize, grow: usize, stage: usize },
     Farmland { crop: usize, stage: usize },
 }
 
 #[derive(Deserialize)]
 pub struct Map {
     pub crops_data: Vec<Crop>,
+    pub tree_data: Vec<Tree>,
     #[serde(skip_deserializing)]
     pub tiles: HashMap<(i32, i32), TileType>,
     #[serde(skip_deserializing)]
@@ -38,7 +48,7 @@ pub struct Map {
 
 impl Map {
     pub fn new() -> Self {
-        let mut map: Self = parse_json("static/crops.json");
+        let mut map: Self = parse_json("static/tiles.json");
 
         map.tiles = HashMap::new();
         map.occupation_map = HashMap::new();
@@ -80,6 +90,18 @@ impl Map {
 
                     *stage += 1;
                     // *watered = false;
+                },
+                TileType::Tree { tree, grow, stage } => {
+                    if *stage >= self.tree_data[*tree].time_to_fruit && *grow >= self.tree_data[*tree].time_to_grow {
+                        continue;
+                    }
+
+                    if *grow >= self.tree_data[*tree].time_to_grow {
+                        *stage += 1;
+                        continue;
+                    }
+
+                    *grow += 1;
                 }
                 _ => {}
             }
@@ -157,9 +179,10 @@ impl Map {
             );
         }
 
-        for (position, tile) in self.tiles.iter() {
+        for (position, tile) in self.tiles.iter().sorted() {
             let texture_id = match tile {
                 TileType::Grass => "grass",
+                TileType::Tree { .. } => "grass",
                 TileType::Farmland { .. } => "dirt",
             };
 
@@ -191,6 +214,31 @@ impl Map {
                     );
 
                     let id: &str = &format!("crop{}", crop);
+
+                    rl.draw_texture_pro(
+                        textures.get(id).unwrap_or(textures.get("error").unwrap()),
+                        source,
+                        destination,
+                        Vector2::zero(),
+                        0.,
+                        Color::WHITE,
+                    );
+                }
+                TileType::Tree { tree, grow, .. } => {
+                    let source = Rectangle::new(
+                        *grow as f32 * TILE_PIXEL_SIZE as f32,
+                        0.,
+                        TILE_PIXEL_SIZE as f32,
+                        TILE_PIXEL_SIZE as f32 * 2.,
+                    );
+                    let destination = Rectangle::new(
+                        (position.0 * TILE_SIZE) as f32,
+                        (position.1 * TILE_SIZE - TILE_SIZE) as f32,
+                        TILE_SIZE as f32,
+                        TILE_SIZE as f32 * 2.,
+                    );
+
+                    let id = &format!("tree{}", tree);
 
                     rl.draw_texture_pro(
                         textures.get(id).unwrap_or(textures.get("error").unwrap()),

@@ -13,6 +13,7 @@ pub enum ButtonState {
     Pressed,
 }
 
+#[derive(Copy, Clone)]
 pub enum PauseMenuState {
     Main,
     Settings,
@@ -107,6 +108,10 @@ impl PauseMenu {
     pub fn update_buttons(&mut self, rl: &mut RaylibHandle) -> bool {
         if !self.is_paused {
             return false;
+        }
+
+        if rl.is_window_resized() {
+            self.switch_state(rl, self.state);
         }
 
         let mut blocks_mouse = false;

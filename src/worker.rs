@@ -50,8 +50,7 @@ impl Worker {
                     match tile {
                         TileType::Grass => {}
                         TileType::Farmland { crop, stage } => {
-                            if *stage >= map.crops_data[*crop].time_to_grow
-                            {
+                            if *stage >= map.crops_data[*crop].time_to_grow {
                                 // existing ready to harvest crop
                                 let crop_position =
                                     Vector2::new(tile_position.0 as f32, tile_position.1 as f32);
@@ -64,12 +63,25 @@ impl Worker {
                                 }
                             }
                         }
+                        TileType::Tree { tree, stage, .. } => {
+                            if *stage >= map.tree_data[*tree].time_to_fruit {
+                                // ready to collect from tree
+                                let tree_position =
+                                    Vector2::new(tile_position.0 as f32, tile_position.1 as f32);
+                                let worker_position =
+                                    Vector2::new(self.position.0 as f32, self.position.1 as f32);
+
+                                if tree_position.distance_to(worker_position) < shortest_distance {
+                                    closest = *tile_position;
+                                    shortest_distance = tree_position.distance_to(worker_position);
+                                }
+                            }
+                        }
                     }
                 }
 
                 target_position = closest;
-            }
-            // _ => target_position = (0, 0),
+            } // _ => target_position = (0, 0),
         }
 
         map.occupation_map.insert(target_position, true);
@@ -90,6 +102,17 @@ impl Worker {
                         exp = *crop + 1; // higher crop_id == more exp
                         *stage = 0;
                         // free this tile from work
+                        if let Some(occupation_tile) = map.occupation_map.get_mut(&self.position) {
+                            *occupation_tile = false;
+                        };
+                    }
+                }
+                TileType::Tree { tree, stage, .. } => {
+                    if *stage >= map.tree_data[*tree].time_to_fruit {
+                        money = map.tree_data[*tree].sell_price;
+                        exp = *tree + 1;
+                        *stage = 0;
+
                         if let Some(occupation_tile) = map.occupation_map.get_mut(&self.position) {
                             *occupation_tile = false;
                         };

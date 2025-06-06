@@ -144,10 +144,12 @@ fn handle_input(
             MenuMode::Crops => {
                 plant_crops(&canvas, map, &selected_tile, player);
             }
+            MenuMode::Trees => {
+                plant_trees(canvas, map, &selected_tile, player);
+            }
             MenuMode::Misc => {
                 perform_misc(player, &canvas, workers, &selected_tile, map);
             }
-            MenuMode::Trees => {}
         }
 
         map.buy_land(selected_tile, player);
@@ -249,6 +251,32 @@ fn plant_crops(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), playe
                 }
             }
         }
+        TileType::Tree { .. } => {}
+    }
+}
+
+fn plant_trees(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), player: &mut Player) {
+    let Some(tile) = map.tiles.get_mut(selected_tile) else {
+        return;
+    };
+
+    if let Some(occ_tile) = map.occupation_map.get_mut(selected_tile) {
+        *occ_tile = false;
+    }
+
+    match tile {
+        TileType::Grass => {
+            let price = canvas.toolbar_data.trees[canvas.selected].price;
+            if player.money >= price {
+                player.money -= price;
+                *tile = TileType::Tree {
+                    tree: canvas.selected,
+                    grow: 0,
+                    stage: 0,
+                };
+            }
+        }
+        _=> {}
     }
 }
 
@@ -275,6 +303,9 @@ fn perform_misc(
 
         match tile {
             TileType::Grass => {}
+            TileType::Tree { .. } => {
+                *tile = TileType::Grass;
+            }
             TileType::Farmland { .. } => {
                 *tile = TileType::Grass;
             }
