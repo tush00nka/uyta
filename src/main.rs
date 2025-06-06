@@ -4,6 +4,7 @@ const SCREEN_WIDTH: i32 = 1280;
 const SCREEN_HEIGHT: i32 = 720;
 
 mod texture_handler;
+use crate::pause_menu::{ButtonState, PauseMenu};
 use crate::texture_handler::TextureHandler;
 
 mod map;
@@ -19,6 +20,7 @@ mod worker;
 use crate::ui::{Canvas, MenuMode};
 use crate::worker::Worker;
 
+mod pause_menu;
 mod ui;
 
 mod utils;
@@ -36,6 +38,7 @@ fn main() {
     let mut player = Player::new();
     let mut workers = vec![Worker::new(0, 0, 0)];
     let mut canvas = Canvas::new();
+    let mut pause_menu = PauseMenu::new(&mut rl);
 
     rl.set_target_fps(
         get_monitor_refresh_rate(get_current_monitor())
@@ -43,22 +46,34 @@ fn main() {
             .unwrap(),
     );
 
+    rl.set_exit_key(None);
+
     let tile_update_time = 0.5;
     let mut timer = 0.0;
 
     while !rl.window_should_close() {
+        pause_menu.toggle_pause(&mut rl);
+        let pause_blocks_mouse = pause_menu.update_buttons(&mut rl);
+
+        // todo: replace with a map maybe
+        if pause_menu.buttons[1].state == ButtonState::Pressed {
+            break;
+        }
+
         timer += rl.get_frame_time();
 
         camera_controller.update_position(&mut rl);
 
-        handle_input(
-            &mut rl,
-            &camera_controller,
-            &canvas,
-            &mut map,
-            &mut player,
-            &mut workers,
-        );
+        if !pause_blocks_mouse {
+            handle_input(
+                &mut rl,
+                &camera_controller,
+                &canvas,
+                &mut map,
+                &mut player,
+                &mut workers,
+            );
+        }
 
         player.update_money();
         player.update_exp();
@@ -86,6 +101,7 @@ fn main() {
             &texture_handler,
             &mut workers,
             &player,
+            &pause_menu,
         );
     }
 }
@@ -130,6 +146,7 @@ fn draw(
     texture_handler: &TextureHandler,
     workers: &mut Vec<Worker>,
     player: &Player,
+    pause_menu: &PauseMenu,
 ) {
     let mut d = rl.begin_drawing(&thread);
     d.clear_background(Color::LIGHTBLUE);
@@ -176,6 +193,8 @@ fn draw(
 
     canvas.draw(&mut d, &map, &texture_handler, player);
     canvas.update(&mut d, player);
+
+    pause_menu.draw(&mut d);
 }
 
 fn plant_crops(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), player: &mut Player) {
