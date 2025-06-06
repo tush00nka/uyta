@@ -158,7 +158,7 @@ impl Map {
         }
     }
 
-    pub fn draw(&self, rl: &mut RaylibDrawHandle, textures: &HashMap<String, Texture2D>) {
+    pub fn draw(&self, rl: &mut RaylibDrawHandle, textures: &HashMap<String, Texture2D>, font: &Font) {
         for expansion_point in self.land_expansion_points.iter() {
             rl.draw_texture_ex(
                 textures.get("land_expansion").unwrap(),
@@ -170,11 +170,14 @@ impl Map {
                 TILE_SCALE as f32,
                 Color::WHITE,
             );
-            rl.draw_text(
-                &format!("{} RUB", self.next_expansion_cost),
-                expansion_point.0 * TILE_SIZE + TILE_SIZE,
-                expansion_point.1 * TILE_SIZE,
-                24,
+            rl.draw_text_ex(
+                font,
+                &format!("{}", self.next_expansion_cost),
+                Vector2::new(
+                (expansion_point.0 * TILE_SIZE + TILE_SIZE) as f32,
+                (expansion_point.1 * TILE_SIZE) as f32),
+                24.,
+                0.,
                 Color::RAYWHITE,
             );
         }

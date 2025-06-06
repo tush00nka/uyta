@@ -40,6 +40,15 @@ fn main() {
     let mut canvas = Canvas::new();
     let mut pause_menu = PauseMenu::new(&mut rl);
 
+    let font = rl
+        .load_font_ex(
+            &thread,
+            "static/tilita.ttf",
+            32,
+            Some("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789"),
+        )
+        .expect("no font???");
+
     rl.set_target_fps(
         get_monitor_refresh_rate(get_current_monitor())
             .try_into()
@@ -118,6 +127,7 @@ fn main() {
             &mut workers,
             &player,
             &pause_menu,
+            &font,
         );
     }
 }
@@ -166,24 +176,25 @@ fn draw(
     workers: &mut Vec<Worker>,
     player: &Player,
     pause_menu: &PauseMenu,
+    font: &Font,
 ) {
     let mut d = rl.begin_drawing(&thread);
     d.clear_background(Color::LIGHTBLUE);
 
     d.draw_mode2D(camera_controller.camera, |mut d2, _| {
-        map.draw(&mut d2, &texture_handler.textures);
+        map.draw(&mut d2, &texture_handler.textures, font);
         workers.iter_mut().for_each(|worker| {
             worker.draw(&mut d2, texture_handler.textures.get("worker").unwrap())
         });
     });
 
     d.draw_rectangle(10, 10, 24 * 4, 28, Color::BLACK.alpha(0.5));
-    // d.draw_text(&format!("{} fps", d.get_fps()), 14, 14, 24, Color::GRAY);
-    d.draw_text(
+    d.draw_text_ex(
+        font,
         &format!("{}", player.display_money),
-        14,
-        14,
-        24,
+        Vector2::new(14., 14.),
+        24.,
+        0.,
         Color::WHITE,
     );
 
@@ -202,18 +213,19 @@ fn draw(
         24,
         Color::DARKORANGE,
     );
-    d.draw_text(
-        &format!("Level {}", player.level),
-        d.get_screen_width() / 4 + 10,
-        10,
-        24,
+    d.draw_text_ex(
+        font,
+        &format!("Уровень {}", player.level),
+        Vector2::new(d.get_screen_width() as f32 / 4. + 10., 10.),
+        24.,
+        0.,
         Color::WHITE,
     );
 
-    canvas.draw(&mut d, &map, &texture_handler, player);
-    canvas.update(&mut d, player);
+    canvas.draw(&mut d, &map, &texture_handler, player, font);
+    canvas.update(&mut d, player, font);
 
-    pause_menu.draw(&mut d);
+    pause_menu.draw(&mut d, font);
 }
 
 fn plant_crops(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), player: &mut Player) {
@@ -276,7 +288,7 @@ fn plant_trees(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), playe
                 };
             }
         }
-        _=> {}
+        _ => {}
     }
 }
 

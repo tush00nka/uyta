@@ -1,6 +1,6 @@
 use raylib::{
     ffi::{CheckCollisionPointRec, MouseButton},
-    prelude::{Color, RaylibDraw, RaylibDrawHandle, Rectangle, Vector2},
+    prelude::{Color, RaylibDraw, RaylibDrawHandle, Rectangle, Vector2}, text::Font,
 };
 use serde::Deserialize;
 
@@ -85,6 +85,7 @@ impl Canvas {
         map: &Map,
         texture_handler: &TextureHandler,
         player: &Player,
+        font: &Font
     ) {
         // draw mode selection buttons (submenus)
         rl.draw_rectangle_rec(
@@ -248,17 +249,19 @@ impl Canvas {
                 "".to_string()
             };
 
-            rl.draw_text(
+            rl.draw_text_ex(
+                font,
                 &format!("{}\n{}", tooltip_pool[i].tooltip, price),
-                2 * (UI_BUTTON_SIZE + UI_GAPS) as i32,
-                (i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS) as i32,
-                UI_BUTTON_SIZE as i32 / 2,
+                Vector2::new(2. * (UI_BUTTON_SIZE + UI_GAPS),
+                i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS),
+                UI_BUTTON_SIZE / 2.,
+                0.,
                 Color::RAYWHITE,
             );
         }
     }
 
-    pub fn update(&mut self, rl: &mut RaylibDrawHandle, player: &Player) {
+    pub fn update(&mut self, rl: &mut RaylibDrawHandle, player: &Player, font: &Font) {
         for i in 0..self.content.len() {
             let rect = self.content[i];
             if unsafe {
@@ -296,16 +299,17 @@ impl Canvas {
                     rl.draw_rectangle(
                         x,
                         y,
-                        format!("Unlock at level {}", pool[0].unlock_level).len() as i32
-                            * (UI_BUTTON_SIZE as i32 / 3),
+                        format!("Откроется на уровне {}", pool[0].unlock_level).len() as i32
+                            * (UI_BUTTON_SIZE as i32 / 6),
                         UI_BUTTON_SIZE as i32 / 2,
                         Color::BLACK.alpha(0.5),
                     );
-                    rl.draw_text(
-                        &format!("Unlock at level {}", pool[0].unlock_level),
-                        x + 5,
-                        y,
-                        UI_BUTTON_SIZE as i32 / 2,
+                    rl.draw_text_ex(
+                        font,
+                        &format!("Откроется на уровне {}", pool[0].unlock_level),
+                        Vector2::new((x+5) as f32, y as f32),
+                        UI_BUTTON_SIZE / 2.,
+                        0.,
                         Color::RAYWHITE,
                     );
                 }
@@ -344,16 +348,17 @@ impl Canvas {
                     rl.draw_rectangle(
                         x,
                         y,
-                        format!("Unlock at level {}", pool[i].unlock_level).len() as i32
-                            * (UI_BUTTON_SIZE as i32 / 3),
+                        format!("Откроется на уровне {}", pool[i].unlock_level).len() as i32
+                            * (UI_BUTTON_SIZE as i32 / 6),
                         UI_BUTTON_SIZE as i32 / 2,
                         Color::BLACK.alpha(0.5),
                     );
-                    rl.draw_text(
-                        &format!("Unlock at level {}", pool[i].unlock_level),
-                        x + 5,
-                        y,
-                        UI_BUTTON_SIZE as i32 / 2,
+                    rl.draw_text_ex(
+                        font,
+                        &format!("Откроется на уровне {}", pool[0].unlock_level),
+                        Vector2::new((x+5) as f32, y as f32),
+                        UI_BUTTON_SIZE / 2.,
+                        0.,
                         Color::RAYWHITE,
                     );
                 }

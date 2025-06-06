@@ -53,7 +53,7 @@ impl PauseMenu {
                         menu_width / 2.,
                         50.,
                     ),
-                    label: "Settings".to_string(),
+                    label: "Настройки".to_string(),
                     state: ButtonState::Normal,
                 };
                 let quit = Button {
@@ -63,7 +63,7 @@ impl PauseMenu {
                         menu_width / 2.,
                         50.,
                     ),
-                    label: "Quit".to_string(),
+                    label: "Выйти из игры".to_string(),
                     state: ButtonState::Normal,
                 };
 
@@ -77,7 +77,7 @@ impl PauseMenu {
                         menu_width / 2.,
                         50.,
                     ),
-                    label: "Toggle fullscreen".to_string(),
+                    label: "Во весь экран".to_string(),
                     state: ButtonState::Normal,
                 };
                 let save = Button {
@@ -87,7 +87,7 @@ impl PauseMenu {
                         menu_width / 2.,
                         50.,
                     ),
-                    label: "Save".to_string(),
+                    label: "Сохранить".to_string(),
                     state: ButtonState::Normal,
                 };
 
@@ -101,7 +101,6 @@ impl PauseMenu {
     pub fn toggle_pause(&mut self, rl: &mut RaylibHandle) {
         if rl.is_key_released(KeyboardKey::KEY_ESCAPE) {
             self.is_paused = !self.is_paused;
-            println!("pause: {}", self.is_paused);
         }
     }
 
@@ -145,7 +144,7 @@ impl PauseMenu {
         blocks_mouse
     }
 
-    pub fn draw(&self, rl: &mut RaylibDrawHandle) {
+    pub fn draw(&self, rl: &mut RaylibDrawHandle, font: &Font) {
         if !self.is_paused {
             return;
         }
@@ -162,11 +161,13 @@ impl PauseMenu {
             menu_height,
             Color::RAYWHITE.alpha(0.5),
         );
-        rl.draw_text(
-            "Menu",
-            screen_width / 2 - 24,
-            screen_height / 2 - menu_height / 2 + 10,
-            24,
+        rl.draw_text_ex(
+            font,
+            "Меню",
+            Vector2::new((screen_width / 2 - 24) as f32,
+            (screen_height / 2 - menu_height / 2 + 10) as f32),
+            24.,
+            0.,
             Color::BLACK,
         );
 
@@ -177,11 +178,12 @@ impl PauseMenu {
                 ButtonState::Pressed => Color::WHITE,
             };
             rl.draw_rectangle_rec(button.rect, color);
-            rl.draw_text(
+            rl.draw_text_ex(
+                font,
                 &button.label,
-                button.rect.x as i32,
-                button.rect.y as i32,
-                24,
+                Vector2::new(button.rect.x, button.rect.y),
+                24.,
+                0.,
                 Color::RAYWHITE,
             );
         }

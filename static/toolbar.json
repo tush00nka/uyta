@@ -1,41 +1,41 @@
 {
     "crops": [
         {
-            "tooltip": "Carrot",
+            "tooltip": "Морковь",
             "unlock_level": 1,
             "price": 20
         },
         {
-            "tooltip": "Cabbage",
+            "tooltip": "Капуста",
             "unlock_level": 3,
             "price": 50
         },
         {
-            "tooltip": "Melon",
+            "tooltip": "Дыня",
             "unlock_level": 5,
             "price": 100
         }
     ],
     "trees": [
         {
-            "tooltip": "Apple Tree",
+            "tooltip": "Яблоня",
             "unlock_level": 1,
             "price": 10
         },
         {
-            "tooltip": "Orange Tree",
+            "tooltip": "Апельсиновое дерево",
             "unlock_level": 10,
             "price": 3000
         }
     ],
     "misc": [
         {
-            "tooltip": "Worker",
+            "tooltip": "Рабочий",
             "unlock_level": 2,
             "price": 100
         },
         {
-            "tooltip": "Remove plants",
+            "tooltip": "Убрать растения",
             "unlock_level": 5,
             "price": 0
         }
