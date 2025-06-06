@@ -16,6 +16,18 @@
             "price": 100
         }
     ],
+    "trees": [
+        {
+            "tooltip": "Apple Tree",
+            "unlock_level": 5,
+            "price": 1000
+        },
+        {
+            "tooltip": "Orange Tree",
+            "unlock_level": 10,
+            "price": 3000
+        }
+    ],
     "misc": [
         {
             "tooltip": "Worker",

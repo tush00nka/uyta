@@ -1,3 +1,5 @@
+use std::f32::MIN_POSITIVE;
+
 use raylib::{
     ffi::{CheckCollisionPointRec, MouseButton},
     prelude::{Color, RaylibDraw, RaylibDrawHandle, Rectangle, Vector2},
@@ -24,6 +26,7 @@ pub struct ToolbarItem {
 #[derive(Deserialize)]
 pub struct ToolbarData {
     pub crops: Vec<ToolbarItem>,
+    pub trees: Vec<ToolbarItem>,
     pub misc: Vec<ToolbarItem>,
 }
 
@@ -36,6 +39,7 @@ impl ToolbarData {
 #[derive(PartialEq)]
 pub enum MenuMode {
     Crops,
+    Trees,
     Misc,
 }
 
@@ -65,6 +69,12 @@ impl Canvas {
                     UI_BUTTON_SIZE,
                     UI_BUTTON_SIZE,
                 ),
+                Rectangle::new(
+                    10.,
+                    3. * UI_BUTTON_SIZE + UI_GAPS * 2.,
+                    UI_BUTTON_SIZE,
+                    UI_BUTTON_SIZE,
+                ),
             ],
             subcontent: vec![],
             toolbar_data: ToolbarData::new(),
@@ -78,10 +88,6 @@ impl Canvas {
         texture_handler: &TextureHandler,
         player: &Player,
     ) {
-        // for node in self.content.iter() {
-        //     rl.draw_rectangle_rec(node.rect, node.bg_color);
-        // }
-
         // draw mode selection buttons (submenus)
         rl.draw_rectangle_rec(
             self.content[0],
@@ -99,20 +105,43 @@ impl Canvas {
             UI_BUTTON_SIZE / TILE_PIXEL_SIZE as f32,
             Color::WHITE,
         );
+
+        let position = Vector2::new(self.content[1].x, self.content[1].y);
+        let color = if self.toolbar_data.trees[0].unlock_level > player.level {
+            Color::GRAY
+        } else {
+            Color::WHITE
+        };
         rl.draw_rectangle_rec(
             self.content[1],
+            if self.mode == MenuMode::Trees {
+                Color::RAYWHITE
+            } else {
+                Color::GRAY
+            },
+        );
+        rl.draw_texture_ex(
+            texture_handler.textures.get("tree_menu").unwrap(),
+            position,
+            0.,
+            UI_BUTTON_SIZE / TILE_PIXEL_SIZE as f32,
+            color,
+        );
+
+        let position = Vector2::new(self.content[2].x, self.content[2].y);
+        let color = if self.toolbar_data.misc[0].unlock_level > player.level {
+            Color::GRAY
+        } else {
+            Color::WHITE
+        };
+        rl.draw_rectangle_rec(
+            self.content[2],
             if self.mode == MenuMode::Misc {
                 Color::RAYWHITE
             } else {
                 Color::GRAY
             },
         );
-        let position = Vector2::new(self.content[1].x, self.content[1].y);
-        let color = if self.toolbar_data.misc[0].unlock_level > player.level {
-            Color::GRAY
-        } else {
-            Color::WHITE
-        };
         rl.draw_texture_ex(
             texture_handler.textures.get("misc_menu").unwrap(),
             position,
@@ -120,9 +149,11 @@ impl Canvas {
             UI_BUTTON_SIZE / TILE_PIXEL_SIZE as f32,
             color,
         );
+
         let submenu_button_amount = match self.mode {
             MenuMode::Crops => map.crops_data.len(),
             MenuMode::Misc => 2,
+            MenuMode::Trees => 2,
         };
         self.subcontent.clear();
         for i in 0..submenu_button_amount {
@@ -169,7 +200,25 @@ impl Canvas {
                         0.,
                         color,
                     );
-                }
+                },
+                MenuMode::Trees => {
+                    tooltip_pool = &self.toolbar_data.trees;
+                    let color = if tooltip_pool[i].unlock_level > player.level {
+                        Color::GRAY
+                    } else {
+                        Color::WHITE
+                    };
+
+                    let id = format!("tree{i}");
+                    rl.draw_texture_pro(
+                        texture_handler.textures.get(&id).unwrap(),
+                        Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32),
+                        rect,
+                        Vector2::zero(),
+                        0.,
+                        color,
+                    );
+                },
                 MenuMode::Misc => {
                     tooltip_pool = &self.toolbar_data.misc;
 
@@ -228,38 +277,34 @@ impl Canvas {
                 };
                 CheckCollisionPointRec(mouse_pos, rect)
             } {
-                // node.bg_color = hovered;
+                let (pool, mode) = match i {
+                    0 => (&self.toolbar_data.crops, MenuMode::Crops),
+                    1 => (&self.toolbar_data.trees, MenuMode::Trees),
+                    2 => (&self.toolbar_data.misc, MenuMode::Misc),
+                    _ => (&self.toolbar_data.misc, MenuMode::Misc),
+                };
+
                 if rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_LEFT) {
-                    match i {
-                        0 => {
-                            self.mode = MenuMode::Crops;
-                            self.selected = 0;
-                        },
-                        1 => {
-                            if self.toolbar_data.misc[0].unlock_level <= player.level {
-                                self.mode = MenuMode::Misc;
-                                self.selected = 0;
-                            }
-                        },
-                        _ => {}
+                    if pool[0].unlock_level <= player.level {
+                        self.mode = mode;
+                        self.selected = 0;
                     }
                 }
 
                 // todo: hardcoded
-                if i == 1 && self.toolbar_data.misc[0].unlock_level > player.level {
+                if pool[0].unlock_level > player.level {
                     let x = rl.get_mouse_position().x as i32;
                     let y = rl.get_mouse_position().y as i32 - UI_BUTTON_SIZE as i32 / 2;
                     rl.draw_rectangle(
                         x,
                         y,
-                        format!("Unlock at level {}", self.toolbar_data.misc[0].unlock_level).len()
-                            as i32
+                        format!("Unlock at level {}", pool[0].unlock_level).len() as i32
                             * (UI_BUTTON_SIZE as i32 / 3),
                         UI_BUTTON_SIZE as i32 / 2,
                         Color::BLACK.alpha(0.5),
                     );
                     rl.draw_text(
-                        &format!("Unlock at level {}", self.toolbar_data.misc[0].unlock_level),
+                        &format!("Unlock at level {}", pool[0].unlock_level),
                         x + 5,
                         y,
                         UI_BUTTON_SIZE as i32 / 2,
@@ -287,6 +332,7 @@ impl Canvas {
             } {
                 let pool: &Vec<ToolbarItem> = match self.mode {
                     MenuMode::Crops => &self.toolbar_data.crops,
+                    MenuMode::Trees => &self.toolbar_data.trees,
                     MenuMode::Misc => &self.toolbar_data.misc,
                 };
 

@@ -73,7 +73,7 @@ fn main() {
                 if pause_menu.buttons[1].state == ButtonState::Pressed {
                     pause_menu.switch_state(&mut rl, PauseMenuState::Main);
                 }
-            },
+            }
         }
 
         timer += rl.get_frame_time();
@@ -147,6 +147,7 @@ fn handle_input(
             MenuMode::Misc => {
                 perform_misc(player, &canvas, workers, &selected_tile, map);
             }
+            MenuMode::Trees => {}
         }
 
         map.buy_land(selected_tile, player);
@@ -224,22 +225,26 @@ fn plant_crops(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), playe
 
     match tile {
         TileType::Grass => {
-            *tile = TileType::Farmland {
-                crop: None,
-                stage: 0,
-            };
+            let price = canvas.toolbar_data.crops[canvas.selected].price;
+            if player.money >= price {
+                player.money -= price;
+                *tile = TileType::Farmland {
+                    crop: canvas.selected,
+                    stage: 0,
+                };
+            }
         }
         TileType::Farmland { crop, stage } => {
             if canvas.mode != MenuMode::Crops {
                 return;
             }
 
-            if crop.is_none() || crop.unwrap() != canvas.selected {
+            if *crop != canvas.selected {
                 let price = canvas.toolbar_data.crops[canvas.selected].price;
                 if player.money >= price {
                     player.money -= price;
                     // plant the seed
-                    *crop = Some(canvas.selected);
+                    *crop = canvas.selected;
                     *stage = 0;
                 }
             }

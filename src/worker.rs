@@ -50,8 +50,7 @@ impl Worker {
                     match tile {
                         TileType::Grass => {}
                         TileType::Farmland { crop, stage } => {
-                            if crop.is_some()
-                                && *stage >= map.crops_data[crop.unwrap()].time_to_grow
+                            if *stage >= map.crops_data[*crop].time_to_grow
                             {
                                 // existing ready to harvest crop
                                 let crop_position =
@@ -85,13 +84,10 @@ impl Worker {
 
             match tile {
                 TileType::Farmland { crop, stage } => {
-                    if crop.is_none() {
-                        self.find_path(map, JobType::Harvest);
-                        return (0,0);
-                    } else if *stage >= map.crops_data[crop.unwrap()].time_to_grow {
+                    if *stage >= map.crops_data[*crop].time_to_grow {
                         // successfully complete task
-                        money = map.crops_data[crop.unwrap()].sell_price;
-                        exp = crop.unwrap() + 1; // higher crop_id == more exp
+                        money = map.crops_data[*crop].sell_price;
+                        exp = *crop + 1; // higher crop_id == more exp
                         *stage = 0;
                         // free this tile from work
                         if let Some(occupation_tile) = map.occupation_map.get_mut(&self.position) {

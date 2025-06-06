@@ -20,7 +20,7 @@ pub struct Crop {
 #[derive(PartialEq)]
 pub enum TileType {
     Grass,
-    Farmland { crop: Option<usize>, stage: usize },
+    Farmland { crop: usize, stage: usize },
 }
 
 #[derive(Deserialize)]
@@ -69,11 +69,7 @@ impl Map {
         for tile in self.tiles.values_mut() {
             match tile {
                 TileType::Farmland { crop, stage } => {
-                    if crop.is_none() {
-                        continue;
-                    }
-
-                    if *stage >= self.crops_data[crop.unwrap()].time_to_grow {
+                    if *stage >= self.crops_data[*crop].time_to_grow {
                         // wait for collect
                         continue;
                     }
@@ -181,10 +177,6 @@ impl Map {
 
             match tile {
                 TileType::Farmland { crop, stage, .. } => {
-                    if crop.is_none() {
-                        continue;
-                    }
-
                     let source = Rectangle::new(
                         *stage as f32 * TILE_PIXEL_SIZE as f32,
                         0.,
@@ -198,7 +190,7 @@ impl Map {
                         TILE_SIZE as f32,
                     );
 
-                    let id: &str = &format!("crop{}", crop.unwrap());
+                    let id: &str = &format!("crop{}", crop);
 
                     rl.draw_texture_pro(
                         textures.get(id).unwrap_or(textures.get("error").unwrap()),
