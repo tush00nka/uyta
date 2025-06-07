@@ -19,7 +19,7 @@ pub struct WorkerHandler {
 
 impl WorkerHandler {
     pub fn new() -> Self {
-        let res = parse_json("workers_save.json");
+        let res = parse_json("dynamic/workers_save.json");
 
         match res {
             Ok(handler) => handler,
@@ -53,7 +53,7 @@ impl WorkerHandler {
 
     pub fn save(&self) {
         let serialized = serde_json::to_string_pretty(self).expect("couldn't save workers data");
-        std::fs::write("workers_save.json", serialized)
+        std::fs::write("dynamic/workers_save.json", serialized)
             .expect("Couldn't write map data to json file");
     }
 }

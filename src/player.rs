@@ -22,7 +22,7 @@ pub struct Player {
 
 impl Player {
     pub fn new() -> Self {
-        let player = parse_json("player_save.json");
+        let player = parse_json("dynamic/player_save.json");
 
         match player {
             Ok(_) => return player.unwrap(),
@@ -202,6 +202,6 @@ impl Player {
 
     pub fn save(&self) {
         let serialized = serde_json::to_string_pretty(self).expect("err");
-        std::fs::write("player_save.json", serialized).expect("Couldn't write player data to json");
+        std::fs::write("dynamic/player_save.json", serialized).expect("Couldn't write player data to json");
     }
 }

@@ -66,7 +66,7 @@ pub struct Map {
 impl Map {
     pub fn new() -> Self {
         let static_data: MapStaticData = parse_json("static/tiles.json").expect("Can't deserialize");
-        let dynamic_data = parse_json("map_save.json");
+        let dynamic_data = parse_json("dynamic/map_save.json");
 
         let has_save_file = match dynamic_data {
             Ok(_) => true,
@@ -350,7 +350,7 @@ impl Map {
 
     pub fn save(&self) {
         let serialized = serde_json::to_string_pretty(&self.dynamic_data).expect("err");
-        std::fs::write("map_save.json", serialized)
+        std::fs::write("dynamic/map_save.json", serialized)
             .expect("Couldn't write map data to json");
     }
 }
