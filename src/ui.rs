@@ -31,7 +31,7 @@ pub struct ToolbarData {
 
 impl ToolbarData {
     fn new() -> Self {
-        parse_json("static/toolbar.json")
+        parse_json("static/toolbar.json").expect("no toolbar")
     }
 }
 
@@ -151,7 +151,7 @@ impl Canvas {
         );
 
         let submenu_button_amount = match self.mode {
-            MenuMode::Crops => map.crops_data.len(),
+            MenuMode::Crops => map.static_data.crops_data.len(),
             MenuMode::Misc => 2,
             MenuMode::Trees => 2,
         };
@@ -190,7 +190,7 @@ impl Canvas {
                     rl.draw_texture_pro(
                         texture_handler.textures.get(&id).unwrap(),
                         Rectangle::new(
-                            map.crops_data[i].time_to_grow as f32 * TILE_PIXEL_SIZE as f32,
+                            map.static_data.crops_data[i].time_to_grow as f32 * TILE_PIXEL_SIZE as f32,
                             0.0,
                             TILE_PIXEL_SIZE as f32,
                             TILE_PIXEL_SIZE as f32,
@@ -213,7 +213,7 @@ impl Canvas {
                     rl.draw_texture_pro(
                         texture_handler.textures.get(&id).unwrap(),
                         Rectangle::new(
-                            (map.tree_data[i].time_to_grow / 5) as f32 * TILE_PIXEL_SIZE as f32,
+                            (map.static_data.tree_data[i].time_to_grow / 5) as f32 * TILE_PIXEL_SIZE as f32,
                             0.0,
                             TILE_PIXEL_SIZE as f32,
                             TILE_PIXEL_SIZE as f32 * 2.,

@@ -8,7 +8,7 @@ use crate::{
     texture_handler::TextureHandler,
     tutorial::Tutorial,
     ui::Canvas,
-    worker::Worker,
+    worker::WorkerHandler,
 };
 
 pub fn draw_bg(rl: &mut RaylibDrawHandle, bg_shader: &mut Shader, bg_texture: &Texture2D) {
@@ -24,15 +24,15 @@ pub fn draw_for_camera(
     map: &Map,
     camera_controller: &CameraController,
     texture_handler: &TextureHandler,
-    workers: &mut Vec<Worker>,
+    worker_handler: &mut WorkerHandler,
     font: &Font,
     selected_tile: (i32, i32),
 ) {
     let mut d2 = rl.begin_mode2D(camera_controller.camera);
 
-    map.draw(&mut d2, &texture_handler.textures, workers, font);
+    map.draw(&mut d2, &texture_handler.textures, worker_handler, font);
 
-    if !map.tiles.contains_key(&selected_tile) {
+    if !map.dynamic_data.tiles.contains_key(&selected_tile) {
         return;
     }
 

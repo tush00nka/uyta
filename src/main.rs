@@ -19,7 +19,7 @@ use crate::player::Player;
 mod worker;
 use crate::tutorial::Tutorial;
 use crate::ui::{Canvas, MenuMode};
-use crate::worker::Worker;
+use crate::worker::WorkerHandler;
 
 mod pause_menu;
 mod ui;
@@ -94,7 +94,7 @@ fn main() {
     let mut camera_controller = CameraController::new();
     let mut map = Map::new();
     let mut player = Player::new();
-    let mut workers = vec![Worker::new(0, 0, 0)];
+    let mut worker_handler = WorkerHandler::new();
     let mut canvas = Canvas::new();
     let mut pause_menu = PauseMenu::new(&mut rl);
     let mut tutorial = Tutorial::new();
@@ -185,7 +185,7 @@ fn main() {
                 &canvas,
                 &mut map,
                 &mut player,
-                &mut workers,
+                &mut worker_handler,
                 selected_tile,
                 &mut tutorial
             );
@@ -202,12 +202,7 @@ fn main() {
 
             map.update_tiles();
 
-            workers.iter_mut().for_each(|worker| {
-                // feels weird and illegal
-                let (money, exp) = worker.follow_path(&mut map, &sounds);
-                player.money += money;
-                player.exp += exp;
-            });
+            worker_handler.advance_workers(&mut player, &mut map, &sounds);
         }
 
         let mut d = rl.begin_drawing(&thread);
@@ -218,7 +213,7 @@ fn main() {
             &map,
             &camera_controller,
             &texture_handler,
-            &mut workers,
+            &mut worker_handler,
             &font,
             selected_tile,
         );
@@ -234,6 +229,10 @@ fn main() {
             rl_audio.get_master_volume(),
         );
     }
+
+    worker_handler.save();
+    player.save();
+    map.save();
 }
 
 fn handle_input(
@@ -241,7 +240,7 @@ fn handle_input(
     canvas: &Canvas,
     map: &mut Map,
     player: &mut Player,
-    workers: &mut Vec<Worker>,
+    worker_handler: &mut WorkerHandler,
     selected_tile: (i32, i32),
     tutorial: &mut Tutorial,
 ) {
@@ -256,7 +255,7 @@ fn handle_input(
                 player.plant_trees(canvas, map, &selected_tile);
             }
             MenuMode::Misc => {
-                player.perform_misc(canvas, workers, &selected_tile, map);
+                player.perform_misc(canvas, worker_handler, &selected_tile, map);
             }
         }
 

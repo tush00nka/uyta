@@ -4,12 +4,62 @@ use std::{
 };
 
 use raylib::prelude::*;
+use serde::{Deserialize, Serialize};
 
-use crate::map::{Map, TILE_PIXEL_SIZE, TILE_SIZE, TileType};
+use crate::{
+    map::{Map, TILE_PIXEL_SIZE, TILE_SIZE, TileType},
+    player::Player,
+    utils::parse_json,
+};
 
+#[derive(Serialize, Deserialize)]
+pub struct WorkerHandler {
+    pub workers: Vec<Worker>,
+}
+
+impl WorkerHandler {
+    pub fn new() -> Self {
+        let res = parse_json("workers_save.json");
+
+        match res {
+            Ok(handler) => handler,
+            Err(_) => {
+                println!("no worker");
+
+                Self {
+                    workers: vec![Worker::new(0, 0)],
+                }
+            }
+        }
+    }
+
+    pub fn add_worker(&mut self, worker: Worker) {
+        self.workers.push(worker);
+    }
+
+    pub fn advance_workers(
+        &mut self,
+        player: &mut Player,
+        map: &mut Map,
+        sounds: &HashMap<String, Sound<'_>>,
+    ) {
+        self.workers.iter_mut().for_each(|worker| {
+            // feels weird and illegal
+            let (money, exp) = worker.follow_path(map, &sounds);
+            player.money += money;
+            player.exp += exp;
+        });
+    }
+
+    pub fn save(&self) {
+        let serialized = serde_json::to_string_pretty(self).expect("couldn't save workers data");
+        std::fs::write("workers_save.json", serialized)
+            .expect("Couldn't write map data to json file");
+    }
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct Worker {
-    #[allow(unused)]
-    id: usize,
     pub position: (i32, i32),
     display_position: (f32, f32),
     path: Vec<(i32, i32)>,
@@ -21,9 +71,8 @@ pub enum JobType {
 }
 
 impl Worker {
-    pub fn new(id: usize, x: i32, y: i32) -> Self {
+    pub fn new(x: i32, y: i32) -> Self {
         Self {
-            id,
             position: (x, y),
             display_position: (
                 (x * TILE_SIZE) as f32,
@@ -42,8 +91,10 @@ impl Worker {
                 let mut shortest_distance = INFINITY;
 
                 // get closest crop tile
-                for (tile_position, tile) in map.tiles.iter() {
-                    if let Some(occupation_tile) = map.occupation_map.get(tile_position) {
+                for (tile_position, tile) in map.dynamic_data.tiles.iter() {
+                    if let Some(occupation_tile) =
+                        map.dynamic_data.occupation_map.get(tile_position)
+                    {
                         if *occupation_tile {
                             // this tile is taken by other worker
                             continue;
@@ -53,7 +104,7 @@ impl Worker {
                     match tile {
                         TileType::Grass => {}
                         TileType::Farmland { crop, stage } => {
-                            if *stage >= map.crops_data[*crop].time_to_grow {
+                            if *stage >= map.static_data.crops_data[*crop].time_to_grow {
                                 // existing ready to harvest crop
                                 let crop_position =
                                     Vector2::new(tile_position.0 as f32, tile_position.1 as f32);
@@ -67,7 +118,7 @@ impl Worker {
                             }
                         }
                         TileType::Tree { tree, stage, .. } => {
-                            if *stage >= map.tree_data[*tree].time_to_fruit {
+                            if *stage >= map.static_data.tree_data[*tree].time_to_fruit {
                                 // ready to collect from tree
                                 let tree_position =
                                     Vector2::new(tile_position.0 as f32, tile_position.1 as f32);
@@ -87,7 +138,9 @@ impl Worker {
             } // _ => target_position = (0, 0),
         }
 
-        map.occupation_map.insert(target_position, true);
+        map.dynamic_data
+            .occupation_map
+            .insert(target_position, true);
         target_position
     }
 
@@ -97,20 +150,22 @@ impl Worker {
         sounds: &HashMap<String, Sound<'_>>,
     ) -> (usize, usize) {
         let Some(next_position) = self.path.get(0) else {
-            let tile = map.tiles.get_mut(&self.position).unwrap();
+            let tile = map.dynamic_data.tiles.get_mut(&self.position).unwrap();
             let mut money = 0;
             let mut exp = 0;
 
             // harvest
             match tile {
                 TileType::Farmland { crop, stage } => {
-                    if *stage >= map.crops_data[*crop].time_to_grow {
+                    if *stage >= map.static_data.crops_data[*crop].time_to_grow {
                         // successfully complete task
-                        money = map.crops_data[*crop].sell_price;
+                        money = map.static_data.crops_data[*crop].sell_price;
                         exp = *crop + 1; // higher crop_id == more exp
                         *stage = 0;
                         // free this tile from work
-                        if let Some(occupation_tile) = map.occupation_map.get_mut(&self.position) {
+                        if let Some(occupation_tile) =
+                            map.dynamic_data.occupation_map.get_mut(&self.position)
+                        {
                             *occupation_tile = false;
                         };
                         let rand = rand::random_range(0..5);
@@ -120,12 +175,14 @@ impl Worker {
                     }
                 }
                 TileType::Tree { tree, stage, .. } => {
-                    if *stage >= map.tree_data[*tree].time_to_fruit {
-                        money = map.tree_data[*tree].sell_price;
+                    if *stage >= map.static_data.tree_data[*tree].time_to_fruit {
+                        money = map.static_data.tree_data[*tree].sell_price;
                         exp = *tree + 1;
                         *stage = 0;
 
-                        if let Some(occupation_tile) = map.occupation_map.get_mut(&self.position) {
+                        if let Some(occupation_tile) =
+                            map.dynamic_data.occupation_map.get_mut(&self.position)
+                        {
                             *occupation_tile = false;
                         };
                         let rand = rand::random_range(0..5);
@@ -150,7 +207,9 @@ impl Worker {
         let start_position = self.position;
         let target_position = self.find_closest_target(map, job);
 
-        if !map.tiles.contains_key(&start_position) || !map.tiles.contains_key(&target_position) {
+        if !map.dynamic_data.tiles.contains_key(&start_position)
+            || !map.dynamic_data.tiles.contains_key(&target_position)
+        {
             return None;
         }
 
@@ -184,7 +243,9 @@ impl Worker {
                     current_position.1 + direction.1,
                 );
 
-                if visited.contains_key(&next_position) || !map.tiles.contains_key(&next_position) {
+                if visited.contains_key(&next_position)
+                    || !map.dynamic_data.tiles.contains_key(&next_position)
+                {
                     continue;
                 }
 

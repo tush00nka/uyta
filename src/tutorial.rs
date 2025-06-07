@@ -1,5 +1,7 @@
 use raylib::prelude::*;
 
+use crate::{player::Player, utils::parse_json};
+
 struct TutorialStep {
     label: String,
     completed: bool,
@@ -21,12 +23,19 @@ pub struct Tutorial {
 
 impl Tutorial {
     pub fn new() -> Self {
+        let player: Result<Player, serde_json::Error> = parse_json("player_save.json");
+
+        let hidden = match player {
+            Ok(_) => true,
+            Err(_) => false,
+        };
+
         Self {
             steps: vec![
                 TutorialStep::new("Перемещайте камеру при помощи [W, A, S, D]".to_string()),
                 TutorialStep::new("Посадите морковь на острове при помощи [ЛКМ]".to_string()),
             ],
-            hidden: false
+            hidden
         }
     }
 

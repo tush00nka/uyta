@@ -1,11 +1,17 @@
 use std::collections::HashMap;
 
 use raylib::{audio::Sound, prelude::*};
+use serde::{Deserialize, Serialize};
 
 use crate::{
-    map::{Map, TileType}, tutorial::Tutorial, ui::{Canvas, MenuMode}, worker::Worker
+    map::{Map, TileType},
+    tutorial::Tutorial,
+    ui::{Canvas, MenuMode},
+    utils::parse_json,
+    worker::{Worker, WorkerHandler},
 };
 
+#[derive(Serialize, Deserialize)]
 pub struct Player {
     pub money: usize,
     display_money: usize,
@@ -16,6 +22,13 @@ pub struct Player {
 
 impl Player {
     pub fn new() -> Self {
+        let player = parse_json("player_save.json");
+
+        match player {
+            Ok(_) => return player.unwrap(),
+            Err(_) => {}
+        }
+
         Self {
             money: 100,
             display_money: 0,
@@ -79,12 +92,18 @@ impl Player {
         );
     }
 
-    pub fn plant_crops(&mut self, canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), tutorial: &mut Tutorial) {
-        let Some(tile) = map.tiles.get_mut(selected_tile) else {
+    pub fn plant_crops(
+        &mut self,
+        canvas: &Canvas,
+        map: &mut Map,
+        selected_tile: &(i32, i32),
+        tutorial: &mut Tutorial,
+    ) {
+        let Some(tile) = map.dynamic_data.tiles.get_mut(selected_tile) else {
             return;
         };
 
-        if let Some(occ_tile) = map.occupation_map.get_mut(selected_tile) {
+        if let Some(occ_tile) = map.dynamic_data.occupation_map.get_mut(selected_tile) {
             *occ_tile = false;
         }
 
@@ -121,11 +140,11 @@ impl Player {
     }
 
     pub fn plant_trees(&mut self, canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32)) {
-        let Some(tile) = map.tiles.get_mut(selected_tile) else {
+        let Some(tile) = map.dynamic_data.tiles.get_mut(selected_tile) else {
             return;
         };
 
-        if let Some(occ_tile) = map.occupation_map.get_mut(selected_tile) {
+        if let Some(occ_tile) = map.dynamic_data.occupation_map.get_mut(selected_tile) {
             *occ_tile = false;
         }
 
@@ -148,21 +167,24 @@ impl Player {
     pub fn perform_misc(
         &mut self,
         canvas: &Canvas,
-        workers: &mut Vec<Worker>,
+        worker_handler: &mut WorkerHandler,
         selected_tile: &(i32, i32),
         map: &mut Map,
     ) {
-        if canvas.selected == 0 && self.money >= 100 && map.tiles.contains_key(selected_tile) {
-            workers.push(Worker::new(workers.len(), selected_tile.0, selected_tile.1));
+        if canvas.selected == 0
+            && self.money >= 100
+            && map.dynamic_data.tiles.contains_key(selected_tile)
+        {
+            worker_handler.add_worker(Worker::new(selected_tile.0, selected_tile.1));
             self.money -= canvas.toolbar_data.misc[canvas.selected].price;
         }
 
         if canvas.selected == 1 {
-            let Some(tile) = map.tiles.get_mut(&selected_tile) else {
+            let Some(tile) = map.dynamic_data.tiles.get_mut(&selected_tile) else {
                 return;
             };
 
-            if let Some(occ_tile) = map.occupation_map.get_mut(&selected_tile) {
+            if let Some(occ_tile) = map.dynamic_data.occupation_map.get_mut(&selected_tile) {
                 *occ_tile = false;
             }
 
@@ -176,5 +198,10 @@ impl Player {
                 }
             }
         }
+    }
+
+    pub fn save(&self) {
+        let serialized = serde_json::to_string_pretty(self).expect("err");
+        std::fs::write("player_save.json", serialized).expect("Couldn't write player data to json");
     }
 }

@@ -1,9 +1,10 @@
 use itertools::Itertools;
 use raylib::prelude::*;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
+use serde_with::serde_as;
 use std::collections::HashMap;
 
-use crate::{player::Player, utils::parse_json, worker::Worker};
+use crate::{player::Player, utils::parse_json, worker::WorkerHandler};
 
 pub const CHUNK_WIDTH: usize = 5;
 pub const CHUNK_HEIGHT: usize = 5;
@@ -25,7 +26,7 @@ pub struct Tree {
     pub sell_price: usize,
 }
 
-#[derive(PartialEq, PartialOrd, Eq, Ord)]
+#[derive(PartialEq, PartialOrd, Eq, Ord, Serialize, Deserialize)]
 pub enum TileType {
     Grass,
     Tree {
@@ -40,53 +41,78 @@ pub enum TileType {
 }
 
 #[derive(Deserialize)]
-pub struct Map {
+pub struct MapStaticData {
     pub crops_data: Vec<Crop>,
     pub tree_data: Vec<Tree>,
-    #[serde(skip_deserializing)]
+}
+
+#[serde_as]
+#[derive(Deserialize, Serialize)]
+pub struct MapDynamicData {
+    #[serde_as(as = "Vec<(_, _)>")]
     pub tiles: HashMap<(i32, i32), TileType>,
-    #[serde(skip_deserializing)]
+    #[serde_as(as = "Vec<(_, _)>")]
     pub occupation_map: HashMap<(i32, i32), bool>,
-    #[serde(skip_deserializing)]
+    #[serde_as(as = "Vec<(_, _)>")]
     land_expansion_points: Vec<(i32, i32)>,
-    #[serde(skip_deserializing)]
     next_expansion_cost: usize,
+}
+
+pub struct Map {
+    pub static_data: MapStaticData,
+    pub dynamic_data: MapDynamicData,
 }
 
 impl Map {
     pub fn new() -> Self {
-        let mut map: Self = parse_json("static/tiles.json");
+        let static_data: MapStaticData = parse_json("static/tiles.json").expect("Can't deserialize");
+        let dynamic_data = parse_json("map_save.json");
 
-        map.tiles = HashMap::new();
-        map.occupation_map = HashMap::new();
-        map.next_expansion_cost = 1000;
+        let has_save_file = match dynamic_data {
+            Ok(_) => true,
+            Err(_) => false,
+        };
+
+        if has_save_file {
+            return Self {
+                static_data,
+                dynamic_data: dynamic_data.unwrap(),
+            }
+        }
+
+        let mut dynamic_data = MapDynamicData {
+            tiles: HashMap::new(),
+            occupation_map: HashMap::new(),
+            land_expansion_points: vec![],
+            next_expansion_cost: 1000,
+        };
 
         let half_width = CHUNK_WIDTH as i32 / 2;
         let half_height = CHUNK_HEIGHT as i32 / 2;
 
         for x in -half_width..=half_width {
             for y in -half_height..=half_height {
-                map.tiles.insert((x, y), TileType::Grass);
+                dynamic_data.tiles.insert((x, y), TileType::Grass);
             }
         }
 
         let directions = [(0, 1), (1, 0), (0, -1), (-1, 0)];
 
         for direction in directions {
-            map.land_expansion_points.push((
+            dynamic_data.land_expansion_points.push((
                 direction.0 * CHUNK_WIDTH as i32,
                 direction.1 * CHUNK_HEIGHT as i32,
             ));
         }
 
-        map
+        Self { static_data, dynamic_data }
     }
 
     pub fn update_tiles(&mut self) {
-        for tile in self.tiles.values_mut() {
+        for tile in self.dynamic_data.tiles.values_mut() {
             match tile {
                 TileType::Farmland { crop, stage } => {
-                    if *stage >= self.crops_data[*crop].time_to_grow {
+                    if *stage >= self.static_data.crops_data[*crop].time_to_grow {
                         // wait for collect
                         continue;
                     }
@@ -94,13 +120,13 @@ impl Map {
                     *stage += 1;
                 }
                 TileType::Tree { tree, grow, stage } => {
-                    if *stage >= self.tree_data[*tree].time_to_fruit
-                        && *grow >= self.tree_data[*tree].time_to_grow
+                    if *stage >= self.static_data.tree_data[*tree].time_to_fruit
+                        && *grow >= self.static_data.tree_data[*tree].time_to_grow
                     {
                         continue;
                     }
 
-                    if *grow >= self.tree_data[*tree].time_to_grow {
+                    if *grow >= self.static_data.tree_data[*tree].time_to_grow {
                         *stage += 1;
                         continue;
                     }
@@ -113,16 +139,16 @@ impl Map {
     }
 
     pub fn buy_land(&mut self, selected_tile: (i32, i32), player: &mut Player) {
-        if player.money < self.next_expansion_cost {
+        if player.money < self.dynamic_data.next_expansion_cost {
             return;
         }
 
         let mut index: Option<usize> = None;
 
-        for expansion_point in self.land_expansion_points.iter() {
+        for expansion_point in self.dynamic_data.land_expansion_points.iter() {
             if selected_tile == *expansion_point {
                 index = Some(
-                    self.land_expansion_points
+                    self.dynamic_data.land_expansion_points
                         .iter()
                         .position(|current| *current == selected_tile)
                         .unwrap(),
@@ -135,11 +161,11 @@ impl Map {
             return;
         }
 
-        player.money -= self.next_expansion_cost;
-        self.next_expansion_cost *= 3;
+        player.money -= self.dynamic_data.next_expansion_cost;
+        self.dynamic_data.next_expansion_cost *= 3;
 
-        let point = self.land_expansion_points[index.unwrap()];
-        self.land_expansion_points.remove(index.unwrap());
+        let point = self.dynamic_data.land_expansion_points[index.unwrap()];
+        self.dynamic_data.land_expansion_points.remove(index.unwrap());
 
         let neg_half_width = -(CHUNK_WIDTH as i32 / 2) + point.0;
         let pos_half_width = CHUNK_WIDTH as i32 / 2 + point.0;
@@ -148,14 +174,14 @@ impl Map {
 
         for x in neg_half_width..=pos_half_width {
             for y in neg_half_height..=pos_half_height {
-                self.tiles.insert((x, y), TileType::Grass);
+                self.dynamic_data.tiles.insert((x, y), TileType::Grass);
             }
         }
 
         let directions = [(0, 1), (1, 0), (0, -1), (-1, 0)];
 
         for direction in directions {
-            self.land_expansion_points.push((
+            self.dynamic_data.land_expansion_points.push((
                 direction.0 * CHUNK_WIDTH as i32 + point.0,
                 direction.1 * CHUNK_HEIGHT as i32 + point.1,
             ));
@@ -166,12 +192,12 @@ impl Map {
         &self,
         rl: &mut RaylibDrawHandle,
         textures: &HashMap<String, Texture2D>,
-        workers: &mut Vec<Worker>,
+        worker_handler: &mut WorkerHandler,
         font: &Font,
     ) {
         let expansion_texture = textures.get("land_expansion").unwrap();
 
-        for expansion_point in self.land_expansion_points.iter() {
+        for expansion_point in self.dynamic_data.land_expansion_points.iter() {
             rl.draw_texture_ex(
                 expansion_texture,
                 Vector2::new(
@@ -184,10 +210,10 @@ impl Map {
             );
             rl.draw_text_ex(
                 font,
-                &format!("{}", self.next_expansion_cost),
+                &format!("{}", self.dynamic_data.next_expansion_cost),
                 Vector2::new(
                     (expansion_point.0 * TILE_SIZE
-                        + self.next_expansion_cost.to_string().chars().count() as i32 * 2)
+                        + self.dynamic_data.next_expansion_cost.to_string().chars().count() as i32 * 2)
                         as f32,
                     (expansion_point.1 * TILE_SIZE - TILE_SIZE / 3) as f32,
                 ),
@@ -199,7 +225,7 @@ impl Map {
 
         let border_texture = textures.get("borders").unwrap();
 
-        for (position, tile) in self.tiles.iter().sorted() {
+        for (position, tile) in self.dynamic_data.tiles.iter().sorted() {
             let texture_id = match tile {
                 TileType::Grass => "grass",
                 TileType::Tree { .. } => "grass",
@@ -222,7 +248,7 @@ impl Map {
 
             for direction in directions {
                 let pos = (position.0 + direction.0, position.1 + direction.1);
-                if !self.tiles.contains_key(&pos) {
+                if !self.dynamic_data.tiles.contains_key(&pos) {
                     rl.draw_texture_pro(
                         border_texture,
                         Rectangle::new(
@@ -246,7 +272,7 @@ impl Map {
         }
 
         // two loops bad, but better worker rendering
-        for (position, tile) in self.tiles.iter().sorted() {
+        for (position, tile) in self.dynamic_data.tiles.iter().sorted() {
             match tile {
                 TileType::Farmland { crop, stage, .. } => {
                     let source = Rectangle::new(
@@ -274,12 +300,12 @@ impl Map {
                     );
                 }
                 TileType::Tree { tree, grow, stage } => {
-                    let ttg = self.tree_data[*tree].time_to_grow;
+                    let ttg = self.static_data.tree_data[*tree].time_to_grow;
 
                     let offset = if *grow < ttg {
                         (*grow / 5) as f32 * TILE_PIXEL_SIZE as f32
                     } else {
-                        if *stage >= self.tree_data[*tree].time_to_fruit {
+                        if *stage >= self.static_data.tree_data[*tree].time_to_fruit {
                             (ttg / 5) as f32 * TILE_PIXEL_SIZE as f32
                         } else {
                             ((ttg - 1) / 5) as f32 * TILE_PIXEL_SIZE as f32
@@ -314,12 +340,18 @@ impl Map {
             }
 
             let worker_texture = textures.get("worker").unwrap();
-            workers.iter_mut().for_each(|worker| {
+            worker_handler.workers.iter_mut().for_each(|worker| {
                 if worker.position == *position {
                     worker.draw(rl, worker_texture);
                 }
             });
         }
+    }
+
+    pub fn save(&self) {
+        let serialized = serde_json::to_string_pretty(&self.dynamic_data).expect("err");
+        std::fs::write("map_save.json", serialized)
+            .expect("Couldn't write map data to json");
     }
 }
 
