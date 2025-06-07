@@ -92,9 +92,9 @@ impl Canvas {
         rl.draw_rectangle_rec(
             self.content[0],
             if self.mode == MenuMode::Crops {
-                Color::RAYWHITE
+                Color::RAYWHITE.alpha(0.9)
             } else {
-                Color::GRAY
+                Color::BLACK.alpha(0.5)
             },
         );
         let position = Vector2::new(self.content[0].x, self.content[0].y);
@@ -115,9 +115,9 @@ impl Canvas {
         rl.draw_rectangle_rec(
             self.content[1],
             if self.mode == MenuMode::Trees {
-                Color::RAYWHITE
+                Color::RAYWHITE.alpha(0.9)
             } else {
-                Color::GRAY
+                Color::BLACK.alpha(0.5)
             },
         );
         rl.draw_texture_ex(
@@ -137,9 +137,9 @@ impl Canvas {
         rl.draw_rectangle_rec(
             self.content[2],
             if self.mode == MenuMode::Misc {
-                Color::RAYWHITE
+                Color::RAYWHITE.alpha(0.9)
             } else {
-                Color::GRAY
+                Color::BLACK.alpha(0.5)
             },
         );
         rl.draw_texture_ex(
@@ -165,9 +165,9 @@ impl Canvas {
             };
 
             let color = if self.selected == i {
-                Color::RAYWHITE
+                Color::RAYWHITE.alpha(0.9)
             } else {
-                Color::GRAY
+                Color::BLACK.alpha(0.5)
             };
 
             rl.draw_rectangle_rec(rect, color);

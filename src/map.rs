@@ -117,9 +117,6 @@ impl Map {
             return;
         }
 
-        player.money -= self.next_expansion_cost;
-        self.next_expansion_cost *= 3;
-
         let mut index: Option<usize> = None;
 
         for expansion_point in self.land_expansion_points.iter() {
@@ -127,7 +124,7 @@ impl Map {
                 index = Some(
                     self.land_expansion_points
                         .iter()
-                        .position(|current| *current == *expansion_point)
+                        .position(|current| *current == selected_tile)
                         .unwrap(),
                 );
                 break;
@@ -137,6 +134,9 @@ impl Map {
         if index.is_none() {
             return;
         }
+
+        player.money -= self.next_expansion_cost;
+        self.next_expansion_cost *= 3;
 
         let point = self.land_expansion_points[index.unwrap()];
         self.land_expansion_points.remove(index.unwrap());
@@ -186,8 +186,10 @@ impl Map {
                 font,
                 &format!("{}", self.next_expansion_cost),
                 Vector2::new(
-                    (expansion_point.0 * TILE_SIZE + TILE_SIZE) as f32,
-                    (expansion_point.1 * TILE_SIZE) as f32,
+                    (expansion_point.0 * TILE_SIZE
+                        + self.next_expansion_cost.to_string().chars().count() as i32 * 2)
+                        as f32,
+                    (expansion_point.1 * TILE_SIZE - TILE_SIZE / 3) as f32,
                 ),
                 24.,
                 0.,

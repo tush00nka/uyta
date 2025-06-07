@@ -1,4 +1,9 @@
-use raylib::{ffi::CheckCollisionPointRec, prelude::*};
+use raylib::{
+    ffi::CheckCollisionPointRec,
+    prelude::*,
+};
+
+use crate::map::TILE_SCALE;
 
 pub struct Button {
     rect: Rectangle,
@@ -179,7 +184,7 @@ impl PauseMenu {
             screen_height / 2 - menu_height / 2,
             menu_width,
             menu_height,
-            Color::RAYWHITE.alpha(0.5),
+            Color::BLACK.alpha(0.8),
         );
         rl.draw_text_ex(
             font,
@@ -190,20 +195,23 @@ impl PauseMenu {
             ),
             24.,
             0.,
-            Color::BLACK,
+            Color::RAYWHITE,
         );
 
         for button in self.buttons.iter() {
             let color = match button.state {
-                ButtonState::Normal => Color::DARKGRAY,
-                ButtonState::Hovered => Color::GRAY,
-                ButtonState::Pressed => Color::WHITE,
+                ButtonState::Normal => Color::GRAY,
+                ButtonState::Hovered => Color::RAYWHITE,
+                ButtonState::Pressed => Color::GRAY,
             };
-            rl.draw_rectangle_rec(button.rect, color);
+            rl.draw_rectangle_lines_ex(button.rect, TILE_SCALE as f32, color);
             rl.draw_text_ex(
                 font,
                 &button.label,
-                Vector2::new(button.rect.x, button.rect.y),
+                Vector2::new(
+                    button.rect.x + button.rect.width / 2. - button.label.chars().count() as f32 * 6.,
+                    button.rect.y + button.rect.height / 2. - 12.,
+                ),
                 24.,
                 0.,
                 Color::RAYWHITE,
@@ -213,10 +221,13 @@ impl PauseMenu {
         if self.state == PauseMenuState::Settings {
             rl.draw_text_ex(
                 font,
-                &format!("Общая громкость\n{}%", (master_volume * 100.).round() as usize),
+                &format!(
+                    "Общая громкость\n{}%",
+                    (master_volume * 100.).round() as usize
+                ),
                 Vector2::new(
-                    screen_width as f32/ 2. - menu_width as f32 / 4. + 60.,
-                    screen_height as f32/ 2. - menu_height as f32/ 2. + 60.,
+                    screen_width as f32 / 2. - menu_width as f32 / 4. + 60.,
+                    screen_height as f32 / 2. - menu_height as f32 / 2. + 60.,
                 ),
                 24.,
                 0.,
