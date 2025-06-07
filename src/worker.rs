@@ -3,6 +3,7 @@ use std::{
     f32::INFINITY,
 };
 
+use rand::random;
 use raylib::prelude::*;
 
 use crate::map::{Map, TILE_PIXEL_SIZE, TILE_SIZE, TileType};
@@ -25,7 +26,10 @@ impl Worker {
         Self {
             id,
             position: (x, y),
-            display_position: ((x * TILE_SIZE) as f32, (y * TILE_SIZE - TILE_SIZE / 2) as f32),
+            display_position: (
+                (x * TILE_SIZE) as f32,
+                (y * TILE_SIZE - TILE_SIZE / 2) as f32,
+            ),
             path: vec![],
         }
     }
@@ -88,12 +92,17 @@ impl Worker {
         target_position
     }
 
-    pub fn follow_path(&mut self, map: &mut Map) -> (usize, usize) {
+    pub fn follow_path(
+        &mut self,
+        map: &mut Map,
+        sounds: &HashMap<String, Sound<'_>>,
+    ) -> (usize, usize) {
         let Some(next_position) = self.path.get(0) else {
             let tile = map.tiles.get_mut(&self.position).unwrap();
             let mut money = 0;
             let mut exp = 0;
 
+            // harvest
             match tile {
                 TileType::Farmland { crop, stage } => {
                     if *stage >= map.crops_data[*crop].time_to_grow {
@@ -105,6 +114,10 @@ impl Worker {
                         if let Some(occupation_tile) = map.occupation_map.get_mut(&self.position) {
                             *occupation_tile = false;
                         };
+                        let rand = rand::random_range(0..5);
+                        let sound = sounds.get(&format!("harvest{rand}")).unwrap();
+                        sound.set_pitch(rand::random_range(0.9..1.1));
+                        sound.play();
                     }
                 }
                 TileType::Tree { tree, stage, .. } => {
@@ -116,6 +129,10 @@ impl Worker {
                         if let Some(occupation_tile) = map.occupation_map.get_mut(&self.position) {
                             *occupation_tile = false;
                         };
+                        let rand = rand::random_range(0..5);
+                        let sound = sounds.get(&format!("harvest{rand}")).unwrap();
+                        sound.set_pitch(rand::random_range(0.9..1.1));
+                        sound.play();
                     }
                 }
                 _ => {}

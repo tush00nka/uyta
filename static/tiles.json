@@ -16,13 +16,13 @@
     "tree_data": [
         {
             "time_to_grow": 20,
-            "time_to_fruit": 5,
-            "sell_price": 10 
+            "time_to_fruit": 10,
+            "sell_price": 100 
         },
         {
             "time_to_grow": 20,
-            "time_to_fruit": 10,
-            "sell_price": 20
+            "time_to_fruit": 20,
+            "sell_price": 300
         }
     ]
 }

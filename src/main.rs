@@ -1,3 +1,6 @@
+use std::collections::HashMap;
+use std::fs;
+
 use raylib::prelude::*;
 
 const SCREEN_WIDTH: i32 = 1280;
@@ -57,6 +60,32 @@ fn main() {
         .title("Уйта")
         .build();
 
+    let rl_audio = RaylibAudio::init_audio_device().expect("error init audio device");
+
+    let mut sounds = HashMap::new();
+
+    let filenames = fs::read_dir("static/sfx/").unwrap();
+    for filename in filenames {
+        let file = match filename {
+            Ok(f) => f,
+            Err(e) => panic!("couldn't load this particular sfx {e}"),
+        };
+
+        let name = file
+            .file_name()
+            .into_string()
+            .unwrap()
+            .split('.')
+            .next()
+            .unwrap()
+            .to_string();
+
+        let sound: Sound = rl_audio
+            .new_sound(file.path().to_str().unwrap())
+            .expect("error loading this particular sound");
+        sounds.insert(name, sound);
+    }
+
     let texture_handler = TextureHandler::new(&mut rl, &thread);
     let mut camera_controller = CameraController::new();
     let mut map = Map::new();
@@ -108,6 +137,7 @@ fn main() {
 
     while !rl.window_should_close() {
         seconds += rl.get_frame_time();
+        timer += rl.get_frame_time();
 
         shader.set_shader_value(seconds_loc, seconds);
 
@@ -135,8 +165,6 @@ fn main() {
             }
         }
 
-        timer += rl.get_frame_time();
-
         camera_controller.update_position(&mut rl);
 
         if !pause_blocks_mouse {
@@ -161,7 +189,7 @@ fn main() {
 
             workers.iter_mut().for_each(|worker| {
                 // feels weird and illegal
-                let (money, exp) = worker.follow_path(&mut map);
+                let (money, exp) = worker.follow_path(&mut map, &sounds);
                 player.money += money;
                 player.exp += exp;
             });

@@ -19,8 +19,8 @@
     "trees": [
         {
             "tooltip": "Яблоня",
-            "unlock_level": 1,
-            "price": 10
+            "unlock_level": 5,
+            "price": 1000
         },
         {
             "tooltip": "Апельсиновое дерево",
