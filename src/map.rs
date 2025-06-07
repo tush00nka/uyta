@@ -216,7 +216,10 @@ impl Map {
                 TILE_SCALE as f32,
                 Color::WHITE,
             );
+        }
 
+        // two loops bad, but better worker rendering
+        for (position, tile) in self.tiles.iter().sorted() {
             match tile {
                 TileType::Farmland { crop, stage, .. } => {
                     let source = Rectangle::new(
