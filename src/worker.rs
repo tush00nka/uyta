@@ -10,7 +10,7 @@ use crate::map::{Map, TILE_PIXEL_SIZE, TILE_SIZE, TileType};
 pub struct Worker {
     #[allow(unused)]
     id: usize,
-    position: (i32, i32),
+    pub position: (i32, i32),
     display_position: (f32, f32),
     path: Vec<(i32, i32)>,
 }

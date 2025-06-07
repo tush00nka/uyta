@@ -182,10 +182,8 @@ fn draw(
     d.clear_background(Color::LIGHTBLUE);
 
     d.draw_mode2D(camera_controller.camera, |mut d2, _| {
-        map.draw(&mut d2, &texture_handler.textures, font);
-        workers.iter_mut().for_each(|worker| {
-            worker.draw(&mut d2, texture_handler.textures.get("worker").unwrap())
-        });
+        map.draw(&mut d2, &texture_handler.textures, workers, font);
+
     });
 
     d.draw_rectangle(10, 10, 24 * 4, 28, Color::BLACK.alpha(0.5));

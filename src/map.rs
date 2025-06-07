@@ -3,7 +3,7 @@ use raylib::prelude::*;
 use serde::Deserialize;
 use std::collections::HashMap;
 
-use crate::{player::Player, utils::parse_json};
+use crate::{player::Player, utils::parse_json, worker::Worker};
 
 pub const CHUNK_WIDTH: usize = 5;
 pub const CHUNK_HEIGHT: usize = 5;
@@ -22,14 +22,21 @@ pub struct Crop {
 pub struct Tree {
     pub time_to_grow: usize,
     pub time_to_fruit: usize,
-    pub sell_price: usize
+    pub sell_price: usize,
 }
 
 #[derive(PartialEq, PartialOrd, Eq, Ord)]
 pub enum TileType {
     Grass,
-    Tree { tree: usize, grow: usize, stage: usize },
-    Farmland { crop: usize, stage: usize },
+    Tree {
+        tree: usize,
+        grow: usize,
+        stage: usize,
+    },
+    Farmland {
+        crop: usize,
+        stage: usize,
+    },
 }
 
 #[derive(Deserialize)]
@@ -90,9 +97,11 @@ impl Map {
 
                     *stage += 1;
                     // *watered = false;
-                },
+                }
                 TileType::Tree { tree, grow, stage } => {
-                    if *stage >= self.tree_data[*tree].time_to_fruit && *grow >= self.tree_data[*tree].time_to_grow {
+                    if *stage >= self.tree_data[*tree].time_to_fruit
+                        && *grow >= self.tree_data[*tree].time_to_grow
+                    {
                         continue;
                     }
 
@@ -158,7 +167,13 @@ impl Map {
         }
     }
 
-    pub fn draw(&self, rl: &mut RaylibDrawHandle, textures: &HashMap<String, Texture2D>, font: &Font) {
+    pub fn draw(
+        &self,
+        rl: &mut RaylibDrawHandle,
+        textures: &HashMap<String, Texture2D>,
+        workers: &mut Vec<Worker>,
+        font: &Font,
+    ) {
         for expansion_point in self.land_expansion_points.iter() {
             rl.draw_texture_ex(
                 textures.get("land_expansion").unwrap(),
@@ -174,8 +189,9 @@ impl Map {
                 font,
                 &format!("{}", self.next_expansion_cost),
                 Vector2::new(
-                (expansion_point.0 * TILE_SIZE + TILE_SIZE) as f32,
-                (expansion_point.1 * TILE_SIZE) as f32),
+                    (expansion_point.0 * TILE_SIZE + TILE_SIZE) as f32,
+                    (expansion_point.1 * TILE_SIZE) as f32,
+                ),
                 24.,
                 0.,
                 Color::RAYWHITE,
@@ -227,9 +243,21 @@ impl Map {
                         Color::WHITE,
                     );
                 }
-                TileType::Tree { tree, grow, .. } => {
+                TileType::Tree { tree, grow, stage } => {
+                    let ttg = self.tree_data[*tree].time_to_grow;
+
+                    let offset = if *grow < ttg {
+                        (*grow / 5) as f32 * TILE_PIXEL_SIZE as f32
+                    } else {
+                        if *stage >= self.tree_data[*tree].time_to_fruit {
+                            (ttg / 5) as f32 * TILE_PIXEL_SIZE as f32
+                        } else {
+                            ((ttg - 1) / 5) as f32 * TILE_PIXEL_SIZE as f32
+                        }
+                    };
+
                     let source = Rectangle::new(
-                        *grow as f32 * TILE_PIXEL_SIZE as f32,
+                        offset,
                         0.,
                         TILE_PIXEL_SIZE as f32,
                         TILE_PIXEL_SIZE as f32 * 2.,
@@ -254,6 +282,12 @@ impl Map {
                 }
                 _ => {}
             }
+
+            workers.iter_mut().for_each(|worker| {
+                if worker.position == *position {
+                    worker.draw(rl, textures.get("worker").unwrap());
+                }
+            });
         }
     }
 }

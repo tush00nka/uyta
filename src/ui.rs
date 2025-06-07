@@ -1,6 +1,7 @@
 use raylib::{
     ffi::{CheckCollisionPointRec, MouseButton},
-    prelude::{Color, RaylibDraw, RaylibDrawHandle, Rectangle, Vector2}, text::Font,
+    prelude::{Color, RaylibDraw, RaylibDrawHandle, Rectangle, Vector2},
+    text::Font,
 };
 use serde::Deserialize;
 
@@ -85,7 +86,7 @@ impl Canvas {
         map: &Map,
         texture_handler: &TextureHandler,
         player: &Player,
-        font: &Font
+        font: &Font,
     ) {
         // draw mode selection buttons (submenus)
         rl.draw_rectangle_rec(
@@ -211,7 +212,12 @@ impl Canvas {
                     let id = format!("tree{i}");
                     rl.draw_texture_pro(
                         texture_handler.textures.get(&id).unwrap(),
-                        Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32),
+                        Rectangle::new(
+                            (map.tree_data[i].time_to_grow / 5) as f32 * TILE_PIXEL_SIZE as f32,
+                            0.0,
+                            TILE_PIXEL_SIZE as f32,
+                            TILE_PIXEL_SIZE as f32 * 2.,
+                        ),
                         rect,
                         Vector2::zero(),
                         0.,
@@ -252,8 +258,10 @@ impl Canvas {
             rl.draw_text_ex(
                 font,
                 &format!("{}\n{}", tooltip_pool[i].tooltip, price),
-                Vector2::new(2. * (UI_BUTTON_SIZE + UI_GAPS),
-                i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS),
+                Vector2::new(
+                    2. * (UI_BUTTON_SIZE + UI_GAPS),
+                    i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS,
+                ),
                 UI_BUTTON_SIZE / 2.,
                 0.,
                 Color::RAYWHITE,
@@ -307,7 +315,7 @@ impl Canvas {
                     rl.draw_text_ex(
                         font,
                         &format!("Откроется на уровне {}", pool[0].unlock_level),
-                        Vector2::new((x+5) as f32, y as f32),
+                        Vector2::new((x + 5) as f32, y as f32),
                         UI_BUTTON_SIZE / 2.,
                         0.,
                         Color::RAYWHITE,
@@ -355,8 +363,8 @@ impl Canvas {
                     );
                     rl.draw_text_ex(
                         font,
-                        &format!("Откроется на уровне {}", pool[0].unlock_level),
-                        Vector2::new((x+5) as f32, y as f32),
+                        &format!("Откроется на уровне {}", pool[i].unlock_level),
+                        Vector2::new((x + 5) as f32, y as f32),
                         UI_BUTTON_SIZE / 2.,
                         0.,
                         Color::RAYWHITE,
