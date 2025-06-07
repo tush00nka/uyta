@@ -3,15 +3,12 @@ use std::fs;
 
 use raylib::prelude::*;
 
-const SCREEN_WIDTH: i32 = 1280;
-const SCREEN_HEIGHT: i32 = 720;
-
 mod texture_handler;
 use crate::pause_menu::{ButtonState, PauseMenu, PauseMenuState};
 use crate::texture_handler::TextureHandler;
 
 mod map;
-use crate::map::{Map, TILE_PIXEL_SIZE, TILE_SCALE, TILE_SIZE, TileType};
+use crate::map::{Map, TILE_PIXEL_SIZE, TILE_SIZE};
 
 mod camera_controller;
 use crate::camera_controller::CameraController;
@@ -26,7 +23,13 @@ use crate::worker::Worker;
 mod pause_menu;
 mod ui;
 
+mod renderer;
 mod utils;
+
+const SCREEN_WIDTH: i32 = 1280;
+const SCREEN_HEIGHT: i32 = 720;
+
+const TILE_UPDATE_TIME: f32 = 0.5;
 
 fn init_shader(shader: &mut Shader, rl: &mut RaylibHandle) {
     let freq_xloc = shader.get_shader_location("freqX");
@@ -61,7 +64,6 @@ fn main() {
         .build();
 
     let rl_audio = RaylibAudio::init_audio_device().expect("error init audio device");
-
     let mut sounds = HashMap::new();
 
     let filenames = fs::read_dir("static/sfx/").unwrap();
@@ -120,10 +122,6 @@ fn main() {
         Color::CYAN.alpha(0.6),
     );
 
-    // let bg_texture = rl
-    //     .load_texture(&thread, "static/textures/water.png")
-    //     .expect("err");
-
     let bg_texture = rl.load_texture_from_image(&thread, &image).expect("err");
 
     let mut shader = rl.load_shader(&thread, None, Some("static/shaders/wave.fs"));
@@ -132,7 +130,6 @@ fn main() {
     let seconds_loc = shader.get_shader_location("seconds");
     let mut seconds = 0.;
 
-    let tile_update_time = 0.5;
     let mut timer = 0.0;
 
     while !rl.window_should_close() {
@@ -173,14 +170,20 @@ fn main() {
 
         camera_controller.update_position(&mut rl);
 
+        let world_pos = rl.get_screen_to_world2D(rl.get_mouse_position(), camera_controller.camera);
+        let selected_tile = (
+            (world_pos.x / TILE_SIZE as f32).floor() as i32,
+            (world_pos.y / TILE_SIZE as f32).floor() as i32,
+        );
+
         if !pause_blocks_mouse {
             handle_input(
                 &mut rl,
-                &camera_controller,
                 &canvas,
                 &mut map,
                 &mut player,
                 &mut workers,
+                selected_tile,
             );
         }
 
@@ -188,7 +191,7 @@ fn main() {
         player.update_exp(&sounds);
 
         // call on tick
-        if timer >= tile_update_time {
+        if timer >= TILE_UPDATE_TIME {
             timer = 0.;
 
             map.update_tiles();
@@ -201,240 +204,54 @@ fn main() {
             });
         }
 
-        draw(
-            &thread,
-            &mut rl,
-            &mut canvas,
+        let mut d = rl.begin_drawing(&thread);
+
+        renderer::draw_bg(&mut d, &mut shader, &bg_texture);
+        renderer::draw_for_camera(
+            &mut d,
             &map,
             &camera_controller,
             &texture_handler,
             &mut workers,
+            &font,
+            selected_tile,
+        );
+        renderer::draw_fg(
+            &mut d,
+            &mut canvas,
+            &map,
+            &texture_handler,
             &player,
             &pause_menu,
             &font,
-            &mut shader,
-            &bg_texture,
-            rl_audio.get_master_volume()
+            rl_audio.get_master_volume(),
         );
     }
 }
 
 fn handle_input(
     rl: &mut RaylibHandle,
-    camera_controller: &CameraController,
     canvas: &Canvas,
     map: &mut Map,
     player: &mut Player,
     workers: &mut Vec<Worker>,
+    selected_tile: (i32, i32),
 ) {
-    let world_pos = rl.get_screen_to_world2D(rl.get_mouse_position(), camera_controller.camera);
-    let selected_tile = (
-        (world_pos.x / TILE_SIZE as f32).floor() as i32,
-        (world_pos.y / TILE_SIZE as f32).floor() as i32,
-    );
-
     if !canvas.blocks_mouse(rl.get_mouse_position())
         && rl.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT)
     {
         match canvas.mode {
             MenuMode::Crops => {
-                plant_crops(&canvas, map, &selected_tile, player);
+                player.plant_crops(canvas, map, &selected_tile);
             }
             MenuMode::Trees => {
-                plant_trees(canvas, map, &selected_tile, player);
+                player.plant_trees(canvas, map, &selected_tile);
             }
             MenuMode::Misc => {
-                perform_misc(player, &canvas, workers, &selected_tile, map);
+                player.perform_misc(canvas, workers, &selected_tile, map);
             }
         }
 
         map.buy_land(selected_tile, player);
-    }
-}
-
-fn draw(
-    thread: &RaylibThread,
-    rl: &mut RaylibHandle,
-    canvas: &mut Canvas,
-    map: &Map,
-    camera_controller: &CameraController,
-    texture_handler: &TextureHandler,
-    workers: &mut Vec<Worker>,
-    player: &Player,
-    pause_menu: &PauseMenu,
-    font: &Font,
-    bg_shader: &mut Shader,
-    bg_texture: &Texture2D,
-    master_volume: f32
-) {
-    let mut d = rl.begin_drawing(&thread);
-    d.clear_background(Color::BLACK);
-
-    // d.draw_texture(texture, 0, 0, Color::WHITE);
-
-    let world_pos = d.get_screen_to_world2D(d.get_mouse_position(), camera_controller.camera);
-    let selected_tile = (
-        (world_pos.x / TILE_SIZE as f32).floor() as i32,
-        (world_pos.y / TILE_SIZE as f32).floor() as i32,
-    );
-
-    d.draw_shader_mode(bg_shader, |mut shader| {
-        shader.draw_texture_ex(bg_texture, Vector2::zero(), 0., 2., Color::WHITE);
-        // shader.draw_texture(bg_texture, bg_texture.width, 0, Color::WHITE);
-    });
-
-    d.draw_mode2D(camera_controller.camera, |mut d2, _| {
-        map.draw(&mut d2, &texture_handler.textures, workers, font);
-
-        if !map.tiles.contains_key(&selected_tile) {
-            return;
-        }
-
-        d2.draw_rectangle_lines_ex(
-            Rectangle::new(
-                (selected_tile.0 * TILE_SIZE) as f32,
-                (selected_tile.1 * TILE_SIZE) as f32,
-                TILE_SIZE as f32,
-                TILE_SIZE as f32,
-            ),
-            TILE_SCALE as f32,
-            Color::RAYWHITE,
-        );
-    });
-
-    d.draw_rectangle(10, 10, 130, 28, Color::BLACK.alpha(0.5));
-    d.draw_text_ex(
-        font,
-        &format!("{}", player.display_money),
-        Vector2::new(14., 14.),
-        24.,
-        0.,
-        Color::WHITE,
-    );
-
-    let exp_bar_fill = player.exp as f32 / player.exp_to_lvl_up as f32;
-    d.draw_rectangle(
-        d.get_screen_width() / 4,
-        10,
-        d.get_screen_width() / 2,
-        24,
-        Color::BLACK.alpha(0.5),
-    );
-    d.draw_rectangle(
-        d.get_screen_width() / 4,
-        10,
-        (exp_bar_fill * (d.get_screen_width() / 2) as f32) as i32,
-        24,
-        Color::DARKORANGE,
-    );
-    d.draw_text_ex(
-        font,
-        &format!("Уровень {}", player.level),
-        Vector2::new(d.get_screen_width() as f32 / 4. + 10., 10.),
-        24.,
-        0.,
-        Color::WHITE,
-    );
-
-    canvas.draw(&mut d, &map, &texture_handler, player, font);
-    canvas.update(&mut d, player, font);
-
-    pause_menu.draw(&mut d, font, master_volume);
-}
-
-fn plant_crops(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), player: &mut Player) {
-    let Some(tile) = map.tiles.get_mut(selected_tile) else {
-        return;
-    };
-
-    if let Some(occ_tile) = map.occupation_map.get_mut(selected_tile) {
-        *occ_tile = false;
-    }
-
-    match tile {
-        TileType::Grass => {
-            let price = canvas.toolbar_data.crops[canvas.selected].price;
-            if player.money >= price {
-                player.money -= price;
-                *tile = TileType::Farmland {
-                    crop: canvas.selected,
-                    stage: 0,
-                };
-            }
-        }
-        TileType::Farmland { crop, stage } => {
-            if canvas.mode != MenuMode::Crops {
-                return;
-            }
-
-            if *crop != canvas.selected {
-                let price = canvas.toolbar_data.crops[canvas.selected].price;
-                if player.money >= price {
-                    player.money -= price;
-                    // plant the seed
-                    *crop = canvas.selected;
-                    *stage = 0;
-                }
-            }
-        }
-        TileType::Tree { .. } => {}
-    }
-}
-
-fn plant_trees(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), player: &mut Player) {
-    let Some(tile) = map.tiles.get_mut(selected_tile) else {
-        return;
-    };
-
-    if let Some(occ_tile) = map.occupation_map.get_mut(selected_tile) {
-        *occ_tile = false;
-    }
-
-    match tile {
-        TileType::Grass => {
-            let price = canvas.toolbar_data.trees[canvas.selected].price;
-            if player.money >= price {
-                player.money -= price;
-                *tile = TileType::Tree {
-                    tree: canvas.selected,
-                    grow: 0,
-                    stage: 0,
-                };
-            }
-        }
-        _ => {}
-    }
-}
-
-fn perform_misc(
-    player: &mut Player,
-    canvas: &Canvas,
-    workers: &mut Vec<Worker>,
-    selected_tile: &(i32, i32),
-    map: &mut Map,
-) {
-    if canvas.selected == 0 && player.money >= 100 && map.tiles.contains_key(selected_tile) {
-        workers.push(Worker::new(workers.len(), selected_tile.0, selected_tile.1));
-        player.money -= canvas.toolbar_data.misc[canvas.selected].price;
-    }
-
-    if canvas.selected == 1 {
-        let Some(tile) = map.tiles.get_mut(&selected_tile) else {
-            return;
-        };
-
-        if let Some(occ_tile) = map.occupation_map.get_mut(&selected_tile) {
-            *occ_tile = false;
-        }
-
-        match tile {
-            TileType::Grass => {}
-            TileType::Tree { .. } => {
-                *tile = TileType::Grass;
-            }
-            TileType::Farmland { .. } => {
-                *tile = TileType::Grass;
-            }
-        }
     }
 }
