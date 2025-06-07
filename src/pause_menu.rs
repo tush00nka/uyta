@@ -13,7 +13,7 @@ pub enum ButtonState {
     Pressed,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum PauseMenuState {
     Main,
     Settings,
@@ -164,7 +164,7 @@ impl PauseMenu {
         blocks_mouse
     }
 
-    pub fn draw(&self, rl: &mut RaylibDrawHandle, font: &Font) {
+    pub fn draw(&self, rl: &mut RaylibDrawHandle, font: &Font, master_volume: f32) {
         if !self.is_paused {
             return;
         }
@@ -204,6 +204,20 @@ impl PauseMenu {
                 font,
                 &button.label,
                 Vector2::new(button.rect.x, button.rect.y),
+                24.,
+                0.,
+                Color::RAYWHITE,
+            );
+        }
+
+        if self.state == PauseMenuState::Settings {
+            rl.draw_text_ex(
+                font,
+                &format!("Общая громкость\n{}%", (master_volume * 100.).round() as usize),
+                Vector2::new(
+                    screen_width as f32/ 2. - menu_width as f32 / 4. + 60.,
+                    screen_height as f32/ 2. - menu_height as f32/ 2. + 60.,
+                ),
                 24.,
                 0.,
                 Color::RAYWHITE,

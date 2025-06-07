@@ -99,7 +99,7 @@ fn main() {
             &thread,
             "static/tilita.ttf",
             32,
-            Some("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789+-"),
+            Some("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789+-%"),
         )
         .expect("no font???");
 
@@ -157,10 +157,10 @@ fn main() {
             }
             PauseMenuState::Settings => {
                 if pause_menu.buttons[0].state == ButtonState::Pressed {
-                    rl_audio.set_master_volume((rl_audio.get_master_volume() - 0.1).min(0.));
+                    rl_audio.set_master_volume((rl_audio.get_master_volume() - 0.1).max(0.));
                 }
                 if pause_menu.buttons[1].state == ButtonState::Pressed {
-                    rl_audio.set_master_volume((rl_audio.get_master_volume() + 0.1).max(1.));
+                    rl_audio.set_master_volume((rl_audio.get_master_volume() + 0.1).min(1.));
                 }
                 if pause_menu.buttons[2].state == ButtonState::Pressed {
                     rl.toggle_fullscreen();
@@ -214,6 +214,7 @@ fn main() {
             &font,
             &mut shader,
             &bg_texture,
+            rl_audio.get_master_volume()
         );
     }
 }
@@ -264,6 +265,7 @@ fn draw(
     font: &Font,
     bg_shader: &mut Shader,
     bg_texture: &Texture2D,
+    master_volume: f32
 ) {
     let mut d = rl.begin_drawing(&thread);
     d.clear_background(Color::BLACK);
@@ -337,7 +339,7 @@ fn draw(
     canvas.draw(&mut d, &map, &texture_handler, player, font);
     canvas.update(&mut d, player, font);
 
-    pause_menu.draw(&mut d, font);
+    pause_menu.draw(&mut d, font, master_volume);
 }
 
 fn plant_crops(canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), player: &mut Player) {
