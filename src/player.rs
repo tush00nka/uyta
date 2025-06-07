@@ -1,3 +1,7 @@
+use std::collections::HashMap;
+
+use raylib::audio::Sound;
+
 pub struct Player {
     pub money: usize,
     pub display_money: usize,
@@ -27,11 +31,12 @@ impl Player {
             (self.display_money as isize + money_diff / money_diff.abs()) as usize;
     }
 
-    pub fn update_exp(&mut self) {
+    pub fn update_exp(&mut self, sounds: &HashMap<String, Sound<'_>>) {
         if self.exp >= self.exp_to_lvl_up {
             self.level+=1;
             self.exp = 0;
             self.exp_to_lvl_up *= 3;
+            sounds.get("level_up").unwrap().play();
         }
     }
 }

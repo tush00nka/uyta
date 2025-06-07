@@ -99,7 +99,7 @@ fn main() {
             &thread,
             "static/tilita.ttf",
             32,
-            Some("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789"),
+            Some("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789+-"),
         )
         .expect("no font???");
 
@@ -157,9 +157,15 @@ fn main() {
             }
             PauseMenuState::Settings => {
                 if pause_menu.buttons[0].state == ButtonState::Pressed {
-                    rl.toggle_fullscreen();
+                    rl_audio.set_master_volume((rl_audio.get_master_volume() - 0.1).min(0.));
                 }
                 if pause_menu.buttons[1].state == ButtonState::Pressed {
+                    rl_audio.set_master_volume((rl_audio.get_master_volume() + 0.1).max(1.));
+                }
+                if pause_menu.buttons[2].state == ButtonState::Pressed {
+                    rl.toggle_fullscreen();
+                }
+                if pause_menu.buttons[3].state == ButtonState::Pressed {
                     pause_menu.switch_state(&mut rl, PauseMenuState::Main);
                 }
             }
@@ -179,7 +185,7 @@ fn main() {
         }
 
         player.update_money();
-        player.update_exp();
+        player.update_exp(&sounds);
 
         // call on tick
         if timer >= tile_update_time {

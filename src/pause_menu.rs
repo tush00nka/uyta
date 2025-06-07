@@ -70,10 +70,30 @@ impl PauseMenu {
                 self.buttons = vec![settings, quit];
             }
             PauseMenuState::Settings => {
-                let fullscreen_toggle = Button {
+                let sfx_sub = Button {
                     rect: Rectangle::new(
                         screen_width / 2. - menu_width / 4.,
                         screen_height / 2. - menu_height / 2. + 60.,
+                        50.,
+                        50.,
+                    ),
+                    label: "-".to_string(),
+                    state: ButtonState::Normal,
+                };
+                let sfx_add = Button {
+                    rect: Rectangle::new(
+                        screen_width / 2. + menu_width / 4. - 50.,
+                        screen_height / 2. - menu_height / 2. + 60.,
+                        50.,
+                        50.,
+                    ),
+                    label: "+".to_string(),
+                    state: ButtonState::Normal,
+                };
+                let fullscreen_toggle = Button {
+                    rect: Rectangle::new(
+                        screen_width / 2. - menu_width / 4.,
+                        screen_height / 2. - menu_height / 2. + 120.,
                         menu_width / 2.,
                         50.,
                     ),
@@ -83,7 +103,7 @@ impl PauseMenu {
                 let save = Button {
                     rect: Rectangle::new(
                         screen_width / 2. - menu_width / 4.,
-                        screen_height / 2. - menu_height / 2. + 120.,
+                        screen_height / 2. - menu_height / 2. + 180.,
                         menu_width / 2.,
                         50.,
                     ),
@@ -91,7 +111,7 @@ impl PauseMenu {
                     state: ButtonState::Normal,
                 };
 
-                self.buttons = vec![fullscreen_toggle, save];
+                self.buttons = vec![sfx_sub, sfx_add, fullscreen_toggle, save];
             }
         }
 
@@ -164,8 +184,10 @@ impl PauseMenu {
         rl.draw_text_ex(
             font,
             "Меню",
-            Vector2::new((screen_width / 2 - 24) as f32,
-            (screen_height / 2 - menu_height / 2 + 10) as f32),
+            Vector2::new(
+                (screen_width / 2 - 24) as f32,
+                (screen_height / 2 - menu_height / 2 + 10) as f32,
+            ),
             24.,
             0.,
             Color::BLACK,

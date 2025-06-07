@@ -3,7 +3,6 @@ use std::{
     f32::INFINITY,
 };
 
-use rand::random;
 use raylib::prelude::*;
 
 use crate::map::{Map, TILE_PIXEL_SIZE, TILE_SIZE, TileType};
