@@ -3,9 +3,7 @@ use std::collections::HashMap;
 use raylib::{audio::Sound, prelude::*};
 
 use crate::{
-    map::{Map, TileType},
-    ui::{Canvas, MenuMode},
-    worker::Worker,
+    map::{Map, TileType}, tutorial::Tutorial, ui::{Canvas, MenuMode}, worker::Worker
 };
 
 pub struct Player {
@@ -81,7 +79,7 @@ impl Player {
         );
     }
 
-    pub fn plant_crops(&mut self, canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32)) {
+    pub fn plant_crops(&mut self, canvas: &Canvas, map: &mut Map, selected_tile: &(i32, i32), tutorial: &mut Tutorial) {
         let Some(tile) = map.tiles.get_mut(selected_tile) else {
             return;
         };
@@ -89,6 +87,8 @@ impl Player {
         if let Some(occ_tile) = map.occupation_map.get_mut(selected_tile) {
             *occ_tile = false;
         }
+
+        tutorial.complete_step(1);
 
         match tile {
             TileType::Grass => {

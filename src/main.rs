@@ -17,6 +17,7 @@ mod player;
 use crate::player::Player;
 
 mod worker;
+use crate::tutorial::Tutorial;
 use crate::ui::{Canvas, MenuMode};
 use crate::worker::Worker;
 
@@ -25,6 +26,7 @@ mod ui;
 
 mod renderer;
 mod utils;
+mod tutorial;
 
 const SCREEN_WIDTH: i32 = 1280;
 const SCREEN_HEIGHT: i32 = 720;
@@ -95,13 +97,14 @@ fn main() {
     let mut workers = vec![Worker::new(0, 0, 0)];
     let mut canvas = Canvas::new();
     let mut pause_menu = PauseMenu::new(&mut rl);
+    let mut tutorial = Tutorial::new();
 
     let font = rl
         .load_font_ex(
             &thread,
             "static/tilita.ttf",
             32,
-            Some("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789+-%"),
+            Some("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789+-%[]()FWASD,.!?"),
         )
         .expect("no font???");
 
@@ -168,7 +171,7 @@ fn main() {
             }
         }
 
-        camera_controller.update_position(&mut rl);
+        camera_controller.update_position(&mut rl, &mut tutorial);
 
         let world_pos = rl.get_screen_to_world2D(rl.get_mouse_position(), camera_controller.camera);
         let selected_tile = (
@@ -184,11 +187,14 @@ fn main() {
                 &mut player,
                 &mut workers,
                 selected_tile,
+                &mut tutorial
             );
         }
 
         player.update_money();
         player.update_exp(&sounds);
+
+        tutorial.close_tutorial(&mut rl);
 
         // call on tick
         if timer >= TILE_UPDATE_TIME {
@@ -223,6 +229,7 @@ fn main() {
             &texture_handler,
             &player,
             &pause_menu,
+            &tutorial,
             &font,
             rl_audio.get_master_volume(),
         );
@@ -236,13 +243,14 @@ fn handle_input(
     player: &mut Player,
     workers: &mut Vec<Worker>,
     selected_tile: (i32, i32),
+    tutorial: &mut Tutorial,
 ) {
     if !canvas.blocks_mouse(rl.get_mouse_position())
         && rl.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT)
     {
         match canvas.mode {
             MenuMode::Crops => {
-                player.plant_crops(canvas, map, &selected_tile);
+                player.plant_crops(canvas, map, &selected_tile, tutorial);
             }
             MenuMode::Trees => {
                 player.plant_trees(canvas, map, &selected_tile);

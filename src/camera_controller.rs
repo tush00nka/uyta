@@ -1,7 +1,7 @@
 use raylib::prelude::*;
 
 use crate::{
-    SCREEN_HEIGHT, SCREEN_WIDTH,
+    tutorial::Tutorial, SCREEN_HEIGHT, SCREEN_WIDTH
 };
 
 pub struct CameraController {
@@ -27,21 +27,25 @@ impl CameraController {
         }
     }
 
-    pub fn update_position(&mut self, rl: &mut RaylibHandle) {
+    pub fn update_position(&mut self, rl: &mut RaylibHandle, tutorial: &mut Tutorial) {
         use raylib::consts::KeyboardKey::*;
 
         let mut direction = Vector2::zero();
 
         if rl.is_key_down(KEY_A) {
+            tutorial.complete_step(0);
             direction.x = -1.;
         }
         if rl.is_key_down(KEY_D) {
+            tutorial.complete_step(0);
             direction.x = 1.;
         }
         if rl.is_key_down(KEY_W) {
+            tutorial.complete_step(0);
             direction.y = -1.;
         }
         if rl.is_key_down(KEY_S) {
+            tutorial.complete_step(0);
             direction.y = 1.;
         }
 

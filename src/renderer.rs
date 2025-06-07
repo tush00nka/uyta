@@ -6,6 +6,7 @@ use crate::{
     pause_menu::PauseMenu,
     player::Player,
     texture_handler::TextureHandler,
+    tutorial::Tutorial,
     ui::Canvas,
     worker::Worker,
 };
@@ -54,6 +55,7 @@ pub fn draw_fg(
     texture_handler: &TextureHandler,
     player: &Player,
     pause_menu: &PauseMenu,
+    tutorial: &Tutorial,
     font: &Font,
     master_volume: f32,
 ) {
@@ -61,6 +63,8 @@ pub fn draw_fg(
 
     canvas.draw(rl, &map, &texture_handler, player, font);
     canvas.update(rl, player, font);
+
+    tutorial.draw(rl, font);
 
     pause_menu.draw(rl, font, master_volume);
 }
