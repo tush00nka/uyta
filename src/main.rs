@@ -33,11 +33,11 @@ fn init_shader(shader: &mut Shader, rl: &mut RaylibHandle) {
     let speed_xloc = shader.get_shader_location("speedX");
     let speed_yloc = shader.get_shader_location("speedY");
 
-    let freq_x = 10.0;
+    let freq_x = 20.0;
     let freq_y = 10.0;
-    let amp_x = 2.0;
+    let amp_x = 0.5;
     let amp_y = 2.0;
-    let speed_x = 2.0;
+    let speed_x = 5.0;
     let speed_y = 2.0;
 
     let screen_size = Vector2::new(rl.get_screen_width() as f32, rl.get_screen_height() as f32);
