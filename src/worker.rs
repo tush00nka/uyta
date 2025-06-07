@@ -25,7 +25,7 @@ impl Worker {
         Self {
             id,
             position: (x, y),
-            display_position: ((x * TILE_SIZE) as f32, (y * TILE_SIZE - TILE_SIZE) as f32),
+            display_position: ((x * TILE_SIZE) as f32, (y * TILE_SIZE - TILE_SIZE / 2) as f32),
             path: vec![],
         }
     }

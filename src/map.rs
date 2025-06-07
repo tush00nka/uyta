@@ -91,12 +91,7 @@ impl Map {
                         continue;
                     }
 
-                    // if !*watered {
-                    //     continue;
-                    // }
-
                     *stage += 1;
-                    // *watered = false;
                 }
                 TileType::Tree { tree, grow, stage } => {
                     if *stage >= self.tree_data[*tree].time_to_fruit
@@ -174,9 +169,11 @@ impl Map {
         workers: &mut Vec<Worker>,
         font: &Font,
     ) {
+        let expansion_texture = textures.get("land_expansion").unwrap();
+
         for expansion_point in self.land_expansion_points.iter() {
             rl.draw_texture_ex(
-                textures.get("land_expansion").unwrap(),
+                expansion_texture,
                 Vector2::new(
                     (expansion_point.0 * TILE_SIZE) as f32,
                     (expansion_point.1 * TILE_SIZE) as f32,
@@ -198,6 +195,8 @@ impl Map {
             );
         }
 
+        let border_texture = textures.get("borders").unwrap();
+
         for (position, tile) in self.tiles.iter().sorted() {
             let texture_id = match tile {
                 TileType::Grass => "grass",
@@ -216,6 +215,32 @@ impl Map {
                 TILE_SCALE as f32,
                 Color::WHITE,
             );
+
+            let directions = [(0, 1), (1, 0), (0, -1), (-1, 0)];
+
+            for direction in directions {
+                let pos = (position.0 + direction.0, position.1 + direction.1);
+                if !self.tiles.contains_key(&pos) {
+                    rl.draw_texture_pro(
+                        border_texture,
+                        Rectangle::new(
+                            (direction.0 * TILE_PIXEL_SIZE) as f32,
+                            (direction.1 * TILE_PIXEL_SIZE) as f32,
+                            TILE_PIXEL_SIZE as f32,
+                            TILE_PIXEL_SIZE as f32,
+                        ),
+                        Rectangle::new(
+                            (pos.0 * TILE_SIZE) as f32,
+                            (pos.1 * TILE_SIZE) as f32,
+                            TILE_SIZE as f32,
+                            TILE_SIZE as f32,
+                        ),
+                        Vector2::zero(),
+                        0.,
+                        Color::WHITE,
+                    );
+                }
+            }
         }
 
         // two loops bad, but better worker rendering
@@ -286,9 +311,10 @@ impl Map {
                 _ => {}
             }
 
+            let worker_texture = textures.get("worker").unwrap();
             workers.iter_mut().for_each(|worker| {
                 if worker.position == *position {
-                    worker.draw(rl, textures.get("worker").unwrap());
+                    worker.draw(rl, worker_texture);
                 }
             });
         }

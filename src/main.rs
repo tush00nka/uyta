@@ -8,7 +8,7 @@ use crate::pause_menu::{ButtonState, PauseMenu, PauseMenuState};
 use crate::texture_handler::TextureHandler;
 
 mod map;
-use crate::map::{Map, TILE_SIZE, TileType};
+use crate::map::{Map, TILE_PIXEL_SIZE, TILE_SCALE, TILE_SIZE, TileType};
 
 mod camera_controller;
 use crate::camera_controller::CameraController;
@@ -24,6 +24,31 @@ mod pause_menu;
 mod ui;
 
 mod utils;
+
+fn init_shader(shader: &mut Shader, rl: &mut RaylibHandle) {
+    let freq_xloc = shader.get_shader_location("freqX");
+    let freq_yloc = shader.get_shader_location("freqY");
+    let amp_xloc = shader.get_shader_location("ampX");
+    let amp_yloc = shader.get_shader_location("ampY");
+    let speed_xloc = shader.get_shader_location("speedX");
+    let speed_yloc = shader.get_shader_location("speedY");
+
+    let freq_x = 10.0;
+    let freq_y = 10.0;
+    let amp_x = 2.0;
+    let amp_y = 2.0;
+    let speed_x = 2.0;
+    let speed_y = 2.0;
+
+    let screen_size = Vector2::new(rl.get_screen_width() as f32, rl.get_screen_height() as f32);
+    shader.set_shader_value(shader.get_shader_location("size"), screen_size);
+    shader.set_shader_value(freq_xloc, freq_x);
+    shader.set_shader_value(freq_yloc, freq_y);
+    shader.set_shader_value(amp_xloc, amp_x);
+    shader.set_shader_value(amp_yloc, amp_y);
+    shader.set_shader_value(speed_xloc, speed_x);
+    shader.set_shader_value(speed_yloc, speed_y);
+}
 
 fn main() {
     let (mut rl, thread) = raylib::init()
@@ -57,10 +82,35 @@ fn main() {
 
     rl.set_exit_key(None);
 
+    let image = Image::gen_image_checked(
+        SCREEN_WIDTH,
+        SCREEN_HEIGHT,
+        TILE_PIXEL_SIZE,
+        TILE_PIXEL_SIZE,
+        Color::CYAN.alpha(0.7),
+        Color::CYAN.alpha(0.6),
+    );
+
+    // let bg_texture = rl
+    //     .load_texture(&thread, "static/textures/water.png")
+    //     .expect("err");
+
+    let bg_texture = rl.load_texture_from_image(&thread, &image).expect("err");
+
+    let mut shader = rl.load_shader(&thread, None, Some("static/shaders/wave.fs"));
+    init_shader(&mut shader, &mut rl);
+
+    let seconds_loc = shader.get_shader_location("seconds");
+    let mut seconds = 0.;
+
     let tile_update_time = 0.5;
     let mut timer = 0.0;
 
     while !rl.window_should_close() {
+        seconds += rl.get_frame_time();
+
+        shader.set_shader_value(seconds_loc, seconds);
+
         pause_menu.toggle_pause(&mut rl);
         let pause_blocks_mouse = pause_menu.update_buttons(&mut rl);
 
@@ -128,6 +178,8 @@ fn main() {
             &player,
             &pause_menu,
             &font,
+            &mut shader,
+            &bg_texture,
         );
     }
 }
@@ -141,7 +193,6 @@ fn handle_input(
     workers: &mut Vec<Worker>,
 ) {
     let world_pos = rl.get_screen_to_world2D(rl.get_mouse_position(), camera_controller.camera);
-
     let selected_tile = (
         (world_pos.x / TILE_SIZE as f32).floor() as i32,
         (world_pos.y / TILE_SIZE as f32).floor() as i32,
@@ -177,16 +228,45 @@ fn draw(
     player: &Player,
     pause_menu: &PauseMenu,
     font: &Font,
+    bg_shader: &mut Shader,
+    bg_texture: &Texture2D,
 ) {
     let mut d = rl.begin_drawing(&thread);
-    d.clear_background(Color::LIGHTBLUE);
+    d.clear_background(Color::BLACK);
+
+    // d.draw_texture(texture, 0, 0, Color::WHITE);
+
+    let world_pos = d.get_screen_to_world2D(d.get_mouse_position(), camera_controller.camera);
+    let selected_tile = (
+        (world_pos.x / TILE_SIZE as f32).floor() as i32,
+        (world_pos.y / TILE_SIZE as f32).floor() as i32,
+    );
+
+    d.draw_shader_mode(bg_shader, |mut shader| {
+        shader.draw_texture_ex(bg_texture, Vector2::zero(), 0., 2., Color::WHITE);
+        // shader.draw_texture(bg_texture, bg_texture.width, 0, Color::WHITE);
+    });
 
     d.draw_mode2D(camera_controller.camera, |mut d2, _| {
         map.draw(&mut d2, &texture_handler.textures, workers, font);
 
+        if !map.tiles.contains_key(&selected_tile) {
+            return;
+        }
+
+        d2.draw_rectangle_lines_ex(
+            Rectangle::new(
+                (selected_tile.0 * TILE_SIZE) as f32,
+                (selected_tile.1 * TILE_SIZE) as f32,
+                TILE_SIZE as f32,
+                TILE_SIZE as f32,
+            ),
+            TILE_SCALE as f32,
+            Color::RAYWHITE,
+        );
     });
 
-    d.draw_rectangle(10, 10, 24 * 4, 28, Color::BLACK.alpha(0.5));
+    d.draw_rectangle(10, 10, 130, 28, Color::BLACK.alpha(0.5));
     d.draw_text_ex(
         font,
         &format!("{}", player.display_money),
@@ -202,7 +282,7 @@ fn draw(
         10,
         d.get_screen_width() / 2,
         24,
-        Color::GRAY,
+        Color::BLACK.alpha(0.5),
     );
     d.draw_rectangle(
         d.get_screen_width() / 4,
