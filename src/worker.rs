@@ -160,7 +160,7 @@ impl Worker {
                     if *stage >= map.static_data.crops_data[*crop].time_to_grow {
                         // successfully complete task
                         money = map.static_data.crops_data[*crop].sell_price;
-                        exp = *crop + 1; // higher crop_id == more exp
+                        exp = map.static_data.crops_data[*crop].exp; // higher crop_id == more exp
                         *stage = 0;
                         // free this tile from work
                         if let Some(occupation_tile) =
@@ -177,7 +177,7 @@ impl Worker {
                 TileType::Tree { tree, stage, .. } => {
                     if *stage >= map.static_data.tree_data[*tree].time_to_fruit {
                         money = map.static_data.tree_data[*tree].sell_price;
-                        exp = *tree + 1;
+                        exp = map.static_data.tree_data[*tree].exp;
                         *stage = 0;
 
                         if let Some(occupation_tile) =

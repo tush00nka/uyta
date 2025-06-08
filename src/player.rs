@@ -51,7 +51,7 @@ impl Player {
         if self.exp >= self.exp_to_lvl_up {
             self.level += 1;
             self.exp = 0;
-            self.exp_to_lvl_up *= 3;
+            self.exp_to_lvl_up = (self.exp_to_lvl_up as f32 * 1.5) as usize;
             sounds.get("level_up").unwrap().play();
         }
     }

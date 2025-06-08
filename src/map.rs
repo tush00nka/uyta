@@ -17,6 +17,7 @@ pub const TILE_SIZE: i32 = TILE_PIXEL_SIZE * TILE_SCALE;
 pub struct Crop {
     pub time_to_grow: usize,
     pub sell_price: usize,
+    pub exp: usize,
 }
 
 #[derive(Deserialize)]
@@ -24,6 +25,7 @@ pub struct Tree {
     pub time_to_grow: usize,
     pub time_to_fruit: usize,
     pub sell_price: usize,
+    pub exp: usize,
 }
 
 #[derive(PartialEq, PartialOrd, Eq, Ord, Serialize, Deserialize)]
@@ -181,10 +183,16 @@ impl Map {
         let directions = [(0, 1), (1, 0), (0, -1), (-1, 0)];
 
         for direction in directions {
-            self.dynamic_data.land_expansion_points.push((
+            let position = (
                 direction.0 * CHUNK_WIDTH as i32 + point.0,
                 direction.1 * CHUNK_HEIGHT as i32 + point.1,
-            ));
+            );
+
+            if self.dynamic_data.tiles.contains_key(&position) {
+                continue;
+            }
+
+            self.dynamic_data.land_expansion_points.push(position);
         }
     }
 

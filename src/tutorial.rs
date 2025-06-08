@@ -23,7 +23,7 @@ pub struct Tutorial {
 
 impl Tutorial {
     pub fn new() -> Self {
-        let player: Result<Player, serde_json::Error> = parse_json("player_save.json");
+        let player: Result<Player, serde_json::Error> = parse_json("dynamic/player_save.json");
 
         let hidden = match player {
             Ok(_) => true,
