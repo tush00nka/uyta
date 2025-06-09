@@ -63,6 +63,8 @@ pub struct Worker {
     pub position: (i32, i32),
     display_position: (f32, f32),
     path: Vec<(i32, i32)>,
+    #[serde(skip_serializing, skip_deserializing)]
+    direction: (i32, i32),
 }
 
 #[derive(PartialEq)]
@@ -79,6 +81,7 @@ impl Worker {
                 (y * TILE_SIZE - TILE_SIZE / 2) as f32,
             ),
             path: vec![],
+            direction: (0, 0)
         }
     }
 
@@ -149,58 +152,58 @@ impl Worker {
         map: &mut Map,
         sounds: &HashMap<String, Sound<'_>>,
     ) -> (usize, usize) {
-        let Some(next_position) = self.path.get(0) else {
-            let tile = map.dynamic_data.tiles.get_mut(&self.position).unwrap();
-            let mut money = 0;
-            let mut exp = 0;
+        if let Some(next_position) = self.path.get(0) {
+            self.position = *next_position;
+            self.path.remove(0);
+            return (0, 0);
+        }
 
-            // harvest
-            match tile {
-                TileType::Farmland { crop, stage } => {
-                    if *stage >= map.static_data.crops_data[*crop].time_to_grow {
-                        // successfully complete task
-                        money = map.static_data.crops_data[*crop].sell_price;
-                        exp = map.static_data.crops_data[*crop].exp; // higher crop_id == more exp
-                        *stage = 0;
-                        // free this tile from work
-                        if let Some(occupation_tile) =
-                            map.dynamic_data.occupation_map.get_mut(&self.position)
-                        {
-                            *occupation_tile = false;
-                        };
-                        let rand = rand::random_range(0..5);
-                        let sound = sounds.get(&format!("harvest{rand}")).unwrap();
-                        sound.set_pitch(rand::random_range(0.9..1.1));
-                        sound.play();
-                    }
-                }
-                TileType::Tree { tree, stage, .. } => {
-                    if *stage >= map.static_data.tree_data[*tree].time_to_fruit {
-                        money = map.static_data.tree_data[*tree].sell_price;
-                        exp = map.static_data.tree_data[*tree].exp;
-                        *stage = 0;
+        let tile = map.dynamic_data.tiles.get_mut(&self.position).unwrap();
+        let mut money = 0;
+        let mut exp = 0;
 
-                        if let Some(occupation_tile) =
-                            map.dynamic_data.occupation_map.get_mut(&self.position)
-                        {
-                            *occupation_tile = false;
-                        };
-                        let rand = rand::random_range(0..5);
-                        let sound = sounds.get(&format!("harvest{rand}")).unwrap();
-                        sound.set_pitch(rand::random_range(0.9..1.1));
-                        sound.play();
-                    }
+        // harvest
+        match tile {
+            TileType::Farmland { crop, stage } => {
+                if *stage >= map.static_data.crops_data[*crop].time_to_grow {
+                    // successfully complete task
+                    money = map.static_data.crops_data[*crop].sell_price;
+                    exp = map.static_data.crops_data[*crop].exp; // higher crop_id == more exp
+                    *stage = 0;
+                    // free this tile from work
+                    if let Some(occupation_tile) =
+                        map.dynamic_data.occupation_map.get_mut(&self.position)
+                    {
+                        *occupation_tile = false;
+                    };
+                    let rand = rand::random_range(0..5);
+                    let sound = sounds.get(&format!("harvest{rand}")).unwrap();
+                    sound.set_pitch(rand::random_range(0.9..1.1));
+                    sound.play();
                 }
-                _ => {}
             }
+            TileType::Tree { tree, stage, .. } => {
+                if *stage >= map.static_data.tree_data[*tree].time_to_fruit {
+                    money = map.static_data.tree_data[*tree].sell_price;
+                    exp = map.static_data.tree_data[*tree].exp;
+                    *stage = 0;
 
-            self.find_path(map, JobType::Harvest);
-            return (money, exp);
-        };
+                    if let Some(occupation_tile) =
+                        map.dynamic_data.occupation_map.get_mut(&self.position)
+                    {
+                        *occupation_tile = false;
+                    };
+                    let rand = rand::random_range(0..5);
+                    let sound = sounds.get(&format!("harvest{rand}")).unwrap();
+                    sound.set_pitch(rand::random_range(0.9..1.1));
+                    sound.play();
+                }
+            }
+            _ => {}
+        }
 
-        self.position = *next_position;
-        self.path.remove(0);
-        return (0, 0);
+        self.find_path(map, JobType::Harvest);
+        return (money, exp);
     }
 
     pub fn find_path(&mut self, map: &mut Map, job: JobType) -> Option<Vec<(i32, i32)>> {
@@ -266,32 +269,31 @@ impl Worker {
         self.display_position.0 = lerp(
             self.display_position.0,
             pixel_position.x,
-            5. * rl.get_frame_time(),
+            10. * rl.get_frame_time(),
         );
         self.display_position.1 = lerp(
             self.display_position.1,
             pixel_position.y,
-            5. * rl.get_frame_time(),
+            10. * rl.get_frame_time(),
         );
 
         let pixel_position = Vector2::new(self.display_position.0, self.display_position.1);
 
         // rl.draw_texture_ex(texture, pixel_position, 0., TILE_SCALE as f32, Color::WHITE);
 
-        let mut direction = (0, 1);
         if let Some(next_position) = self.path.get(0) {
-            direction = (
+            self.direction = (
                 next_position.0 - self.position.0,
                 next_position.1 - self.position.1,
             );
         }
 
-        let texture_index = match direction {
+        let texture_index = match self.direction {
             (0, 1) => 0,
             (0, -1) => 1,
             (1, 0) => 2,
             (-1, 0) => 3,
-            _ => 1,
+            _ => 4,
         };
 
         let source = Rectangle {

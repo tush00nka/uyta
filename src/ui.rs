@@ -225,7 +225,7 @@ impl Canvas {
                             -TILE_PIXEL_SIZE as f32,
                             0.0,
                             TILE_PIXEL_SIZE as f32,
-                            TILE_PIXEL_SIZE as f32 * 2.,
+                            TILE_PIXEL_SIZE as f32,
                         ),
                         rect,
                         Vector2::zero(),
