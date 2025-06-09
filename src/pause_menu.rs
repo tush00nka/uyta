@@ -1,7 +1,4 @@
-use raylib::{
-    ffi::CheckCollisionPointRec,
-    prelude::*,
-};
+use raylib::{ffi::CheckCollisionPointRec, prelude::*};
 
 use crate::map::TILE_SCALE;
 
@@ -44,8 +41,16 @@ impl PauseMenu {
     }
 
     pub fn switch_state(&mut self, rl: &mut RaylibHandle, state: PauseMenuState) {
-        let screen_width = rl.get_screen_width() as f32;
-        let screen_height = rl.get_screen_height() as f32;
+        let screen_width = if rl.is_window_fullscreen() {
+            get_monitor_width(get_current_monitor()) as f32
+        } else {
+            rl.get_screen_width() as f32
+        };
+        let screen_height = if rl.is_window_fullscreen() {
+            get_monitor_height(get_current_monitor()) as f32
+        } else {
+            rl.get_screen_height() as f32
+        };
         let menu_width = screen_width as f32 * 0.5;
         let menu_height = screen_height as f32 * 0.75;
 
@@ -174,8 +179,17 @@ impl PauseMenu {
             return;
         }
 
-        let screen_width = rl.get_screen_width();
-        let screen_height = rl.get_screen_height();
+        let screen_width = if rl.is_window_fullscreen() {
+            get_monitor_width(get_current_monitor())
+        } else {
+            rl.get_screen_width()
+        };
+        let screen_height = if rl.is_window_fullscreen() {
+            get_monitor_height(get_current_monitor())
+        } else {
+            rl.get_screen_height()
+        };
+
         let menu_width = (screen_width as f32 * 0.5) as i32;
         let menu_height = (screen_height as f32 * 0.75) as i32;
 
@@ -209,7 +223,8 @@ impl PauseMenu {
                 font,
                 &button.label,
                 Vector2::new(
-                    button.rect.x + button.rect.width / 2. - button.label.chars().count() as f32 * 6.,
+                    button.rect.x + button.rect.width / 2.
+                        - button.label.chars().count() as f32 * 6.,
                     button.rect.y + button.rect.height / 2. - 12.,
                 ),
                 24.,
