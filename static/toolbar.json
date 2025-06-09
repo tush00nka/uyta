@@ -11,9 +11,19 @@
             "price": 50
         },
         {
-            "tooltip": "Дыня",
+            "tooltip": "Тыква",
             "unlock_level": 5,
             "price": 100
+        },
+        {
+            "tooltip": "Картофель",
+            "unlock_level": 7,
+            "price": 300
+        },
+        {
+            "tooltip": "Клубника",
+            "unlock_level": 9,
+            "price": 750
         }
     ],
     "trees": [
@@ -26,6 +36,21 @@
             "tooltip": "Апельсиновое дерево",
             "unlock_level": 10,
             "price": 3000
+        },
+        {
+            "tooltip": "Вишня",
+            "unlock_level": 15,
+            "price": 6000
+        },
+        {
+            "tooltip": "Гранат",
+            "unlock_level": 20,
+            "price": 9000
+        },
+        {
+            "tooltip": "Кокосовая пальма",
+            "unlock_level": 25,
+            "price": 12000
         }
     ],
     "misc": [

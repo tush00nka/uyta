@@ -16,6 +16,7 @@ pub const TILE_SIZE: i32 = TILE_PIXEL_SIZE * TILE_SCALE;
 #[derive(Deserialize)]
 pub struct Crop {
     pub time_to_grow: usize,
+    grow_step: usize,
     pub sell_price: usize,
     pub exp: usize,
 }
@@ -23,6 +24,7 @@ pub struct Crop {
 #[derive(Deserialize)]
 pub struct Tree {
     pub time_to_grow: usize,
+    grow_step: usize,
     pub time_to_fruit: usize,
     pub sell_price: usize,
     pub exp: usize,
@@ -67,7 +69,8 @@ pub struct Map {
 
 impl Map {
     pub fn new() -> Self {
-        let static_data: MapStaticData = parse_json("static/tiles.json").expect("Can't deserialize");
+        let static_data: MapStaticData =
+            parse_json("static/tiles.json").expect("Can't deserialize");
         let dynamic_data = parse_json("dynamic/map_save.json");
 
         let has_save_file = match dynamic_data {
@@ -79,7 +82,7 @@ impl Map {
             return Self {
                 static_data,
                 dynamic_data: dynamic_data.unwrap(),
-            }
+            };
         }
 
         let mut dynamic_data = MapDynamicData {
@@ -107,7 +110,10 @@ impl Map {
             ));
         }
 
-        Self { static_data, dynamic_data }
+        Self {
+            static_data,
+            dynamic_data,
+        }
     }
 
     pub fn update_tiles(&mut self) {
@@ -150,7 +156,8 @@ impl Map {
         for expansion_point in self.dynamic_data.land_expansion_points.iter() {
             if selected_tile == *expansion_point {
                 index = Some(
-                    self.dynamic_data.land_expansion_points
+                    self.dynamic_data
+                        .land_expansion_points
                         .iter()
                         .position(|current| *current == selected_tile)
                         .unwrap(),
@@ -167,7 +174,9 @@ impl Map {
         self.dynamic_data.next_expansion_cost *= 3;
 
         let point = self.dynamic_data.land_expansion_points[index.unwrap()];
-        self.dynamic_data.land_expansion_points.remove(index.unwrap());
+        self.dynamic_data
+            .land_expansion_points
+            .remove(index.unwrap());
 
         let neg_half_width = -(CHUNK_WIDTH as i32 / 2) + point.0;
         let pos_half_width = CHUNK_WIDTH as i32 / 2 + point.0;
@@ -188,7 +197,9 @@ impl Map {
                 direction.1 * CHUNK_HEIGHT as i32 + point.1,
             );
 
-            if self.dynamic_data.tiles.contains_key(&position) {
+            if self.dynamic_data.tiles.contains_key(&position)
+                || self.dynamic_data.land_expansion_points.contains(&position)
+            {
                 continue;
             }
 
@@ -221,8 +232,13 @@ impl Map {
                 &format!("{}", self.dynamic_data.next_expansion_cost),
                 Vector2::new(
                     (expansion_point.0 * TILE_SIZE
-                        + self.dynamic_data.next_expansion_cost.to_string().chars().count() as i32 * 2)
-                        as f32,
+                        + self
+                            .dynamic_data
+                            .next_expansion_cost
+                            .to_string()
+                            .chars()
+                            .count() as i32
+                            * 2) as f32,
                     (expansion_point.1 * TILE_SIZE - TILE_SIZE / 3) as f32,
                 ),
                 24.,
@@ -284,7 +300,8 @@ impl Map {
             match tile {
                 TileType::Farmland { crop, stage, .. } => {
                     let source = Rectangle::new(
-                        *stage as f32 * TILE_PIXEL_SIZE as f32,
+                        (*stage / self.static_data.crops_data[*crop].grow_step) as f32
+                            * TILE_PIXEL_SIZE as f32,
                         0.,
                         TILE_PIXEL_SIZE as f32,
                         TILE_PIXEL_SIZE as f32,
@@ -308,15 +325,17 @@ impl Map {
                     );
                 }
                 TileType::Tree { tree, grow, stage } => {
-                    let ttg = self.static_data.tree_data[*tree].time_to_grow;
+                    let tree_data = &self.static_data.tree_data[*tree];
 
-                    let offset = if *grow < ttg {
-                        (*grow / 5) as f32 * TILE_PIXEL_SIZE as f32
+                    let offset = if *grow < tree_data.time_to_grow {
+                        (*grow / tree_data.grow_step) as f32 * TILE_PIXEL_SIZE as f32
                     } else {
                         if *stage >= self.static_data.tree_data[*tree].time_to_fruit {
-                            (ttg / 5) as f32 * TILE_PIXEL_SIZE as f32
+                            (tree_data.time_to_grow / tree_data.grow_step) as f32
+                                * TILE_PIXEL_SIZE as f32
                         } else {
-                            ((ttg - 1) / 5) as f32 * TILE_PIXEL_SIZE as f32
+                            ((tree_data.time_to_grow - 1) / tree_data.grow_step) as f32
+                                * TILE_PIXEL_SIZE as f32
                         }
                     };
 

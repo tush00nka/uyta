@@ -44,7 +44,10 @@ impl Player {
             return;
         }
 
-        self.display_money = (self.display_money as isize + money_diff / money_diff.abs()) as usize;
+        self.display_money = (self.display_money as isize
+            + money_diff / money_diff.abs()
+                * 10_i32.pow(money_diff.to_string().chars().count() as u32 - 1) as isize)
+            as usize;
     }
 
     pub fn update_exp(&mut self, sounds: &HashMap<String, Sound<'_>>) {
@@ -202,6 +205,7 @@ impl Player {
 
     pub fn save(&self) {
         let serialized = serde_json::to_string_pretty(self).expect("err");
-        std::fs::write("dynamic/player_save.json", serialized).expect("Couldn't write player data to json");
+        std::fs::write("dynamic/player_save.json", serialized)
+            .expect("Couldn't write player data to json");
     }
 }

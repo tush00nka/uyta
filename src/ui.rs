@@ -153,12 +153,21 @@ impl Canvas {
         let submenu_button_amount = match self.mode {
             MenuMode::Crops => map.static_data.crops_data.len(),
             MenuMode::Misc => 2,
-            MenuMode::Trees => 2,
+            MenuMode::Trees => map.static_data.tree_data.len(),
         };
         self.subcontent.clear();
+
+        rl.draw_rectangle(
+            (UI_BUTTON_SIZE + UI_GAPS) as i32,
+            (UI_BUTTON_SIZE + UI_GAPS) as i32,
+            UI_GAPS as i32 / 2,
+            UI_BUTTON_SIZE as i32 * 3 + UI_GAPS as i32,
+            Color::BLACK.alpha(0.5),
+        );
+
         for i in 0..submenu_button_amount {
             let rect = Rectangle {
-                x: (UI_BUTTON_SIZE + UI_GAPS),
+                x: (UI_BUTTON_SIZE + UI_GAPS * 2.),
                 y: i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS,
                 width: UI_BUTTON_SIZE,
                 height: UI_BUTTON_SIZE,
@@ -190,7 +199,7 @@ impl Canvas {
                     rl.draw_texture_pro(
                         texture_handler.textures.get(&id).unwrap(),
                         Rectangle::new(
-                            map.static_data.crops_data[i].time_to_grow as f32 * TILE_PIXEL_SIZE as f32,
+                            -TILE_PIXEL_SIZE as f32,
                             0.0,
                             TILE_PIXEL_SIZE as f32,
                             TILE_PIXEL_SIZE as f32,
@@ -213,7 +222,7 @@ impl Canvas {
                     rl.draw_texture_pro(
                         texture_handler.textures.get(&id).unwrap(),
                         Rectangle::new(
-                            (map.static_data.tree_data[i].time_to_grow / 5) as f32 * TILE_PIXEL_SIZE as f32,
+                            -TILE_PIXEL_SIZE as f32,
                             0.0,
                             TILE_PIXEL_SIZE as f32,
                             TILE_PIXEL_SIZE as f32 * 2.,
@@ -259,7 +268,7 @@ impl Canvas {
                 font,
                 &format!("{}\n{}", tooltip_pool[i].tooltip, price),
                 Vector2::new(
-                    2. * (UI_BUTTON_SIZE + UI_GAPS),
+                    2. * (UI_BUTTON_SIZE + UI_GAPS) + UI_GAPS,
                     i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS,
                 ),
                 UI_BUTTON_SIZE / 2.,
