@@ -7,7 +7,7 @@ use crate::{
     map::{Map, TileType},
     tutorial::Tutorial,
     ui::{Canvas, MenuMode},
-    utils::parse_json,
+    utils::{get_game_width, parse_json},
     worker::{Worker, WorkerHandler},
 };
 
@@ -70,25 +70,27 @@ impl Player {
             Color::WHITE,
         );
 
+        let screen_width = get_game_width(rl);
+
         let exp_bar_fill = self.exp as f32 / self.exp_to_lvl_up as f32;
         rl.draw_rectangle(
-            rl.get_screen_width() / 4,
+            screen_width / 4,
             10,
-            rl.get_screen_width() / 2,
+            screen_width / 2,
             24,
             Color::BLACK.alpha(0.5),
         );
         rl.draw_rectangle(
-            rl.get_screen_width() / 4,
+            screen_width / 4,
             10,
-            (exp_bar_fill * (rl.get_screen_width() / 2) as f32) as i32,
+            (exp_bar_fill * (screen_width/ 2) as f32) as i32,
             24,
             Color::DARKORANGE,
         );
         rl.draw_text_ex(
             font,
             &format!("Уровень {}", self.level),
-            Vector2::new(rl.get_screen_width() as f32 / 4. + 10., 10.),
+            Vector2::new(screen_width as f32 / 4. + 10., 10.),
             24.,
             0.,
             Color::WHITE,

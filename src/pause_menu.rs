@@ -1,6 +1,7 @@
 use raylib::{ffi::CheckCollisionPointRec, prelude::*};
+use serde::{Deserialize, Serialize};
 
-use crate::map::TILE_SCALE;
+use crate::{map::TILE_SCALE, utils::{get_game_height, get_game_width, parse_json}};
 
 pub struct Button {
     rect: Rectangle,
@@ -27,6 +28,33 @@ pub struct PauseMenu {
     pub state: PauseMenuState,
 }
 
+#[derive(Deserialize, Serialize)]
+pub struct GameSettigns {
+    pub master_volume: f32,
+    pub is_fullscreen: bool,
+}
+
+impl GameSettigns {
+    pub fn new() -> Self {
+        let res = parse_json("dynamic/settings.json");
+        match res {
+            Ok(settings) => return settings,
+            Err(_) => {
+                return Self {
+                    master_volume: 0.5,
+                    is_fullscreen: true,
+                };
+            }
+        }
+    }
+
+    pub fn save(&self) {
+        let serialized = serde_json::to_string_pretty(self).expect("err");
+        std::fs::write("dynamic/settings.json", serialized)
+            .expect("Couldn't write settings data to json");
+    }
+}
+
 impl PauseMenu {
     pub fn new(rl: &mut RaylibHandle) -> Self {
         let mut menu = Self {
@@ -41,16 +69,8 @@ impl PauseMenu {
     }
 
     pub fn switch_state(&mut self, rl: &mut RaylibHandle, state: PauseMenuState) {
-        let screen_width = if rl.is_window_fullscreen() {
-            get_monitor_width(get_current_monitor()) as f32
-        } else {
-            rl.get_screen_width() as f32
-        };
-        let screen_height = if rl.is_window_fullscreen() {
-            get_monitor_height(get_current_monitor()) as f32
-        } else {
-            rl.get_screen_height() as f32
-        };
+        let screen_width = get_game_width(rl) as f32;
+        let screen_height = get_game_height(rl) as f32;
         let menu_width = screen_width as f32 * 0.5;
         let menu_height = screen_height as f32 * 0.75;
 
@@ -100,6 +120,7 @@ impl PauseMenu {
                     label: "+".to_string(),
                     state: ButtonState::Normal,
                 };
+                let fullscreen_label = if rl.is_window_fullscreen() { "В окне".to_string() } else { "Во весь экран".to_string() };
                 let fullscreen_toggle = Button {
                     rect: Rectangle::new(
                         screen_width / 2. - menu_width / 4.,
@@ -107,7 +128,7 @@ impl PauseMenu {
                         menu_width / 2.,
                         50.,
                     ),
-                    label: "Во весь экран".to_string(),
+                    label: fullscreen_label,
                     state: ButtonState::Normal,
                 };
                 let save = Button {
@@ -179,16 +200,8 @@ impl PauseMenu {
             return;
         }
 
-        let screen_width = if rl.is_window_fullscreen() {
-            get_monitor_width(get_current_monitor())
-        } else {
-            rl.get_screen_width()
-        };
-        let screen_height = if rl.is_window_fullscreen() {
-            get_monitor_height(get_current_monitor())
-        } else {
-            rl.get_screen_height()
-        };
+        let screen_width = get_game_width(rl);
+        let screen_height = get_game_height(rl);
 
         let menu_width = (screen_width as f32 * 0.5) as i32;
         let menu_height = (screen_height as f32 * 0.75) as i32;

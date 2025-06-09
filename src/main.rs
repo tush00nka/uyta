@@ -4,7 +4,7 @@ use std::fs;
 use raylib::prelude::*;
 
 mod texture_handler;
-use crate::pause_menu::{ButtonState, PauseMenu, PauseMenuState};
+use crate::pause_menu::{ButtonState, GameSettigns, PauseMenu, PauseMenuState};
 use crate::texture_handler::TextureHandler;
 
 mod map;
@@ -25,8 +25,8 @@ mod pause_menu;
 mod ui;
 
 mod renderer;
-mod utils;
 mod tutorial;
+mod utils;
 
 const SCREEN_WIDTH: i32 = 1280;
 const SCREEN_HEIGHT: i32 = 720;
@@ -96,6 +96,13 @@ fn main() {
     let mut player = Player::new();
     let mut worker_handler = WorkerHandler::new();
     let mut canvas = Canvas::new();
+
+    let mut game_settings = GameSettigns::new();
+    rl_audio.set_master_volume(game_settings.master_volume);
+    if game_settings.is_fullscreen && !rl.is_window_fullscreen() {
+        rl.toggle_fullscreen();
+    }
+
     let mut pause_menu = PauseMenu::new(&mut rl);
     let mut tutorial = Tutorial::new();
 
@@ -157,15 +164,21 @@ fn main() {
             }
             PauseMenuState::Settings => {
                 if pause_menu.buttons[0].state == ButtonState::Pressed {
-                    rl_audio.set_master_volume((rl_audio.get_master_volume() - 0.1).max(0.));
+                    let new_volume = (rl_audio.get_master_volume() - 0.1).max(0.);
+                    rl_audio.set_master_volume(new_volume);
+                    game_settings.master_volume = new_volume;
                 }
                 if pause_menu.buttons[1].state == ButtonState::Pressed {
-                    rl_audio.set_master_volume((rl_audio.get_master_volume() + 0.1).min(1.));
+                    let new_volume = (rl_audio.get_master_volume() + 0.1).min(1.);
+                    rl_audio.set_master_volume(new_volume);
+                    game_settings.master_volume = new_volume;
                 }
                 if pause_menu.buttons[2].state == ButtonState::Pressed {
                     rl.toggle_fullscreen();
+                    game_settings.is_fullscreen = rl.is_window_fullscreen();
                 }
                 if pause_menu.buttons[3].state == ButtonState::Pressed {
+                    game_settings.save();
                     pause_menu.switch_state(&mut rl, PauseMenuState::Main);
                 }
             }
@@ -187,7 +200,7 @@ fn main() {
                 &mut player,
                 &mut worker_handler,
                 selected_tile,
-                &mut tutorial
+                &mut tutorial,
             );
         }
 
