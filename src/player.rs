@@ -40,6 +40,11 @@ impl Player {
     }
 
     pub fn update_money(&mut self) {
+        if cfg!(target_arch="wasm32") {
+            self.display_money = self.money;
+            return;
+        }
+
         let money_diff = self.money as isize - self.display_money as isize;
         if money_diff == 0 {
             return;
