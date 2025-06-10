@@ -2,4 +2,4 @@
 #rustflags = ["-C", "link-args=-s USE_GLFW=3 -s ASSERTIONS=1 --profiling"]
 # rustflags = ["-C", "link-args=-s USE_GLFW=3 -s FORCE_FILESYSTEM=1 -s ALLOW_MEMORY_GROWTH=1 --preload-file /root/raylib-rs/showcase/original@original"]
 linker = "emcc"
-rustflags = ["-C", "link-args=-s USE_GLFW=3 -s FORCE_FILESYSTEM=1 -s ASYNCIFY -s ALLOW_MEMORY_GROWTH=1 --preload-file ./static"]
+rustflags = ["-C", "link-args=-s USE_GLFW=3 -s FORCE_FILESYSTEM=1 -s ASYNCIFY -s ALLOW_MEMORY_GROWTH=1 --preload-file static@static"]
