@@ -160,9 +160,9 @@ impl PauseMenu {
             return false;
         }
 
-        if rl.is_window_resized() {
-            self.switch_state(rl, self.state);
-        }
+        // if rl.is_window_resized() {
+        //     self.switch_state(rl, self.state);
+        // }
 
         let mut blocks_mouse = false;
 

@@ -74,11 +74,11 @@ impl CameraController {
             ),
         };
 
-        if rl.is_window_resized() {
-            self.camera.offset = Vector2 {
-                x: rl.get_screen_width() as f32 / 2.,
-                y: rl.get_screen_height() as f32 / 2.,
-            };
-        }
+        // if rl.is_window_resized() {
+        //     self.camera.offset = Vector2 {
+        //         x: rl.get_screen_width() as f32 / 2.,
+        //         y: rl.get_screen_height() as f32 / 2.,
+        //     };
+        // }
     }
 }

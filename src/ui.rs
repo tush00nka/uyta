@@ -199,7 +199,10 @@ impl Canvas {
                     rl.draw_texture_pro(
                         texture_handler.textures.get(&id).unwrap(),
                         Rectangle::new(
-                            -TILE_PIXEL_SIZE as f32,
+                            (map.static_data.crops_data[i].time_to_grow
+                                / map.static_data.crops_data[i].grow_step)
+                                as f32
+                                * TILE_PIXEL_SIZE as f32,
                             0.0,
                             TILE_PIXEL_SIZE as f32,
                             TILE_PIXEL_SIZE as f32,
@@ -222,7 +225,10 @@ impl Canvas {
                     rl.draw_texture_pro(
                         texture_handler.textures.get(&id).unwrap(),
                         Rectangle::new(
-                            -TILE_PIXEL_SIZE as f32,
+                            (map.static_data.tree_data[i].time_to_grow
+                                / map.static_data.tree_data[i].grow_step)
+                                as f32
+                                * TILE_PIXEL_SIZE as f32,
                             0.0,
                             TILE_PIXEL_SIZE as f32,
                             TILE_PIXEL_SIZE as f32,

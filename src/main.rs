@@ -1,6 +1,9 @@
 use std::collections::HashMap;
 use std::fs;
 
+use raylib::ffi::{
+    CloseAudioDevice, GetMasterVolume, InitAudioDevice, LoadSound, SetMasterVolume, Sound,
+};
 use raylib::prelude::*;
 
 mod texture_handler;
@@ -33,7 +36,7 @@ const SCREEN_HEIGHT: i32 = 720;
 
 const TILE_UPDATE_TIME: f32 = 0.5;
 
-fn init_shader(shader: &mut Shader, rl: &mut RaylibHandle) {
+fn init_shader(shader: &mut Shader) {
     let freq_xloc = shader.get_shader_location("freqX");
     let freq_yloc = shader.get_shader_location("freqY");
     let amp_xloc = shader.get_shader_location("ampX");
@@ -48,7 +51,7 @@ fn init_shader(shader: &mut Shader, rl: &mut RaylibHandle) {
     let speed_x = 5.0;
     let speed_y = 2.0;
 
-    let screen_size = Vector2::new(rl.get_screen_width() as f32, rl.get_screen_height() as f32);
+    let screen_size = Vector2::new(SCREEN_WIDTH as f32, SCREEN_HEIGHT as f32);
     shader.set_shader_value(shader.get_shader_location("size"), screen_size);
     shader.set_shader_value(freq_xloc, freq_x);
     shader.set_shader_value(freq_yloc, freq_y);
@@ -59,35 +62,43 @@ fn init_shader(shader: &mut Shader, rl: &mut RaylibHandle) {
 }
 
 fn main() {
-    let (mut rl, thread) = raylib::init()
-        .size(SCREEN_WIDTH, SCREEN_HEIGHT)
-        .resizable()
-        .title("Уйта")
-        .build();
+    let (mut rl, thread) = if cfg!(target_arch = "wasm32") {
+        raylib::init().size(SCREEN_WIDTH, SCREEN_HEIGHT).build()
+    } else {
+        raylib::init()
+            .size(SCREEN_WIDTH, SCREEN_HEIGHT)
+            .resizable()
+            .title("Уйта")
+            .build()
+    };
 
-    let rl_audio = RaylibAudio::init_audio_device().expect("error init audio device");
+    if !cfg!(target_arch = "wasm32") {
+        unsafe { InitAudioDevice() };
+    }
+
+    // let rl_audio = RaylibAudio::init_audio_device().expect("error init audio device");
     let mut sounds = HashMap::new();
+    if !cfg!(target_arch = "wasm32") {
+        let filenames = fs::read_dir("static/sfx/").unwrap();
+        for filename in filenames {
+            let file = match filename {
+                Ok(f) => f,
+                Err(e) => panic!("couldn't load this particular sfx {e}"),
+            };
 
-    let filenames = fs::read_dir("static/sfx/").unwrap();
-    for filename in filenames {
-        let file = match filename {
-            Ok(f) => f,
-            Err(e) => panic!("couldn't load this particular sfx {e}"),
-        };
+            let name = file
+                .file_name()
+                .into_string()
+                .unwrap()
+                .split('.')
+                .next()
+                .unwrap()
+                .to_string();
 
-        let name = file
-            .file_name()
-            .into_string()
-            .unwrap()
-            .split('.')
-            .next()
-            .unwrap()
-            .to_string();
-
-        let sound: Sound = rl_audio
-            .new_sound(file.path().to_str().unwrap())
-            .expect("error loading this particular sound");
-        sounds.insert(name, sound);
+            let sound: Sound =
+                unsafe { LoadSound(file.path().to_str().unwrap().as_ptr() as *const i8) };
+            sounds.insert(name, sound);
+        }
     }
 
     let texture_handler = TextureHandler::new(&mut rl, &thread);
@@ -98,10 +109,11 @@ fn main() {
     let mut canvas = Canvas::new();
 
     let mut game_settings = GameSettigns::new();
-    rl_audio.set_master_volume(game_settings.master_volume);
-    if game_settings.is_fullscreen && !rl.is_window_fullscreen() {
-        rl.toggle_fullscreen();
-    }
+    // rl_audio.set_master_volume(game_settings.master_volume);
+
+    // if game_settings.is_fullscreen && !rl.is_window_fullscreen() {
+    //     rl.toggle_fullscreen();
+    // }
 
     let mut pause_menu = PauseMenu::new(&mut rl);
     let mut tutorial = Tutorial::new();
@@ -115,11 +127,15 @@ fn main() {
         )
         .expect("no font???");
 
-    rl.set_target_fps(
-        get_monitor_refresh_rate(get_current_monitor())
-            .try_into()
-            .unwrap(),
-    );
+    if cfg!(target_arch = "wasm32") {
+        rl.set_target_fps(60);
+    } else {
+        rl.set_target_fps(
+            get_monitor_refresh_rate(get_current_monitor())
+                .try_into()
+                .unwrap(),
+        );
+    }
 
     rl.set_exit_key(None);
 
@@ -134,8 +150,14 @@ fn main() {
 
     let bg_texture = rl.load_texture_from_image(&thread, &image).expect("err");
 
-    let mut shader = rl.load_shader(&thread, None, Some("static/shaders/wave.fs"));
-    init_shader(&mut shader, &mut rl);
+    let shader_path = if cfg!(target_arch = "wasm32") {
+        "static/shaders/wave100.fs"
+    } else {
+        "static/shaders/wave330.fs"
+    };
+
+    let mut shader = rl.load_shader(&thread, None, Some(shader_path));
+    init_shader(&mut shader);
 
     let seconds_loc = shader.get_shader_location("seconds");
     let mut seconds = 0.;
@@ -154,32 +176,49 @@ fn main() {
         match pause_menu.state {
             PauseMenuState::Main => {
                 // todo: replace with a map maybe
-                if pause_menu.buttons[1].state == ButtonState::Pressed {
-                    break;
-                }
-
                 if pause_menu.buttons[0].state == ButtonState::Pressed {
                     pause_menu.switch_state(&mut rl, PauseMenuState::Settings);
+                }
+
+                if !cfg!(target_arch = "wasm32") {
+                    if pause_menu.buttons[1].state == ButtonState::Pressed {
+                        break;
+                    }
                 }
             }
             PauseMenuState::Settings => {
                 if pause_menu.buttons[0].state == ButtonState::Pressed {
-                    let new_volume = (rl_audio.get_master_volume() - 0.1).max(0.);
-                    rl_audio.set_master_volume(new_volume);
-                    game_settings.master_volume = new_volume;
+                    unsafe {
+                        let new_volume = (GetMasterVolume() - 0.1).max(0.);
+                        SetMasterVolume(new_volume);
+                        game_settings.master_volume = new_volume;
+                    }
+                    // let new_volume = (rl_audio.get_master_volume() - 0.1).max(0.);
+                    // rl_audio.set_master_volume(new_volume);
+                    // game_settings.master_volume = new_volume;
                 }
                 if pause_menu.buttons[1].state == ButtonState::Pressed {
-                    let new_volume = (rl_audio.get_master_volume() + 0.1).min(1.);
-                    rl_audio.set_master_volume(new_volume);
-                    game_settings.master_volume = new_volume;
+                    unsafe {
+                        let new_volume = (GetMasterVolume() + 0.1).min(1.);
+                        SetMasterVolume(new_volume);
+                        game_settings.master_volume = new_volume;
+                    }
+                    // let new_volume = (rl_audio.get_master_volume() + 0.1).min(1.);
+                    // rl_audio.set_master_volume(new_volume);
+                    // game_settings.master_volume = new_volume;
                 }
-                if pause_menu.buttons[2].state == ButtonState::Pressed {
-                    rl.toggle_fullscreen();
-                    game_settings.is_fullscreen = rl.is_window_fullscreen();
+                if !cfg!(target_arch = "wasm32") {
+                    if pause_menu.buttons[2].state == ButtonState::Pressed {
+                        rl.toggle_fullscreen();
+                        game_settings.is_fullscreen = rl.is_window_fullscreen();
+                    }
                 }
                 if pause_menu.buttons[3].state == ButtonState::Pressed {
-                    game_settings.save();
                     pause_menu.switch_state(&mut rl, PauseMenuState::Main);
+
+                    if !cfg!(target_arch = "wasm32") {
+                        game_settings.save();
+                    }
                 }
             }
         }
@@ -239,10 +278,21 @@ fn main() {
             &pause_menu,
             &tutorial,
             &font,
-            rl_audio.get_master_volume(),
+            // rl_audio.get_master_volume(),
+            unsafe { GetMasterVolume() },
         );
     }
 
+    if !cfg!(target_arch = "wasm32") {
+        unsafe { CloseAudioDevice() };
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    save_game(&worker_handler, &player, &map);
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn save_game(worker_handler: &WorkerHandler, player: &Player, map: &Map) {
     worker_handler.save();
     player.save();
     map.save();

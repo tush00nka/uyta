@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use raylib::{audio::Sound, prelude::*};
+use raylib::{ffi::{PlaySound, Sound}, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -22,11 +22,12 @@ pub struct Player {
 
 impl Player {
     pub fn new() -> Self {
-        let player = parse_json("dynamic/player_save.json");
-
-        match player {
-            Ok(_) => return player.unwrap(),
-            Err(_) => {}
+        if !cfg!(target_arch = "wasm32") {
+            let player = parse_json("dynamic/player_save.json");
+            match player {
+                Ok(_) => return player.unwrap(),
+                Err(_) => {}
+            }
         }
 
         Self {
@@ -50,12 +51,14 @@ impl Player {
             as usize;
     }
 
-    pub fn update_exp(&mut self, sounds: &HashMap<String, Sound<'_>>) {
+    pub fn update_exp(&mut self, sounds: &HashMap<String, Sound>) {
         if self.exp >= self.exp_to_lvl_up {
             self.level += 1;
             self.exp = 0;
             self.exp_to_lvl_up = (self.exp_to_lvl_up as f32 * 1.5) as usize;
-            sounds.get("level_up").unwrap().play();
+            if !cfg!(target_arch="wasm32") {
+                unsafe { PlaySound(*sounds.get("level_up").unwrap()) };
+            }
         }
     }
 
@@ -83,7 +86,7 @@ impl Player {
         rl.draw_rectangle(
             screen_width / 4,
             10,
-            (exp_bar_fill * (screen_width/ 2) as f32) as i32,
+            (exp_bar_fill * (screen_width / 2) as f32) as i32,
             24,
             Color::DARKORANGE,
         );
@@ -205,6 +208,7 @@ impl Player {
         }
     }
 
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn save(&self) {
         let serialized = serde_json::to_string_pretty(self).expect("err");
         std::fs::write("dynamic/player_save.json", serialized)

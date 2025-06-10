@@ -16,7 +16,7 @@ pub const TILE_SIZE: i32 = TILE_PIXEL_SIZE * TILE_SCALE;
 #[derive(Deserialize)]
 pub struct Crop {
     pub time_to_grow: usize,
-    grow_step: usize,
+    pub grow_step: usize,
     pub sell_price: usize,
     pub exp: usize,
 }
@@ -24,7 +24,7 @@ pub struct Crop {
 #[derive(Deserialize)]
 pub struct Tree {
     pub time_to_grow: usize,
-    grow_step: usize,
+    pub grow_step: usize,
     pub time_to_fruit: usize,
     pub sell_price: usize,
     pub exp: usize,
@@ -71,18 +71,21 @@ impl Map {
     pub fn new() -> Self {
         let static_data: MapStaticData =
             parse_json("static/tiles.json").expect("Can't deserialize");
-        let dynamic_data = parse_json("dynamic/map_save.json");
 
-        let has_save_file = match dynamic_data {
-            Ok(_) => true,
-            Err(_) => false,
-        };
+        if !cfg!(target_arch = "wasm32") {
+            let dynamic_data = parse_json("dynamic/map_save.json");
 
-        if has_save_file {
-            return Self {
-                static_data,
-                dynamic_data: dynamic_data.unwrap(),
+            let has_save_file = match dynamic_data {
+                Ok(_) => true,
+                Err(_) => false,
             };
+
+            if has_save_file {
+                return Self {
+                    static_data,
+                    dynamic_data: dynamic_data.unwrap(),
+                };
+            }
         }
 
         let mut dynamic_data = MapDynamicData {
@@ -272,15 +275,28 @@ impl Map {
 
             for direction in directions {
                 let pos = (position.0 + direction.0, position.1 + direction.1);
+
+                let mut direction = direction;
+                if cfg!(target_arch = "wasm32") {
+                    if direction.0 < 0 {
+                        direction.0 = 2;
+                    }
+                    if direction.1 < 0 {
+                        direction.1 = 2;
+                    }
+                }
+
+                let source = Rectangle::new(
+                    (direction.0 * TILE_PIXEL_SIZE) as f32,
+                    (direction.1 * TILE_PIXEL_SIZE) as f32,
+                    TILE_PIXEL_SIZE as f32,
+                    TILE_PIXEL_SIZE as f32,
+                );
+
                 if !self.dynamic_data.tiles.contains_key(&pos) {
                     rl.draw_texture_pro(
                         border_texture,
-                        Rectangle::new(
-                            (direction.0 * TILE_PIXEL_SIZE) as f32,
-                            (direction.1 * TILE_PIXEL_SIZE) as f32,
-                            TILE_PIXEL_SIZE as f32,
-                            TILE_PIXEL_SIZE as f32,
-                        ),
+                        source,
                         Rectangle::new(
                             (pos.0 * TILE_SIZE) as f32,
                             (pos.1 * TILE_SIZE) as f32,
@@ -375,6 +391,7 @@ impl Map {
         }
     }
 
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn save(&self) {
         let serialized = serde_json::to_string_pretty(&self.dynamic_data).expect("err");
         std::fs::write("dynamic/map_save.json", serialized)

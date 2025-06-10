@@ -3,7 +3,7 @@ use std::{
     f32::INFINITY,
 };
 
-use raylib::prelude::*;
+use raylib::{ffi::{PlaySound, Sound}, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -19,17 +19,18 @@ pub struct WorkerHandler {
 
 impl WorkerHandler {
     pub fn new() -> Self {
-        let res = parse_json("dynamic/workers_save.json");
-
-        match res {
-            Ok(handler) => handler,
-            Err(_) => {
-                println!("no worker");
-
-                Self {
-                    workers: vec![Worker::new(0, 0)],
+        if !cfg!(target_arch = "wasm32") {
+            let res = parse_json("dynamic/workers_save.json");
+            match res {
+                Ok(handler) => return handler,
+                Err(_) => {
+                    println!("no worker");
                 }
             }
+        }
+
+        Self {
+            workers: vec![Worker::new(0, 0)],
         }
     }
 
@@ -41,7 +42,7 @@ impl WorkerHandler {
         &mut self,
         player: &mut Player,
         map: &mut Map,
-        sounds: &HashMap<String, Sound<'_>>,
+        sounds: &HashMap<String, Sound>,
     ) {
         self.workers.iter_mut().for_each(|worker| {
             // feels weird and illegal
@@ -51,6 +52,7 @@ impl WorkerHandler {
         });
     }
 
+    #[cfg(not(target_arch="wasm32"))]
     pub fn save(&self) {
         let serialized = serde_json::to_string_pretty(self).expect("couldn't save workers data");
         std::fs::write("dynamic/workers_save.json", serialized)
@@ -81,7 +83,7 @@ impl Worker {
                 (y * TILE_SIZE - TILE_SIZE / 2) as f32,
             ),
             path: vec![],
-            direction: (0, 0)
+            direction: (0, 0),
         }
     }
 
@@ -150,7 +152,7 @@ impl Worker {
     pub fn follow_path(
         &mut self,
         map: &mut Map,
-        sounds: &HashMap<String, Sound<'_>>,
+        sounds: &HashMap<String, Sound>,
     ) -> (usize, usize) {
         if let Some(next_position) = self.path.get(0) {
             self.position = *next_position;
@@ -176,10 +178,13 @@ impl Worker {
                     {
                         *occupation_tile = false;
                     };
-                    let rand = rand::random_range(0..5);
-                    let sound = sounds.get(&format!("harvest{rand}")).unwrap();
-                    sound.set_pitch(rand::random_range(0.9..1.1));
-                    sound.play();
+                    if !cfg!(target_arch="wasm32") {
+                        let rand = rand::random_range(0..5);
+                    // let sound = sounds.get(&format!("harvest{rand}")).unwrap();
+                    // sound.set_pitch(rand::random_range(0.9..1.1));
+                    // sound.play();
+                        unsafe { PlaySound(*sounds.get(&format!("harvest{rand}")).unwrap()) };
+                    }
                 }
             }
             TileType::Tree { tree, stage, .. } => {
@@ -193,10 +198,13 @@ impl Worker {
                     {
                         *occupation_tile = false;
                     };
-                    let rand = rand::random_range(0..5);
-                    let sound = sounds.get(&format!("harvest{rand}")).unwrap();
-                    sound.set_pitch(rand::random_range(0.9..1.1));
-                    sound.play();
+                    if !cfg!(target_arch="wasm32") {
+                        let rand = rand::random_range(0..5);
+                        // let sound = sounds.get(&format!("harvest{rand}")).unwrap();
+                        // sound.set_pitch(rand::random_range(0.9..1.1));
+                        // sound.play();
+                        unsafe { PlaySound(*sounds.get(&format!("harvest{rand}")).unwrap()) };
+                    }
                 }
             }
             _ => {}
