@@ -1,0 +1,71 @@
+{
+    "crops_data": [
+        {
+            "time_to_grow": 3,
+            "grow_step": 1,
+            "sell_price": 5,
+            "exp": 1
+        },
+        {
+            "time_to_grow": 6,
+            "grow_step": 2,
+            "sell_price": 15,
+            "exp": 3
+        },
+        {
+            "time_to_grow": 9,
+            "grow_step": 2,
+            "sell_price": 25,
+            "exp": 5
+        },
+        {
+            "time_to_grow": 9,
+            "grow_step": 2,
+            "sell_price": 40,
+            "exp": 10
+        },
+        {
+            "time_to_grow": 9,
+            "grow_step": 3,
+            "sell_price": 75,
+            "exp": 15
+        }
+    ],
+    "tree_data": [
+        {
+            "time_to_grow": 20,
+            "grow_step": 5,
+            "time_to_fruit": 10,
+            "sell_price": 100,
+            "exp": 10
+        },
+        {
+            "time_to_grow": 20,
+            "grow_step": 5,
+            "time_to_fruit": 20,
+            "sell_price": 300,
+            "exp": 20
+        },
+        {
+            "time_to_grow": 20,
+            "grow_step": 5,
+            "time_to_fruit": 5,
+            "sell_price": 100,
+            "exp": 30
+        },
+        {
+            "time_to_grow": 40,
+            "grow_step": 10,
+            "time_to_fruit": 30,
+            "sell_price": 500,
+            "exp": 40
+        },
+        { 
+            "time_to_grow": 20,
+            "grow_step": 5,
+            "time_to_fruit": 20,
+            "sell_price": 750,
+            "exp": 50
+        }
+    ]
+}
