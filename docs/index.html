@@ -186,7 +186,7 @@
 </head>
 
 <body>
-    <div id="header">
+    <!-- <div id="header">
         <a id="logo" href="https://www.raylib.com"></a>
 
         <div class="spinner" id='spinner'></div>
@@ -195,12 +195,12 @@
         <span id='controls'>
             <span><input type="button" value="🖵 FULLSCREEN" onclick="Module.requestFullscreen(false, false)"></span>
             <span><input type="button" id="btn-audio" value="🔇 SUSPEND" onclick="toggleAudio()"></span>
-        </span>
+        </span> 
 
         <div class="emscripten">
             <progress value="0" max="100" id="progress" hidden=1></progress>
         </div>
-    </div>
+    </div> -->
 
     <div class="emscripten_border">
         <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
@@ -228,9 +228,6 @@
         }
     </script>
     <script type='text/javascript'>
-        var statusElement = document.querySelector('#status');
-        var progressElement = document.querySelector('#progress');
-        var spinnerElement = document.querySelector('#spinner');
         var Module = {
             preRun: [],
             postRun: [],
@@ -280,21 +277,6 @@
 
                 Module.setStatus.last.time = now;
                 Module.setStatus.last.text = text;
-
-                if (m) {
-                    text = m[1];
-                    progressElement.value = parseInt(m[2]) * 100;
-                    progressElement.max = parseInt(m[4]) * 100;
-                    progressElement.hidden = true;
-                    spinnerElement.hidden = false;
-                } else {
-                    progressElement.value = null;
-                    progressElement.max = null;
-                    progressElement.hidden = true;
-                    if (!text) spinnerElement.style.display = 'none';
-                }
-
-                statusElement.innerHTML = text;
             },
             totalDependencies: 0,
             monitorRunDependencies: function (left) {
@@ -308,7 +290,6 @@
 
         window.onerror = function () {
             Module.setStatus('Exception thrown, see JavaScript console');
-            spinnerElement.style.display = 'none';
             Module.setStatus = function (text) { if (text) Module.printErr('[post-exception status] ' + text); };
         };
     </script>
