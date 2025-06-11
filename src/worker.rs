@@ -7,6 +7,7 @@ use raylib::prelude::*;
 use serde::{Deserialize, Serialize};
 
 use crate::{
+    animal::AnimalHandler,
     map::{Map, TILE_PIXEL_SIZE, TILE_SIZE, TileType},
     player::Player,
     utils::parse_json,
@@ -41,11 +42,12 @@ impl WorkerHandler {
         &mut self,
         player: &mut Player,
         map: &mut Map,
+        animal_handler: &AnimalHandler,
         sounds: &HashMap<String, Sound<'_>>,
     ) {
         self.workers.iter_mut().for_each(|worker| {
             // feels weird and illegal
-            let (money, exp) = worker.follow_path(map, &sounds);
+            let (money, exp) = worker.follow_path(map, animal_handler, &sounds);
             player.money += money;
             player.exp += exp;
         });
@@ -81,7 +83,7 @@ impl Worker {
                 (y * TILE_SIZE - TILE_SIZE / 2) as f32,
             ),
             path: vec![],
-            direction: (0, 0)
+            direction: (0, 0),
         }
     }
 
@@ -104,34 +106,46 @@ impl Worker {
                         }
                     }
 
+                    let tile_position_vec =
+                        Vector2::new(tile_position.0 as f32, tile_position.1 as f32);
+
                     match tile {
                         TileType::Grass => {}
                         TileType::Farmland { crop, stage } => {
                             if *stage >= map.static_data.crops_data[*crop].time_to_grow {
-                                // existing ready to harvest crop
-                                let crop_position =
-                                    Vector2::new(tile_position.0 as f32, tile_position.1 as f32);
                                 let worker_position =
                                     Vector2::new(self.position.0 as f32, self.position.1 as f32);
 
-                                if crop_position.distance_to(worker_position) < shortest_distance {
+                                if tile_position_vec.distance_to(worker_position)
+                                    < shortest_distance
+                                {
                                     closest = *tile_position;
-                                    shortest_distance = crop_position.distance_to(worker_position);
+                                    shortest_distance =
+                                        tile_position_vec.distance_to(worker_position);
                                 }
                             }
                         }
                         TileType::Tree { tree, stage, .. } => {
                             if *stage >= map.static_data.tree_data[*tree].time_to_fruit {
-                                // ready to collect from tree
-                                let tree_position =
-                                    Vector2::new(tile_position.0 as f32, tile_position.1 as f32);
                                 let worker_position =
                                     Vector2::new(self.position.0 as f32, self.position.1 as f32);
 
-                                if tree_position.distance_to(worker_position) < shortest_distance {
+                                if tile_position_vec.distance_to(worker_position)
+                                    < shortest_distance
+                                {
                                     closest = *tile_position;
-                                    shortest_distance = tree_position.distance_to(worker_position);
+                                    shortest_distance =
+                                        tile_position_vec.distance_to(worker_position);
                                 }
+                            }
+                        }
+                        TileType::AnimalDrop { .. } => {
+                            let worker_position =
+                                Vector2::new(self.position.0 as f32, self.position.1 as f32);
+
+                            if tile_position_vec.distance_to(worker_position) < shortest_distance {
+                                closest = *tile_position;
+                                shortest_distance = tile_position_vec.distance_to(worker_position);
                             }
                         }
                     }
@@ -150,6 +164,7 @@ impl Worker {
     pub fn follow_path(
         &mut self,
         map: &mut Map,
+        animal_handler: &AnimalHandler,
         sounds: &HashMap<String, Sound<'_>>,
     ) -> (usize, usize) {
         if let Some(next_position) = self.path.get(0) {
@@ -198,6 +213,26 @@ impl Worker {
                     sound.set_pitch(rand::random_range(0.9..1.1));
                     sound.play();
                 }
+            }
+            TileType::AnimalDrop { animal } => {
+                money = animal_handler.static_data.animal_data[*animal as usize].drop_cost;
+                // todo: make separate exp value im animal_data
+                exp = animal_handler.static_data.animal_data[*animal as usize].drop_cost / 10;
+
+                if let Some(occupation_tile) =
+                    map.dynamic_data.occupation_map.get_mut(&self.position)
+                {
+                    *occupation_tile = false;
+                };
+
+                let rand = rand::random_range(0..5);
+                let sound = sounds.get(&format!("harvest{rand}")).unwrap();
+                sound.set_pitch(rand::random_range(0.9..1.1));
+                sound.play();
+
+                map.dynamic_data
+                    .tiles
+                    .insert(self.position, TileType::Grass);
             }
             _ => {}
         }

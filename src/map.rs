@@ -4,7 +4,12 @@ use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use std::collections::HashMap;
 
-use crate::{player::Player, utils::parse_json, worker::WorkerHandler};
+use crate::{
+    animal::{AnimalHandler, AnimalType},
+    player::Player,
+    utils::parse_json,
+    worker::WorkerHandler,
+};
 
 pub const CHUNK_WIDTH: usize = 5;
 pub const CHUNK_HEIGHT: usize = 5;
@@ -41,6 +46,9 @@ pub enum TileType {
     Farmland {
         crop: usize,
         stage: usize,
+    },
+    AnimalDrop {
+        animal: AnimalType,
     },
 }
 
@@ -212,6 +220,7 @@ impl Map {
         rl: &mut RaylibDrawHandle,
         textures: &HashMap<String, Texture2D>,
         worker_handler: &mut WorkerHandler,
+        animal_handler: &mut AnimalHandler,
         font: &Font,
     ) {
         let expansion_texture = textures.get("land_expansion").unwrap();
@@ -251,9 +260,8 @@ impl Map {
 
         for (position, tile) in self.dynamic_data.tiles.iter().sorted() {
             let texture_id = match tile {
-                TileType::Grass => "grass",
-                TileType::Tree { .. } => "grass",
                 TileType::Farmland { .. } => "dirt",
+                _ => "grass",
             };
 
             let pixel_pos = Vector2::new(
@@ -363,6 +371,27 @@ impl Map {
                         Color::WHITE,
                     );
                 }
+                TileType::AnimalDrop { animal } => {
+                    let source =
+                        Rectangle::new(0., 0., TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32);
+                    let destination = Rectangle::new(
+                        (position.0 * TILE_SIZE) as f32,
+                        (position.1 * TILE_SIZE) as f32,
+                        TILE_SIZE as f32,
+                        TILE_SIZE as f32,
+                    );
+
+                    let id: &str = &format!("animal_drop{}", *animal as usize);
+
+                    rl.draw_texture_pro(
+                        textures.get(id).unwrap_or(textures.get("error").unwrap()),
+                        source,
+                        destination,
+                        Vector2::zero(),
+                        0.,
+                        Color::WHITE,
+                    );
+                }
                 _ => {}
             }
 
@@ -372,6 +401,15 @@ impl Map {
                     worker.draw(rl, worker_texture);
                 }
             });
+            animal_handler
+                .dynamic_data
+                .animals
+                .iter_mut()
+                .for_each(|animal| {
+                    if animal.position == *position {
+                        animal.draw(rl, &textures);
+                    }
+                })
         }
     }
 

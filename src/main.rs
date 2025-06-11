@@ -4,6 +4,7 @@ use std::fs;
 use raylib::prelude::*;
 
 mod texture_handler;
+use crate::animal::AnimalHandler;
 use crate::pause_menu::{ButtonState, GameSettigns, PauseMenu, PauseMenuState};
 use crate::texture_handler::TextureHandler;
 
@@ -27,6 +28,8 @@ mod ui;
 mod renderer;
 mod tutorial;
 mod utils;
+
+mod animal;
 
 const SCREEN_WIDTH: i32 = 1280;
 const SCREEN_HEIGHT: i32 = 720;
@@ -95,6 +98,7 @@ fn main() {
     let mut map = Map::new();
     let mut player = Player::new();
     let mut worker_handler = WorkerHandler::new();
+    let mut animal_handler = AnimalHandler::new();
     let mut canvas = Canvas::new();
 
     let mut game_settings = GameSettigns::new();
@@ -199,6 +203,7 @@ fn main() {
                 &mut map,
                 &mut player,
                 &mut worker_handler,
+                &mut animal_handler,
                 selected_tile,
                 &mut tutorial,
             );
@@ -215,7 +220,8 @@ fn main() {
 
             map.update_tiles();
 
-            worker_handler.advance_workers(&mut player, &mut map, &sounds);
+            worker_handler.advance_workers(&mut player, &mut map, &animal_handler, &sounds);
+            animal_handler.move_animals(&mut map);
         }
 
         let mut d = rl.begin_drawing(&thread);
@@ -227,6 +233,7 @@ fn main() {
             &camera_controller,
             &texture_handler,
             &mut worker_handler,
+            &mut animal_handler,
             &font,
             selected_tile,
         );
@@ -244,6 +251,7 @@ fn main() {
     }
 
     worker_handler.save();
+    animal_handler.save();
     player.save();
     map.save();
 }
@@ -254,6 +262,7 @@ fn handle_input(
     map: &mut Map,
     player: &mut Player,
     worker_handler: &mut WorkerHandler,
+    animal_handler: &mut AnimalHandler,
     selected_tile: (i32, i32),
     tutorial: &mut Tutorial,
 ) {
@@ -266,6 +275,9 @@ fn handle_input(
             }
             MenuMode::Trees => {
                 player.plant_trees(canvas, map, &selected_tile);
+            }
+            MenuMode::Animals => {
+                player.spawn_animals(canvas, map, &selected_tile, animal_handler);
             }
             MenuMode::Misc => {
                 player.perform_misc(canvas, worker_handler, &selected_tile, map);

@@ -1,0 +1,8 @@
+{
+    "animal_data": [
+        {
+            "time_to_drop": 10,
+            "drop_cost": 100
+        }   
+    ]
+}

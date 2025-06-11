@@ -4,6 +4,7 @@ use raylib::{audio::Sound, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
+    animal::{Animal, AnimalHandler, AnimalType},
     map::{Map, TileType},
     tutorial::Tutorial,
     ui::{Canvas, MenuMode},
@@ -83,7 +84,7 @@ impl Player {
         rl.draw_rectangle(
             screen_width / 4,
             10,
-            (exp_bar_fill * (screen_width/ 2) as f32) as i32,
+            (exp_bar_fill * (screen_width / 2) as f32) as i32,
             24,
             Color::DARKORANGE,
         );
@@ -140,7 +141,7 @@ impl Player {
                     }
                 }
             }
-            TileType::Tree { .. } => {}
+            _ => {}
         }
     }
 
@@ -163,6 +164,33 @@ impl Player {
                         grow: 0,
                         stage: 0,
                     };
+                }
+            }
+            _ => {}
+        }
+    }
+
+    pub fn spawn_animals(
+        &mut self,
+        canvas: &Canvas,
+        map: &mut Map,
+        selected_tile: &(i32, i32),
+        animal_handler: &mut AnimalHandler,
+    ) {
+        let Some(tile) = map.dynamic_data.tiles.get(selected_tile) else {
+            return;
+        };
+
+        match tile {
+            TileType::Grass => {
+                let price = canvas.toolbar_data.animals[canvas.selected].price;
+                if self.money >= price {
+                    self.money -= price;
+                    animal_handler.add_animal(Animal::new(
+                        AnimalType::from_index(canvas.selected),
+                        selected_tile.0,
+                        selected_tile.1,
+                    ));
                 }
             }
             _ => {}
@@ -194,13 +222,13 @@ impl Player {
             }
 
             match tile {
-                TileType::Grass => {}
                 TileType::Tree { .. } => {
                     *tile = TileType::Grass;
                 }
                 TileType::Farmland { .. } => {
                     *tile = TileType::Grass;
                 }
+                _ => {}
             }
         }
     }

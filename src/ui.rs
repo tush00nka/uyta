@@ -26,6 +26,7 @@ pub struct ToolbarItem {
 pub struct ToolbarData {
     pub crops: Vec<ToolbarItem>,
     pub trees: Vec<ToolbarItem>,
+    pub animals: Vec<ToolbarItem>,
     pub misc: Vec<ToolbarItem>,
 }
 
@@ -39,6 +40,7 @@ impl ToolbarData {
 pub enum MenuMode {
     Crops,
     Trees,
+    Animals,
     Misc,
 }
 
@@ -71,6 +73,12 @@ impl Canvas {
                 Rectangle::new(
                     10.,
                     3. * UI_BUTTON_SIZE + UI_GAPS * 2.,
+                    UI_BUTTON_SIZE,
+                    UI_BUTTON_SIZE,
+                ),
+                Rectangle::new(
+                    10.,
+                    4. * UI_BUTTON_SIZE + UI_GAPS * 2.5,
                     UI_BUTTON_SIZE,
                     UI_BUTTON_SIZE,
                 ),
@@ -129,13 +137,35 @@ impl Canvas {
         );
 
         let position = Vector2::new(self.content[2].x, self.content[2].y);
-        let color = if self.toolbar_data.misc[0].unlock_level > player.level {
+        let color = if self.toolbar_data.animals[0].unlock_level > player.level {
             Color::GRAY
         } else {
             Color::WHITE
         };
         rl.draw_rectangle_rec(
             self.content[2],
+            if self.mode == MenuMode::Animals {
+                Color::RAYWHITE.alpha(0.9)
+            } else {
+                Color::BLACK.alpha(0.5)
+            },
+        );
+        rl.draw_texture_ex(
+            texture_handler.textures.get("animals_menu").unwrap(),
+            position,
+            0.,
+            UI_BUTTON_SIZE / TILE_PIXEL_SIZE as f32,
+            color,
+        );
+
+        let position = Vector2::new(self.content[3].x, self.content[3].y);
+        let color = if self.toolbar_data.misc[0].unlock_level > player.level {
+            Color::GRAY
+        } else {
+            Color::WHITE
+        };
+        rl.draw_rectangle_rec(
+            self.content[3],
             if self.mode == MenuMode::Misc {
                 Color::RAYWHITE.alpha(0.9)
             } else {
@@ -154,6 +184,7 @@ impl Canvas {
             MenuMode::Crops => map.static_data.crops_data.len(),
             MenuMode::Misc => 2,
             MenuMode::Trees => map.static_data.tree_data.len(),
+            MenuMode::Animals => 1,
         };
         self.subcontent.clear();
 
@@ -233,6 +264,25 @@ impl Canvas {
                         color,
                     );
                 }
+                MenuMode::Animals => {
+                    tooltip_pool = &self.toolbar_data.animals;
+
+                    let color = if tooltip_pool[i].unlock_level > player.level {
+                        Color::GRAY
+                    } else {
+                        Color::WHITE
+                    };
+
+                    let id = format!("animal{i}");
+                    rl.draw_texture_pro(
+                        texture_handler.textures.get(&id).unwrap(),
+                        Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32),
+                        rect,
+                        Vector2::zero(),
+                        0.,
+                        color,
+                    );
+                }
                 MenuMode::Misc => {
                     tooltip_pool = &self.toolbar_data.misc;
 
@@ -298,7 +348,7 @@ impl Canvas {
                 let (pool, mode) = match i {
                     0 => (&self.toolbar_data.crops, MenuMode::Crops),
                     1 => (&self.toolbar_data.trees, MenuMode::Trees),
-                    2 => (&self.toolbar_data.misc, MenuMode::Misc),
+                    2 => (&self.toolbar_data.animals, MenuMode::Animals),
                     _ => (&self.toolbar_data.misc, MenuMode::Misc),
                 };
 
@@ -316,8 +366,10 @@ impl Canvas {
                     rl.draw_rectangle(
                         x,
                         y,
-                        format!("Откроется на уровне {}", pool[0].unlock_level).len() as i32
-                            * (UI_BUTTON_SIZE as i32 / 6),
+                        format!("Откроется на уровне {}", pool[0].unlock_level)
+                            .chars()
+                            .count() as i32
+                            * (UI_BUTTON_SIZE as i32 / 4),
                         UI_BUTTON_SIZE as i32 / 2,
                         Color::BLACK.alpha(0.5),
                     );
@@ -352,6 +404,7 @@ impl Canvas {
                 let pool: &Vec<ToolbarItem> = match self.mode {
                     MenuMode::Crops => &self.toolbar_data.crops,
                     MenuMode::Trees => &self.toolbar_data.trees,
+                    MenuMode::Animals => &self.toolbar_data.animals,
                     MenuMode::Misc => &self.toolbar_data.misc,
                 };
 
@@ -365,8 +418,10 @@ impl Canvas {
                     rl.draw_rectangle(
                         x,
                         y,
-                        format!("Откроется на уровне {}", pool[i].unlock_level).len() as i32
-                            * (UI_BUTTON_SIZE as i32 / 6),
+                        format!("Откроется на уровне {}", pool[i].unlock_level)
+                            .chars()
+                            .count() as i32
+                            * (UI_BUTTON_SIZE as i32 / 4),
                         UI_BUTTON_SIZE as i32 / 2,
                         Color::BLACK.alpha(0.5),
                     );

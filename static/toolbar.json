@@ -53,6 +53,13 @@
             "price": 12000
         }
     ],
+    "animals": [
+        {
+            "tooltip": "Курица",
+            "unlock_level": 15,
+            "price": 1000
+        }
+    ],
     "misc": [
         {
             "tooltip": "Рабочий",
