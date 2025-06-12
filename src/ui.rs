@@ -192,7 +192,7 @@ impl Canvas {
             (UI_BUTTON_SIZE + UI_GAPS) as i32,
             (UI_BUTTON_SIZE + UI_GAPS) as i32,
             UI_GAPS as i32 / 2,
-            UI_BUTTON_SIZE as i32 * 3 + UI_GAPS as i32,
+            UI_BUTTON_SIZE as i32 * 4 + (UI_GAPS * 1.5) as i32,
             Color::BLACK.alpha(0.5),
         );
 

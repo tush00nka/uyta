@@ -45,10 +45,12 @@ impl Player {
             return;
         }
 
-        self.display_money = (self.display_money as isize
-            + money_diff / money_diff.abs()
-                * 10_i32.pow(money_diff.to_string().chars().count() as u32 - 1) as isize)
-            as usize;
+        self.display_money = self.money;
+
+        // self.display_money = (self.display_money as isize
+        //     + money_diff / money_diff.abs()
+        //         * 10_i32.pow((money_diff.to_string().chars().count() as u32 - 1).max(0)) as isize)
+        //     as usize;
     }
 
     pub fn update_exp(&mut self, sounds: &HashMap<String, Sound<'_>>) {
