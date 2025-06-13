@@ -7,6 +7,7 @@ use crate::{
 pub struct CameraController {
     pub position: Vector2,
     pub speed: f32,
+    target_zoom: f32,
     pub camera: Camera2D,
 }
 
@@ -15,6 +16,7 @@ impl CameraController {
         Self {
             position: Vector2 { x: 0., y: 0. },
             speed: 500.0,
+            target_zoom: 1.0, 
             camera: Camera2D {
                 target: Vector2::zero(),
                 offset: Vector2 {
@@ -50,16 +52,14 @@ impl CameraController {
         }
 
         self.position += direction.normalized() * self.speed * rl.get_frame_time();
-        // self.position.x = self
-        //     .position
-        //     .x
-        //     .min((MAP_WIDTH as i32 / 2 * TILE_SIZE) as f32)
-        //     .max((-(MAP_WIDTH as i32) / 2 * TILE_SIZE) as f32);
-        // self.position.y = self
-        //     .position
-        //     .y
-        //     .min((MAP_HEIGHT as i32 / 2 * TILE_SIZE) as f32)
-        //     .max((-(MAP_HEIGHT as i32) / 2 * TILE_SIZE) as f32);
+        self.camera.zoom = lerp(self.camera.zoom, self.target_zoom, 10. * rl.get_frame_time());
+
+        if rl.get_mouse_wheel_move() > 0. {
+            self.target_zoom = (self.target_zoom * 1.1).min(2.);
+        }
+        if rl.get_mouse_wheel_move() < 0. {
+            self.target_zoom = (self.target_zoom / 1.1).max(0.5);
+        }
 
         self.camera.target = Vector2 {
             x: lerp(
