@@ -1,6 +1,6 @@
 use raylib::prelude::*;
 
-use crate::{player::Player, utils::parse_json};
+use crate::{player::Player, utils::{get_game_height, parse_json}};
 
 struct TutorialStep {
     label: String,
@@ -62,6 +62,8 @@ impl Tutorial {
             text += &format!("[{}] {}\n", mark, step.label);
         }
 
+        let height = get_game_height(rl);
+
         if all_completed {
             let label = "Вы прошли обучение! Нажмите [F1], чтобы скрыть подсказки";
             rl.draw_text_ex(
@@ -69,7 +71,7 @@ impl Tutorial {
                 label,
                 Vector2::new(
                     10.,
-                    rl.get_screen_height() as f32 - 24. * self.steps.len() as f32 - 34.,
+                    height as f32 - 24. * self.steps.len() as f32 - 34.,
                 ),
                 24.,
                 0.,
@@ -82,7 +84,7 @@ impl Tutorial {
             &text,
             Vector2::new(
                 10.,
-                rl.get_screen_height() as f32 - 24. * self.steps.len() as f32 - 10.,
+                height as f32 - 24. * self.steps.len() as f32 - 10.,
             ),
             24.,
             0.,
