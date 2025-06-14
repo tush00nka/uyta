@@ -415,6 +415,7 @@ impl Map {
 
     pub fn save(&self) {
         let serialized = serde_json::to_string_pretty(&self.dynamic_data).expect("err");
+        std::fs::create_dir_all("dynamic").expect("Couldn't create dir");
         std::fs::write("dynamic/map_save.json", serialized)
             .expect("Couldn't write map data to json");
     }

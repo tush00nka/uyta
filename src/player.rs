@@ -237,6 +237,7 @@ impl Player {
 
     pub fn save(&self) {
         let serialized = serde_json::to_string_pretty(self).expect("err");
+        std::fs::create_dir_all("dynamic").expect("Couldn't create dir");
         std::fs::write("dynamic/player_save.json", serialized)
             .expect("Couldn't write player data to json");
     }
