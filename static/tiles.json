@@ -16,19 +16,19 @@
             "time_to_grow": 9,
             "grow_step": 2,
             "sell_price": 25,
-            "exp": 5
-        },
-        {
-            "time_to_grow": 9,
-            "grow_step": 2,
-            "sell_price": 40,
             "exp": 10
         },
         {
             "time_to_grow": 9,
+            "grow_step": 2,
+            "sell_price": 50,
+            "exp": 25
+        },
+        {
+            "time_to_grow": 9,
             "grow_step": 3,
-            "sell_price": 75,
-            "exp": 15
+            "sell_price": 100,
+            "exp": 50
         }
     ],
     "tree_data": [
@@ -37,35 +37,35 @@
             "grow_step": 5,
             "time_to_fruit": 10,
             "sell_price": 100,
-            "exp": 10
+            "exp": 100
         },
         {
             "time_to_grow": 20,
             "grow_step": 5,
             "time_to_fruit": 20,
             "sell_price": 300,
-            "exp": 20
+            "exp": 200
         },
         {
             "time_to_grow": 20,
             "grow_step": 5,
             "time_to_fruit": 10,
             "sell_price": 100,
-            "exp": 30
+            "exp": 300
         },
         {
             "time_to_grow": 40,
             "grow_step": 10,
             "time_to_fruit": 30,
             "sell_price": 500,
-            "exp": 40
+            "exp": 400
         },
         { 
             "time_to_grow": 20,
             "grow_step": 5,
             "time_to_fruit": 30,
             "sell_price": 750,
-            "exp": 50
+            "exp": 500
         }
     ]
 }

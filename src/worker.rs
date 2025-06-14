@@ -218,7 +218,7 @@ impl Worker {
             TileType::AnimalDrop { animal } => {
                 money = animal_handler.static_data.animal_data[*animal as usize].drop_cost;
                 // todo: make separate exp value im animal_data
-                exp = animal_handler.static_data.animal_data[*animal as usize].drop_cost / 10;
+                exp = animal_handler.static_data.animal_data[*animal as usize].drop_cost;
 
                 if let Some(occupation_tile) =
                     map.dynamic_data.occupation_map.get_mut(&self.position)

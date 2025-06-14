@@ -179,7 +179,7 @@ impl Map {
         }
 
         player.money -= self.dynamic_data.next_expansion_cost;
-        self.dynamic_data.next_expansion_cost *= 3;
+        self.dynamic_data.next_expansion_cost = (self.dynamic_data.next_expansion_cost as f32 * 1.5).round() as usize;
 
         let point = self.dynamic_data.land_expansion_points[index.unwrap()];
         self.dynamic_data

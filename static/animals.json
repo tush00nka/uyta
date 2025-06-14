@@ -2,10 +2,14 @@
     "animal_data": [
         {
             "time_to_drop": 20,
-            "drop_cost": 200
+            "drop_cost": 300
         },
         {
             "time_to_drop": 50,
+            "drop_cost": 1000
+        },
+        {
+            "time_to_drop": 25,
             "drop_cost": 1000
         }
     ]
