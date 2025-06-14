@@ -225,8 +225,7 @@ impl Worker {
                     *occupation_tile = false;
                 };
 
-                let rand = rand::random_range(0..5);
-                let sound = sounds.get(&format!("harvest{rand}")).unwrap();
+                let sound = sounds.get(&format!("grass")).unwrap();
                 sound.set_pitch(rand::random_range(0.9..1.1));
                 sound.play();
 

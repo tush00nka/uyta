@@ -6,10 +6,7 @@ use raylib::{
 use serde::Deserialize;
 
 use crate::{
-    map::{Map, TILE_PIXEL_SIZE},
-    player::Player,
-    texture_handler::TextureHandler,
-    utils::parse_json,
+    animal::AnimalHandler, map::{Map, TILE_PIXEL_SIZE}, player::Player, texture_handler::TextureHandler, utils::parse_json
 };
 
 const UI_BUTTON_SIZE: f32 = 60.;
@@ -92,6 +89,7 @@ impl Canvas {
         &mut self,
         rl: &mut RaylibDrawHandle,
         map: &Map,
+        animal_handler: &AnimalHandler,
         texture_handler: &TextureHandler,
         player: &Player,
         font: &Font,
@@ -184,7 +182,7 @@ impl Canvas {
             MenuMode::Crops => map.static_data.crops_data.len(),
             MenuMode::Misc => 2,
             MenuMode::Trees => map.static_data.tree_data.len(),
-            MenuMode::Animals => 1,
+            MenuMode::Animals => animal_handler.static_data.animal_data.len(),
         };
         self.subcontent.clear();
 

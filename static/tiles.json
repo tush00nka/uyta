@@ -61,8 +61,8 @@
             "exp": 40
         },
         { 
-            "time_to_grow": 30,
-            "grow_step": 10,
+            "time_to_grow": 20,
+            "grow_step": 5,
             "time_to_fruit": 30,
             "sell_price": 750,
             "exp": 50

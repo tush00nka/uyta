@@ -5,7 +5,7 @@ use serde_with::serde_as;
 use std::collections::HashMap;
 
 use crate::{
-    animal::{AnimalHandler, AnimalType},
+    animal::AnimalHandler,
     player::Player,
     utils::parse_json,
     worker::WorkerHandler,
@@ -48,7 +48,7 @@ pub enum TileType {
         stage: usize,
     },
     AnimalDrop {
-        animal: AnimalType,
+        animal: usize,
     },
 }
 

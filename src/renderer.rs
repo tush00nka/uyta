@@ -46,6 +46,7 @@ pub fn draw_fg(
     rl: &mut RaylibDrawHandle,
     canvas: &mut Canvas,
     map: &Map,
+    animal_handler: &AnimalHandler,
     texture_handler: &TextureHandler,
     player: &Player,
     pause_menu: &PauseMenu,
@@ -55,7 +56,7 @@ pub fn draw_fg(
 ) {
     player.draw_stats(rl, font);
 
-    canvas.draw(rl, &map, &texture_handler, player, font);
+    canvas.draw(rl, map, animal_handler, texture_handler, player, font);
     canvas.update(rl, player, font);
 
     tutorial.draw(rl, font);

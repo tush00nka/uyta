@@ -8,31 +8,9 @@ use crate::{
     utils::parse_json,
 };
 
-#[derive(Serialize, Deserialize, Copy, Clone, PartialEq, PartialOrd, Eq, Ord)]
-pub enum AnimalType {
-    Chicken,
-    Cow,
-    Pig,
-    Sheep,
-    Rabbit,
-}
-
-impl AnimalType {
-    pub fn from_index(index: usize) -> Self {
-        match index {
-            0 => Self::Chicken,
-            1 => Self::Cow,
-            2 => Self::Pig,
-            3 => Self::Sheep,
-            4 => Self::Rabbit,
-            _ => Self::Chicken,
-        }
-    }
-}
-
 #[derive(Serialize, Deserialize)]
 pub struct Animal {
-    animal_type: AnimalType,
+    animal_type: usize,
     drop_bar: usize,
     pub position: (i32, i32),
     display_position: (f32, f32),
@@ -105,7 +83,7 @@ impl AnimalHandler {
 }
 
 impl Animal {
-    pub fn new(animal_type: AnimalType, x: i32, y: i32) -> Self {
+    pub fn new(animal_type: usize, x: i32, y: i32) -> Self {
         Self {
             animal_type,
             drop_bar: 0,

@@ -4,7 +4,7 @@ use raylib::{audio::Sound, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    animal::{Animal, AnimalHandler, AnimalType},
+    animal::Animal, AnimalHandler,
     map::{Map, TileType},
     tutorial::Tutorial,
     ui::{Canvas, MenuMode},
@@ -189,7 +189,7 @@ impl Player {
                 if self.money >= price {
                     self.money -= price;
                     animal_handler.add_animal(Animal::new(
-                        AnimalType::from_index(canvas.selected),
+                        canvas.selected,
                         selected_tile.0,
                         selected_tile.1,
                     ));

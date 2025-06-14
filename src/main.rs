@@ -241,6 +241,7 @@ fn main() {
             &mut d,
             &mut canvas,
             &map,
+            &animal_handler,
             &texture_handler,
             &player,
             &pause_menu,
