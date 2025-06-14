@@ -1,4 +1,4 @@
 /target
-/dynamic/*
+/dynamic/**
 /emsdk
 /docs
