@@ -33,6 +33,7 @@ impl Tutorial {
         Self {
             steps: vec![
                 TutorialStep::new("Перемещайте камеру при помощи [W, A, S, D]".to_string()),
+                TutorialStep::new("Отцентрируйте камеру при помощи [С]".to_string()),
                 TutorialStep::new("Посадите морковь на острове при помощи [ЛКМ]".to_string()),
             ],
             hidden
@@ -75,7 +76,7 @@ impl Tutorial {
                 ),
                 24.,
                 0.,
-                Color::DARKORANGE,
+                Color::ORANGE,
             );
         }
 

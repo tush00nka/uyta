@@ -35,24 +35,31 @@ impl CameraController {
         let mut direction = Vector2::zero();
 
         if rl.is_key_down(KEY_A) {
-            tutorial.complete_step(0);
             direction.x = -1.;
         }
         if rl.is_key_down(KEY_D) {
-            tutorial.complete_step(0);
             direction.x = 1.;
         }
         if rl.is_key_down(KEY_W) {
-            tutorial.complete_step(0);
             direction.y = -1.;
         }
         if rl.is_key_down(KEY_S) {
-            tutorial.complete_step(0);
             direction.y = 1.;
+        }
+
+        if let Some(key) = rl.get_key_pressed() {
+            if [KEY_A, KEY_D, KEY_W, KEY_S].contains(&key) {
+                tutorial.complete_step(0);
+            }
         }
 
         self.position += direction.normalized() * self.speed * rl.get_frame_time();
         self.camera.zoom = lerp(self.camera.zoom, self.target_zoom, 10. * rl.get_frame_time());
+
+        if rl.is_key_down(KEY_C) {
+            tutorial.complete_step(1);
+            self.position = Vector2::zero();
+        }
 
         if rl.get_mouse_wheel_move() > 0. {
             self.target_zoom = (self.target_zoom * 1.1).min(2.);

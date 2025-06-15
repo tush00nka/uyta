@@ -96,7 +96,6 @@ impl Canvas {
         animal_handler: &AnimalHandler,
         texture_handler: &TextureHandler,
         player: &Player,
-        font: &Font,
     ) {
         // draw mode selection buttons (submenus)
         rl.draw_rectangle_rec(
@@ -335,10 +334,26 @@ impl Canvas {
             let rect = self.content[i];
             if unsafe { CheckCollisionPointRec(rl.get_mouse_position().into(), rect.into()) } {
                 let (pool, mode, label) = match i {
-                    0 => (&self.toolbar_data.crops, MenuMode::Crops, "Растения".to_string()),
-                    1 => (&self.toolbar_data.trees, MenuMode::Trees, "Деревья".to_string()),
-                    2 => (&self.toolbar_data.animals, MenuMode::Animals, "Животные".to_string()),
-                    _ => (&self.toolbar_data.misc, MenuMode::Misc, "Прочее".to_string()),
+                    0 => (
+                        &self.toolbar_data.crops,
+                        MenuMode::Crops,
+                        "Растения".to_string(),
+                    ),
+                    1 => (
+                        &self.toolbar_data.trees,
+                        MenuMode::Trees,
+                        "Деревья".to_string(),
+                    ),
+                    2 => (
+                        &self.toolbar_data.animals,
+                        MenuMode::Animals,
+                        "Животные".to_string(),
+                    ),
+                    _ => (
+                        &self.toolbar_data.misc,
+                        MenuMode::Misc,
+                        "Прочее".to_string(),
+                    ),
                 };
 
                 if rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_LEFT) {
@@ -359,14 +374,12 @@ impl Canvas {
                 let tooltip_rect = Rectangle::new(
                     x,
                     y,
-                    tooltip_text.chars().count() as f32 * UI_BUTTON_SIZE / 3.5,
+                    tooltip_text.lines().next().unwrap().chars().count() as f32 * UI_BUTTON_SIZE
+                        / 3.5,
                     tooltip_text.lines().count() as f32 * UI_BUTTON_SIZE / 2.,
                 );
 
-                rl.draw_rectangle_rec(
-                    tooltip_rect,
-                    Color::BLACK.alpha(0.5),
-                );
+                rl.draw_rectangle_rec(tooltip_rect, Color::BLACK.alpha(0.75));
                 rl.draw_text_ex(
                     font,
                     &tooltip_text,
@@ -401,31 +414,28 @@ impl Canvas {
                     MenuMode::Misc => &self.toolbar_data.misc,
                 };
 
-
                 let tooltip_text = if pool[i].unlock_level > player.level {
                     format!("Откроется на уровне {}", pool[i].unlock_level)
                 } else {
                     if pool[i].price <= 0 {
                         format!("{}", pool[i].tooltip)
-                    }
-                    else {
+                    } else {
                         format!("{}\n{}", pool[i].tooltip, pool[i].price)
                     }
                 };
 
                 let x = rl.get_mouse_position().x;
-                let y = rl.get_mouse_position().y - (UI_BUTTON_SIZE / 2. * tooltip_text.lines().count() as f32);
+                let y = rl.get_mouse_position().y
+                    - (UI_BUTTON_SIZE / 2. * tooltip_text.lines().count() as f32);
                 let tooltip_rect = Rectangle::new(
                     x,
                     y,
-                    tooltip_text.chars().count() as f32 * UI_BUTTON_SIZE / 3.5,
+                    tooltip_text.lines().next().unwrap().chars().count() as f32 * UI_BUTTON_SIZE
+                        / 3.5,
                     tooltip_text.lines().count() as f32 * UI_BUTTON_SIZE / 2.,
                 );
 
-                rl.draw_rectangle_rec(
-                    tooltip_rect,
-                    Color::BLACK.alpha(0.5),
-                );
+                rl.draw_rectangle_rec(tooltip_rect, Color::BLACK.alpha(0.75));
                 rl.draw_text_ex(
                     font,
                     &tooltip_text,

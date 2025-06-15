@@ -56,7 +56,7 @@ pub fn draw_fg(
 ) {
     player.draw_stats(rl, font);
 
-    canvas.draw(rl, map, animal_handler, texture_handler, player, font);
+    canvas.draw(rl, map, animal_handler, texture_handler, player);
     canvas.update(rl, player, font);
 
     tutorial.draw(rl, font);

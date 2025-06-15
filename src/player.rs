@@ -115,7 +115,7 @@ impl Player {
             *occ_tile = false;
         }
 
-        tutorial.complete_step(1);
+        tutorial.complete_step(2);
 
         match tile {
             TileType::Grass => {
