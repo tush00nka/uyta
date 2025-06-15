@@ -288,7 +288,7 @@ impl Player {
             price = (price as f32 * 1.1) as usize;
         }
 
-        if canvas.selected == 0 && self.money >= 100 && map.dynamic_data.tiles.contains_key(selected_tile)
+        if canvas.selected == 0 && self.money >= price && map.dynamic_data.tiles.contains_key(selected_tile)
         {
             worker_handler.add_worker(Worker::new(selected_tile.0, selected_tile.1));
             self.money -= price;

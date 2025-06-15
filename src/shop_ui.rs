@@ -8,7 +8,12 @@ use raylib::{
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    animal::AnimalHandler, map::{Map, TILE_PIXEL_SIZE}, player::Player, texture_handler::TextureHandler, utils::{parse_json, shrink_number_for_display}, UI_BUTTON_SIZE, UI_GAPS
+    UI_BUTTON_SIZE, UI_GAPS,
+    animal::AnimalHandler,
+    map::{Map, TILE_PIXEL_SIZE},
+    player::Player,
+    texture_handler::TextureHandler,
+    utils::{parse_json, shrink_number_for_display},
 };
 
 #[derive(Deserialize)]
@@ -150,6 +155,7 @@ impl Canvas {
         animal_handler: &AnimalHandler,
         texture_handler: &TextureHandler,
         player: &Player,
+        font: &Font,
     ) {
         // draw mode selection buttons (submenus)
         rl.draw_rectangle_rec(
@@ -268,96 +274,82 @@ impl Canvas {
             rl.draw_rectangle_rec(rect, color);
             self.subcontent.push(rect);
 
-            let tooltip_pool: &Vec<ToolbarItem>;
-
-            // todo: refactor hardcoded ui
+            let tooltip_pool;
+            let amount_pool;
+            let texture_id;
+            let source;
             match self.mode {
                 MenuMode::Crops => {
                     tooltip_pool = &self.toolbar_data.static_data.crops;
-
-                    let color = if tooltip_pool[i].unlock_level > player.level {
-                        Color::GRAY
-                    } else {
-                        Color::WHITE
-                    };
-
-                    let id = format!("crop{i}");
-                    rl.draw_texture_pro(
-                        texture_handler.textures.get(&id).unwrap(),
-                        Rectangle::new(
-                            -TILE_PIXEL_SIZE as f32,
-                            0.0,
-                            TILE_PIXEL_SIZE as f32,
-                            TILE_PIXEL_SIZE as f32,
-                        ),
-                        rect,
-                        Vector2::zero(),
-                        0.,
-                        color,
+                    amount_pool = &self.toolbar_data.dynamic_data.crop_amount;
+                    texture_id = format!("crop{i}");
+                    source = Rectangle::new(
+                        -TILE_PIXEL_SIZE as f32,
+                        0.0,
+                        TILE_PIXEL_SIZE as f32,
+                        TILE_PIXEL_SIZE as f32,
                     );
                 }
                 MenuMode::Trees => {
                     tooltip_pool = &self.toolbar_data.static_data.trees;
-                    let color = if tooltip_pool[i].unlock_level > player.level {
-                        Color::GRAY
-                    } else {
-                        Color::WHITE
-                    };
-
-                    let id = format!("tree{i}");
-                    rl.draw_texture_pro(
-                        texture_handler.textures.get(&id).unwrap(),
-                        Rectangle::new(
-                            -TILE_PIXEL_SIZE as f32,
-                            0.0,
-                            TILE_PIXEL_SIZE as f32,
-                            TILE_PIXEL_SIZE as f32,
-                        ),
-                        rect,
-                        Vector2::zero(),
-                        0.,
-                        color,
+                    amount_pool = &self.toolbar_data.dynamic_data.tree_amount;
+                    texture_id = format!("tree{i}");
+                    source = Rectangle::new(
+                        -TILE_PIXEL_SIZE as f32,
+                        0.0,
+                        TILE_PIXEL_SIZE as f32,
+                        TILE_PIXEL_SIZE as f32,
                     );
                 }
                 MenuMode::Animals => {
                     tooltip_pool = &self.toolbar_data.static_data.animals;
-
-                    let color = if tooltip_pool[i].unlock_level > player.level {
-                        Color::GRAY
-                    } else {
-                        Color::WHITE
-                    };
-
-                    let id = format!("animal{i}");
-                    rl.draw_texture_pro(
-                        texture_handler.textures.get(&id).unwrap(),
-                        Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32),
-                        rect,
-                        Vector2::zero(),
-                        0.,
-                        color,
-                    );
+                    amount_pool = &self.toolbar_data.dynamic_data.animal_amount;
+                    texture_id = format!("animal{i}");
+                    source =
+                        Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32);
                 }
                 MenuMode::Misc => {
                     tooltip_pool = &self.toolbar_data.static_data.misc;
-
-                    let color = if tooltip_pool[i].unlock_level > player.level {
-                        Color::GRAY
-                    } else {
-                        Color::WHITE
-                    };
-
-                    let id = format!("misc{i}");
-                    rl.draw_texture_pro(
-                        texture_handler.textures.get(&id).unwrap(),
-                        Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32),
-                        rect,
-                        Vector2::zero(),
-                        0.,
-                        color,
-                    );
+                    amount_pool = &self.toolbar_data.dynamic_data.misc_amount;
+                    texture_id = format!("misc{i}");
+                    source =
+                        Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32);
                 }
             }
+
+            let color = if tooltip_pool[i].unlock_level > player.level {
+                Color::GRAY
+            } else {
+                Color::WHITE
+            };
+
+            rl.draw_texture_pro(
+                texture_handler.textures.get(&texture_id).unwrap(),
+                source,
+                rect,
+                Vector2::zero(),
+                0.,
+                color,
+            );
+
+            if *amount_pool.get(&i).unwrap() <= 0 {
+                continue;
+            }
+
+            rl.draw_text_pro(
+                font,
+                &amount_pool.get(&i).unwrap().to_string(),
+                Vector2::new(rect.x, rect.y),
+                Vector2::zero(),
+                0.,
+                16.,
+                0.,
+                if self.selected == i {
+                    Color::BLACK
+                } else {
+                    Color::RAYWHITE
+                },
+            );
 
             // if self.selected != i {
             //     continue;
@@ -462,10 +454,22 @@ impl Canvas {
                 CheckCollisionPointRec(mouse_pos, rect)
             } {
                 let (pool, amount_pool) = match self.mode {
-                    MenuMode::Crops => (&self.toolbar_data.static_data.crops, &self.toolbar_data.dynamic_data.crop_amount),
-                    MenuMode::Trees => (&self.toolbar_data.static_data.trees, &self.toolbar_data.dynamic_data.tree_amount),
-                    MenuMode::Animals => (&self.toolbar_data.static_data.animals, &self.toolbar_data.dynamic_data.animal_amount),
-                    MenuMode::Misc => (&self.toolbar_data.static_data.misc, &self.toolbar_data.dynamic_data.misc_amount),
+                    MenuMode::Crops => (
+                        &self.toolbar_data.static_data.crops,
+                        &self.toolbar_data.dynamic_data.crop_amount,
+                    ),
+                    MenuMode::Trees => (
+                        &self.toolbar_data.static_data.trees,
+                        &self.toolbar_data.dynamic_data.tree_amount,
+                    ),
+                    MenuMode::Animals => (
+                        &self.toolbar_data.static_data.animals,
+                        &self.toolbar_data.dynamic_data.animal_amount,
+                    ),
+                    MenuMode::Misc => (
+                        &self.toolbar_data.static_data.misc,
+                        &self.toolbar_data.dynamic_data.misc_amount,
+                    ),
                 };
 
                 let tooltip_text = if pool[i].unlock_level > player.level {
@@ -474,10 +478,10 @@ impl Canvas {
                     if pool[i].price <= 0 {
                         format!("{}", pool[i].tooltip)
                     } else {
-                        let mut price = pool[i].price; 
+                        let mut price = pool[i].price;
                         for _ in 0..*amount_pool.get(&i).unwrap() {
                             price = (price as f32 * 1.1) as usize;
-                        };
+                        }
 
                         format!("{}\n{}", pool[i].tooltip, shrink_number_for_display(price))
                     }
