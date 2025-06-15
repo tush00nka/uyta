@@ -27,36 +27,36 @@ pub struct ToolbarStatic {
 
 #[derive(Deserialize, Serialize)]
 pub struct ToolbarDynamic {
-    pub crop_prices: HashMap<usize, f32>,
-    pub tree_prices: HashMap<usize, f32>,
-    pub animal_prices: HashMap<usize, f32>,
-    pub misc_prices: HashMap<usize, f32>,
+    pub crop_amount: HashMap<usize, usize>,
+    pub tree_amount: HashMap<usize, usize>,
+    pub animal_amount: HashMap<usize, usize>,
+    pub misc_amount: HashMap<usize, usize>,
 }
 
 impl ToolbarDynamic {
     fn new(static_data: &ToolbarStatic) -> Self {
-        let mut crop_prices = HashMap::new();
+        let mut crop_amount = HashMap::new();
         for i in 0..static_data.crops.len() {
-            crop_prices.insert(i, static_data.crops[i].price as f32);
+            crop_amount.insert(i, 0);
         }
-        let mut tree_prices = HashMap::new();
+        let mut tree_amount = HashMap::new();
         for i in 0..static_data.trees.len() {
-            tree_prices.insert(i, static_data.trees[i].price as f32);
+            tree_amount.insert(i, 0);
         }
-        let mut animal_prices = HashMap::new();
+        let mut animal_amount = HashMap::new();
         for i in 0..static_data.animals.len() {
-            animal_prices.insert(i, static_data.animals[i].price as f32);
+            animal_amount.insert(i, 0);
         }
-        let mut misc_prices = HashMap::new();
+        let mut misc_amount = HashMap::new();
         for i in 0..static_data.misc.len() {
-            misc_prices.insert(i, static_data.misc[i].price as f32);
+            misc_amount.insert(i, 0);
         }
 
         Self {
-            crop_prices,
-            tree_prices,
-            animal_prices,
-            misc_prices,
+            crop_amount,
+            tree_amount,
+            animal_amount,
+            misc_amount,
         }
     }
 }
@@ -461,11 +461,11 @@ impl Canvas {
                 };
                 CheckCollisionPointRec(mouse_pos, rect)
             } {
-                let (pool, price_pool) = match self.mode {
-                    MenuMode::Crops => (&self.toolbar_data.static_data.crops, &self.toolbar_data.dynamic_data.crop_prices),
-                    MenuMode::Trees => (&self.toolbar_data.static_data.trees, &self.toolbar_data.dynamic_data.tree_prices),
-                    MenuMode::Animals => (&self.toolbar_data.static_data.animals, &self.toolbar_data.dynamic_data.animal_prices),
-                    MenuMode::Misc => (&self.toolbar_data.static_data.misc, &self.toolbar_data.dynamic_data.misc_prices),
+                let (pool, amount_pool) = match self.mode {
+                    MenuMode::Crops => (&self.toolbar_data.static_data.crops, &self.toolbar_data.dynamic_data.crop_amount),
+                    MenuMode::Trees => (&self.toolbar_data.static_data.trees, &self.toolbar_data.dynamic_data.tree_amount),
+                    MenuMode::Animals => (&self.toolbar_data.static_data.animals, &self.toolbar_data.dynamic_data.animal_amount),
+                    MenuMode::Misc => (&self.toolbar_data.static_data.misc, &self.toolbar_data.dynamic_data.misc_amount),
                 };
 
                 let tooltip_text = if pool[i].unlock_level > player.level {
@@ -474,7 +474,12 @@ impl Canvas {
                     if pool[i].price <= 0 {
                         format!("{}", pool[i].tooltip)
                     } else {
-                        format!("{}\n{}", pool[i].tooltip, shrink_number_for_display(price_pool.get(&i).unwrap().floor() as usize))
+                        let mut price = pool[i].price; 
+                        for _ in 0..*amount_pool.get(&i).unwrap() {
+                            price = (price as f32 * 1.1) as usize;
+                        };
+
+                        format!("{}\n{}", pool[i].tooltip, shrink_number_for_display(price))
                     }
                 };
 

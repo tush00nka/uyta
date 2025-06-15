@@ -127,15 +127,20 @@ impl Player {
 
         match tile {
             TileType::Grass => {
-                let price = canvas
+                let amount = canvas
                     .toolbar_data
                     .dynamic_data
-                    .crop_prices
+                    .crop_amount
                     .get_mut(&canvas.selected)
                     .unwrap();
-                if self.money >= (*price).floor() as usize {
-                    self.money -= (*price).floor() as usize;
-                    // *price *= 1.1;
+
+                let mut price = canvas.toolbar_data.static_data.crops[canvas.selected].price;
+                for _ in 0..*amount {
+                    price = (price as f32 * 1.1) as usize;
+                }
+                if self.money >= price {
+                    self.money -= price;
+                    *amount += 1;
                     *tile = TileType::Farmland {
                         crop: canvas.selected,
                         stage: 0,
@@ -148,18 +153,39 @@ impl Player {
                 }
 
                 if *crop != canvas.selected {
-                    // let crop_price = canvas.toolbar_data.dynamic_data.crop_prices.get_mut(&crop).unwrap(); 
+                    // let crop_price = canvas.toolbar_data.dynamic_data.crop_prices.get_mut(&crop).unwrap();
                     // *crop_price /= 1.1;
 
-                    let price = canvas
+                    let amount = canvas
                         .toolbar_data
                         .dynamic_data
-                        .crop_prices
+                        .crop_amount
                         .get_mut(&canvas.selected)
                         .unwrap();
-                    if self.money >= (*price).floor() as usize {
-                        self.money -= (*price).floor() as usize;
-                        // *price *= 1.1;
+
+                    let mut price = canvas.toolbar_data.static_data.crops[canvas.selected].price;
+                    for _ in 0..*amount {
+                        price = (price as f32 * 1.1) as usize;
+                    }
+
+                    if self.money >= price {
+                        let replaced_amount = canvas
+                            .toolbar_data
+                            .dynamic_data
+                            .crop_amount
+                            .get_mut(crop)
+                            .unwrap();
+                        *replaced_amount -= 1;
+
+                        let amount = canvas
+                            .toolbar_data
+                            .dynamic_data
+                            .crop_amount
+                            .get_mut(crop)
+                            .unwrap();
+                        *amount += 1;
+
+                        self.money -= price;
                         *crop = canvas.selected;
                         *stage = 0;
                     }
@@ -180,15 +206,20 @@ impl Player {
 
         match tile {
             TileType::Grass => {
-                let price = canvas
+                let amount = canvas
                     .toolbar_data
                     .dynamic_data
-                    .tree_prices
+                    .tree_amount
                     .get_mut(&canvas.selected)
                     .unwrap();
-                if self.money >= (*price).floor() as usize {
-                    self.money -= (*price).floor() as usize;
-                    // *price *= 1.1;
+
+                let mut price = canvas.toolbar_data.static_data.trees[canvas.selected].price;
+                for _ in 0..*amount {
+                    price = (price as f32 * 1.1) as usize;
+                }
+                if self.money >= price {
+                    self.money -= price;
+                    *amount += 1;
                     *tile = TileType::Tree {
                         tree: canvas.selected,
                         grow: 0,
@@ -213,15 +244,20 @@ impl Player {
 
         match tile {
             TileType::Grass => {
-                let price = canvas
+                let amount = canvas
                     .toolbar_data
                     .dynamic_data
-                    .animal_prices
+                    .animal_amount
                     .get_mut(&canvas.selected)
                     .unwrap();
-                if self.money >= (*price).floor() as usize {
-                    self.money -= (*price).floor() as usize;
-                    *price *= 1.1;
+
+                let mut price = canvas.toolbar_data.static_data.animals[canvas.selected].price;
+                for _ in 0..*amount {
+                    price = (price as f32 * 1.1) as usize;
+                }
+                if self.money >= price {
+                    self.money -= price;
+                    *amount += 1;
                     animal_handler.add_animal(Animal::new(
                         canvas.selected,
                         selected_tile.0,
@@ -240,20 +276,23 @@ impl Player {
         selected_tile: &(i32, i32),
         map: &mut Map,
     ) {
-        let price = canvas
+        let amount = canvas
             .toolbar_data
             .dynamic_data
-            .misc_prices
+            .misc_amount
             .get_mut(&canvas.selected)
             .unwrap();
 
-        if canvas.selected == 0
-            && self.money >= 100
-            && map.dynamic_data.tiles.contains_key(selected_tile)
+        let mut price = canvas.toolbar_data.static_data.misc[canvas.selected].price;
+        for _ in 0..*amount {
+            price = (price as f32 * 1.1) as usize;
+        }
+
+        if canvas.selected == 0 && self.money >= 100 && map.dynamic_data.tiles.contains_key(selected_tile)
         {
             worker_handler.add_worker(Worker::new(selected_tile.0, selected_tile.1));
-            self.money -= (*price).floor() as usize;
-            *price *= 1.1;
+            self.money -= price;
+            *amount += 1;
         }
 
         if canvas.selected == 1 {
@@ -267,13 +306,23 @@ impl Player {
 
             match tile {
                 TileType::Tree { tree, .. } => {
-                    // let tree_price = canvas.toolbar_data.dynamic_data.tree_prices.get_mut(&tree).unwrap(); 
-                    // *tree_price /= 1.1;
+                    let replaced_amount = canvas
+                        .toolbar_data
+                        .dynamic_data
+                        .crop_amount
+                        .get_mut(tree)
+                        .unwrap();
+                    *replaced_amount -= 1;
                     *tile = TileType::Grass;
                 }
                 TileType::Farmland { crop, .. } => {
-                    // let crop_price = canvas.toolbar_data.dynamic_data.crop_prices.get_mut(&crop).unwrap(); 
-                    // *crop_price /= 1.1;
+                    let replaced_amount = canvas
+                        .toolbar_data
+                        .dynamic_data
+                        .crop_amount
+                        .get_mut(crop)
+                        .unwrap();
+                    *replaced_amount -= 1;
                     *tile = TileType::Grass;
                 }
                 _ => {}
