@@ -153,6 +153,7 @@ impl PauseMenu {
     pub fn toggle_pause(&mut self, rl: &mut RaylibHandle) {
         if rl.is_key_released(KeyboardKey::KEY_ESCAPE) {
             self.is_paused = !self.is_paused;
+            self.switch_state(rl, self.state);
         }
     }
 

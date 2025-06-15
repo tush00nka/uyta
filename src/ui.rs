@@ -6,7 +6,11 @@ use raylib::{
 use serde::Deserialize;
 
 use crate::{
-    animal::AnimalHandler, map::{Map, TILE_PIXEL_SIZE}, player::Player, texture_handler::TextureHandler, utils::parse_json
+    animal::AnimalHandler,
+    map::{Map, TILE_PIXEL_SIZE},
+    player::Player,
+    texture_handler::TextureHandler,
+    utils::parse_json,
 };
 
 const UI_BUTTON_SIZE: f32 = 60.;
@@ -302,52 +306,39 @@ impl Canvas {
                 }
             }
 
-            if self.selected != i {
-                continue;
-            }
+            // if self.selected != i {
+            //     continue;
+            // }
 
-            let price = if tooltip_pool[i].price > 0 {
-                tooltip_pool[i].price.to_string()
-            } else {
-                "".to_string()
-            };
+            // let price = if tooltip_pool[i].price > 0 {
+            //     tooltip_pool[i].price.to_string()
+            // } else {
+            //     "".to_string()
+            // };
 
-            rl.draw_text_ex(
-                font,
-                &format!("{}\n{}", tooltip_pool[i].tooltip, price),
-                Vector2::new(
-                    2. * (UI_BUTTON_SIZE + UI_GAPS) + UI_GAPS,
-                    i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS,
-                ),
-                UI_BUTTON_SIZE / 2.,
-                0.,
-                Color::RAYWHITE,
-            );
+            // rl.draw_text_ex(
+            //     font,
+            //     &format!("{}\n{}", tooltip_pool[i].tooltip, price),
+            //     Vector2::new(
+            //         2. * (UI_BUTTON_SIZE + UI_GAPS) + UI_GAPS,
+            //         i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS,
+            //     ),
+            //     UI_BUTTON_SIZE / 2.,
+            //     0.,
+            //     Color::RAYWHITE,
+            // );
         }
     }
 
     pub fn update(&mut self, rl: &mut RaylibDrawHandle, player: &Player, font: &Font) {
         for i in 0..self.content.len() {
             let rect = self.content[i];
-            if unsafe {
-                use raylib::ffi::{Rectangle, Vector2};
-                let rect = Rectangle {
-                    x: rect.x,
-                    y: rect.y,
-                    width: rect.width,
-                    height: rect.height,
-                };
-                let mouse_pos = Vector2 {
-                    x: rl.get_mouse_position().x,
-                    y: rl.get_mouse_position().y,
-                };
-                CheckCollisionPointRec(mouse_pos, rect)
-            } {
-                let (pool, mode) = match i {
-                    0 => (&self.toolbar_data.crops, MenuMode::Crops),
-                    1 => (&self.toolbar_data.trees, MenuMode::Trees),
-                    2 => (&self.toolbar_data.animals, MenuMode::Animals),
-                    _ => (&self.toolbar_data.misc, MenuMode::Misc),
+            if unsafe { CheckCollisionPointRec(rl.get_mouse_position().into(), rect.into()) } {
+                let (pool, mode, label) = match i {
+                    0 => (&self.toolbar_data.crops, MenuMode::Crops, "Растения".to_string()),
+                    1 => (&self.toolbar_data.trees, MenuMode::Trees, "Деревья".to_string()),
+                    2 => (&self.toolbar_data.animals, MenuMode::Animals, "Животные".to_string()),
+                    _ => (&self.toolbar_data.misc, MenuMode::Misc, "Прочее".to_string()),
                 };
 
                 if rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_LEFT) {
@@ -357,29 +348,33 @@ impl Canvas {
                     }
                 }
 
-                // todo: hardcoded
-                if pool[0].unlock_level > player.level {
-                    let x = rl.get_mouse_position().x as i32;
-                    let y = rl.get_mouse_position().y as i32 - UI_BUTTON_SIZE as i32 / 2;
-                    rl.draw_rectangle(
-                        x,
-                        y,
-                        format!("Откроется на уровне {}", pool[0].unlock_level)
-                            .chars()
-                            .count() as i32
-                            * (UI_BUTTON_SIZE as i32 / 4),
-                        UI_BUTTON_SIZE as i32 / 2,
-                        Color::BLACK.alpha(0.5),
-                    );
-                    rl.draw_text_ex(
-                        font,
-                        &format!("Откроется на уровне {}", pool[0].unlock_level),
-                        Vector2::new((x + 5) as f32, y as f32),
-                        UI_BUTTON_SIZE / 2.,
-                        0.,
-                        Color::RAYWHITE,
-                    );
-                }
+                let x = rl.get_mouse_position().x;
+                let y = rl.get_mouse_position().y - UI_BUTTON_SIZE / 2.;
+                let tooltip_text = if pool[0].unlock_level > player.level {
+                    format!("Откроется на уровне {}", pool[0].unlock_level)
+                } else {
+                    label
+                };
+
+                let tooltip_rect = Rectangle::new(
+                    x,
+                    y,
+                    tooltip_text.chars().count() as f32 * UI_BUTTON_SIZE / 3.5,
+                    tooltip_text.lines().count() as f32 * UI_BUTTON_SIZE / 2.,
+                );
+
+                rl.draw_rectangle_rec(
+                    tooltip_rect,
+                    Color::BLACK.alpha(0.5),
+                );
+                rl.draw_text_ex(
+                    font,
+                    &tooltip_text,
+                    Vector2::new(x + 5., y),
+                    UI_BUTTON_SIZE / 2.,
+                    0.,
+                    Color::RAYWHITE,
+                );
             }
         }
 
@@ -406,31 +401,44 @@ impl Canvas {
                     MenuMode::Misc => &self.toolbar_data.misc,
                 };
 
+
+                let tooltip_text = if pool[i].unlock_level > player.level {
+                    format!("Откроется на уровне {}", pool[i].unlock_level)
+                } else {
+                    if pool[i].price <= 0 {
+                        format!("{}", pool[i].tooltip)
+                    }
+                    else {
+                        format!("{}\n{}", pool[i].tooltip, pool[i].price)
+                    }
+                };
+
+                let x = rl.get_mouse_position().x;
+                let y = rl.get_mouse_position().y - (UI_BUTTON_SIZE / 2. * tooltip_text.lines().count() as f32);
+                let tooltip_rect = Rectangle::new(
+                    x,
+                    y,
+                    tooltip_text.chars().count() as f32 * UI_BUTTON_SIZE / 3.5,
+                    tooltip_text.lines().count() as f32 * UI_BUTTON_SIZE / 2.,
+                );
+
+                rl.draw_rectangle_rec(
+                    tooltip_rect,
+                    Color::BLACK.alpha(0.5),
+                );
+                rl.draw_text_ex(
+                    font,
+                    &tooltip_text,
+                    Vector2::new(x + 5., y),
+                    UI_BUTTON_SIZE / 2.,
+                    0.,
+                    Color::RAYWHITE,
+                );
+
                 if pool[i].unlock_level <= player.level {
                     if rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_LEFT) {
                         self.selected = i;
                     }
-                } else {
-                    let x = rl.get_mouse_position().x as i32;
-                    let y = rl.get_mouse_position().y as i32 - UI_BUTTON_SIZE as i32 / 2;
-                    rl.draw_rectangle(
-                        x,
-                        y,
-                        format!("Откроется на уровне {}", pool[i].unlock_level)
-                            .chars()
-                            .count() as i32
-                            * (UI_BUTTON_SIZE as i32 / 4),
-                        UI_BUTTON_SIZE as i32 / 2,
-                        Color::BLACK.alpha(0.5),
-                    );
-                    rl.draw_text_ex(
-                        font,
-                        &format!("Откроется на уровне {}", pool[i].unlock_level),
-                        Vector2::new((x + 5) as f32, y as f32),
-                        UI_BUTTON_SIZE / 2.,
-                        0.,
-                        Color::RAYWHITE,
-                    );
                 }
             }
         }
