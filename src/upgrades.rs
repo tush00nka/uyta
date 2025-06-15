@@ -2,10 +2,7 @@ use raylib::{ffi::CheckCollisionPointRec, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    UI_BUTTON_SIZE, UI_GAPS,
-    map::TILE_PIXEL_SIZE,
-    player::Player,
-    utils::{get_game_width, parse_json},
+    map::TILE_PIXEL_SIZE, player::Player, utils::{get_game_width, parse_json, shrink_number_for_display}, UI_BUTTON_SIZE, UI_GAPS
 };
 
 #[derive(Deserialize)]
@@ -153,7 +150,7 @@ impl UpgradeHandler {
             );
             rl.draw_text_ex(
                 font,
-                &data.cost.to_string(),
+                &shrink_number_for_display(data.cost),
                 Vector2::new(x + 5., y + UI_BUTTON_SIZE + UI_BUTTON_SIZE / 3.),
                 UI_BUTTON_SIZE / 2.,
                 0.,

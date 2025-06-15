@@ -1,16 +1,14 @@
+use std::collections::HashMap;
+
 use raylib::{
     ffi::{CheckCollisionPointRec, MouseButton},
     prelude::{Color, RaylibDraw, RaylibDrawHandle, Rectangle, Vector2},
     text::Font,
 };
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::{
-    animal::AnimalHandler,
-    map::{Map, TILE_PIXEL_SIZE},
-    player::Player,
-    texture_handler::TextureHandler,
-    utils::parse_json, UI_BUTTON_SIZE, UI_GAPS,
+    animal::AnimalHandler, map::{Map, TILE_PIXEL_SIZE}, player::Player, texture_handler::TextureHandler, utils::{parse_json, shrink_number_for_display}, UI_BUTTON_SIZE, UI_GAPS
 };
 
 #[derive(Deserialize)]
@@ -19,18 +17,77 @@ pub struct ToolbarItem {
     unlock_level: usize,
     pub price: usize,
 }
-
 #[derive(Deserialize)]
-pub struct ToolbarData {
+pub struct ToolbarStatic {
     pub crops: Vec<ToolbarItem>,
     pub trees: Vec<ToolbarItem>,
     pub animals: Vec<ToolbarItem>,
     pub misc: Vec<ToolbarItem>,
 }
 
+#[derive(Deserialize, Serialize)]
+pub struct ToolbarDynamic {
+    pub crop_prices: HashMap<usize, f32>,
+    pub tree_prices: HashMap<usize, f32>,
+    pub animal_prices: HashMap<usize, f32>,
+    pub misc_prices: HashMap<usize, f32>,
+}
+
+impl ToolbarDynamic {
+    fn new(static_data: &ToolbarStatic) -> Self {
+        let mut crop_prices = HashMap::new();
+        for i in 0..static_data.crops.len() {
+            crop_prices.insert(i, static_data.crops[i].price as f32);
+        }
+        let mut tree_prices = HashMap::new();
+        for i in 0..static_data.trees.len() {
+            tree_prices.insert(i, static_data.trees[i].price as f32);
+        }
+        let mut animal_prices = HashMap::new();
+        for i in 0..static_data.animals.len() {
+            animal_prices.insert(i, static_data.animals[i].price as f32);
+        }
+        let mut misc_prices = HashMap::new();
+        for i in 0..static_data.misc.len() {
+            misc_prices.insert(i, static_data.misc[i].price as f32);
+        }
+
+        Self {
+            crop_prices,
+            tree_prices,
+            animal_prices,
+            misc_prices,
+        }
+    }
+}
+
+pub struct ToolbarData {
+    pub static_data: ToolbarStatic,
+    pub dynamic_data: ToolbarDynamic,
+}
+
 impl ToolbarData {
     fn new() -> Self {
-        parse_json("static/toolbar.json").expect("no toolbar")
+        let static_data = parse_json("static/toolbar.json").expect("no toolbar");
+
+        let res = parse_json("dynamic/toolbar_save.json");
+
+        let dynamic_data = match res {
+            Ok(dynamic_data) => dynamic_data,
+            Err(_) => ToolbarDynamic::new(&static_data),
+        };
+
+        Self {
+            static_data,
+            dynamic_data,
+        }
+    }
+
+    pub fn save(&self) {
+        let serialized = serde_json::to_string_pretty(&self.dynamic_data).expect("err");
+        std::fs::create_dir_all("dynamic").expect("Couldn't create dir");
+        std::fs::write("dynamic/toolbar_save.json", serialized)
+            .expect("Couldn't write toolbar data to json");
     }
 }
 
@@ -113,7 +170,7 @@ impl Canvas {
         );
 
         let position = Vector2::new(self.content[1].x, self.content[1].y);
-        let color = if self.toolbar_data.trees[0].unlock_level > player.level {
+        let color = if self.toolbar_data.static_data.trees[0].unlock_level > player.level {
             Color::GRAY
         } else {
             Color::WHITE
@@ -135,7 +192,7 @@ impl Canvas {
         );
 
         let position = Vector2::new(self.content[2].x, self.content[2].y);
-        let color = if self.toolbar_data.animals[0].unlock_level > player.level {
+        let color = if self.toolbar_data.static_data.animals[0].unlock_level > player.level {
             Color::GRAY
         } else {
             Color::WHITE
@@ -157,7 +214,7 @@ impl Canvas {
         );
 
         let position = Vector2::new(self.content[3].x, self.content[3].y);
-        let color = if self.toolbar_data.misc[0].unlock_level > player.level {
+        let color = if self.toolbar_data.static_data.misc[0].unlock_level > player.level {
             Color::GRAY
         } else {
             Color::WHITE
@@ -216,7 +273,7 @@ impl Canvas {
             // todo: refactor hardcoded ui
             match self.mode {
                 MenuMode::Crops => {
-                    tooltip_pool = &self.toolbar_data.crops;
+                    tooltip_pool = &self.toolbar_data.static_data.crops;
 
                     let color = if tooltip_pool[i].unlock_level > player.level {
                         Color::GRAY
@@ -240,7 +297,7 @@ impl Canvas {
                     );
                 }
                 MenuMode::Trees => {
-                    tooltip_pool = &self.toolbar_data.trees;
+                    tooltip_pool = &self.toolbar_data.static_data.trees;
                     let color = if tooltip_pool[i].unlock_level > player.level {
                         Color::GRAY
                     } else {
@@ -263,7 +320,7 @@ impl Canvas {
                     );
                 }
                 MenuMode::Animals => {
-                    tooltip_pool = &self.toolbar_data.animals;
+                    tooltip_pool = &self.toolbar_data.static_data.animals;
 
                     let color = if tooltip_pool[i].unlock_level > player.level {
                         Color::GRAY
@@ -282,7 +339,7 @@ impl Canvas {
                     );
                 }
                 MenuMode::Misc => {
-                    tooltip_pool = &self.toolbar_data.misc;
+                    tooltip_pool = &self.toolbar_data.static_data.misc;
 
                     let color = if tooltip_pool[i].unlock_level > player.level {
                         Color::GRAY
@@ -332,22 +389,22 @@ impl Canvas {
             if unsafe { CheckCollisionPointRec(rl.get_mouse_position().into(), rect.into()) } {
                 let (pool, mode, label) = match i {
                     0 => (
-                        &self.toolbar_data.crops,
+                        &self.toolbar_data.static_data.crops,
                         MenuMode::Crops,
                         "Растения".to_string(),
                     ),
                     1 => (
-                        &self.toolbar_data.trees,
+                        &self.toolbar_data.static_data.trees,
                         MenuMode::Trees,
                         "Деревья".to_string(),
                     ),
                     2 => (
-                        &self.toolbar_data.animals,
+                        &self.toolbar_data.static_data.animals,
                         MenuMode::Animals,
                         "Животные".to_string(),
                     ),
                     _ => (
-                        &self.toolbar_data.misc,
+                        &self.toolbar_data.static_data.misc,
                         MenuMode::Misc,
                         "Прочее".to_string(),
                     ),
@@ -404,11 +461,11 @@ impl Canvas {
                 };
                 CheckCollisionPointRec(mouse_pos, rect)
             } {
-                let pool: &Vec<ToolbarItem> = match self.mode {
-                    MenuMode::Crops => &self.toolbar_data.crops,
-                    MenuMode::Trees => &self.toolbar_data.trees,
-                    MenuMode::Animals => &self.toolbar_data.animals,
-                    MenuMode::Misc => &self.toolbar_data.misc,
+                let (pool, price_pool) = match self.mode {
+                    MenuMode::Crops => (&self.toolbar_data.static_data.crops, &self.toolbar_data.dynamic_data.crop_prices),
+                    MenuMode::Trees => (&self.toolbar_data.static_data.trees, &self.toolbar_data.dynamic_data.tree_prices),
+                    MenuMode::Animals => (&self.toolbar_data.static_data.animals, &self.toolbar_data.dynamic_data.animal_prices),
+                    MenuMode::Misc => (&self.toolbar_data.static_data.misc, &self.toolbar_data.dynamic_data.misc_prices),
                 };
 
                 let tooltip_text = if pool[i].unlock_level > player.level {
@@ -417,7 +474,7 @@ impl Canvas {
                     if pool[i].price <= 0 {
                         format!("{}", pool[i].tooltip)
                     } else {
-                        format!("{}\n{}", pool[i].tooltip, pool[i].price)
+                        format!("{}\n{}", pool[i].tooltip, shrink_number_for_display(price_pool.get(&i).unwrap().floor() as usize))
                     }
                 };
 

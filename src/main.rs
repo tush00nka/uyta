@@ -206,7 +206,7 @@ fn main() {
         if !pause_blocks_mouse {
             handle_input(
                 &mut rl,
-                &canvas,
+                &mut canvas,
                 &mut map,
                 &mut player,
                 &mut worker_handler,
@@ -259,6 +259,7 @@ fn main() {
         );
     }
 
+    canvas.toolbar_data.save();
     upgrade_handler.save();
     worker_handler.save();
     animal_handler.save();
@@ -268,7 +269,7 @@ fn main() {
 
 fn handle_input(
     rl: &mut RaylibHandle,
-    canvas: &Canvas,
+    canvas: &mut Canvas,
     map: &mut Map,
     player: &mut Player,
     worker_handler: &mut WorkerHandler,

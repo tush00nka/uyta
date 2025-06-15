@@ -65,7 +65,6 @@ pub struct MapDynamicData {
     pub tiles: HashMap<(i32, i32), TileType>,
     #[serde_as(as = "Vec<(_, _)>")]
     pub occupation_map: HashMap<(i32, i32), bool>,
-    #[serde_as(as = "Vec<(_, _)>")]
     land_expansion_points: Vec<(i32, i32)>,
     next_expansion_cost: usize,
 }
