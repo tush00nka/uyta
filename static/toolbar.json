@@ -57,17 +57,17 @@
         {
             "tooltip": "Курица",
             "unlock_level": 14,
-            "price": 1000
-        },
-        {
-            "tooltip": "Свинья",
-            "unlock_level": 22,
             "price": 5000
         },
         {
-            "tooltip": "Овца",
-            "unlock_level": 34,
+            "tooltip": "Свинья",
+            "unlock_level": 24,
             "price": 10000
+        },
+        {
+            "tooltip": "Овца",
+            "unlock_level": 32,
+            "price": 20000
         }
     ],
     "misc": [

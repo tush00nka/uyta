@@ -10,6 +10,7 @@ use crate::{
     animal::AnimalHandler,
     map::{Map, TILE_PIXEL_SIZE, TILE_SIZE, TileType},
     player::Player,
+    upgrades::UpgradeHandler,
     utils::parse_json,
 };
 
@@ -43,11 +44,12 @@ impl WorkerHandler {
         player: &mut Player,
         map: &mut Map,
         animal_handler: &AnimalHandler,
+        upgrade_handler: &UpgradeHandler,
         sounds: &HashMap<String, Sound<'_>>,
     ) {
         self.workers.iter_mut().for_each(|worker| {
             // feels weird and illegal
-            let (money, exp) = worker.follow_path(map, animal_handler, &sounds);
+            let (money, exp) = worker.follow_path(map, animal_handler, upgrade_handler, &sounds);
             player.money += money;
             player.exp += exp;
         });
@@ -166,6 +168,7 @@ impl Worker {
         &mut self,
         map: &mut Map,
         animal_handler: &AnimalHandler,
+        upgrade_handler: &UpgradeHandler,
         sounds: &HashMap<String, Sound<'_>>,
     ) -> (usize, usize) {
         if let Some(next_position) = self.path.get(0) {
@@ -182,9 +185,35 @@ impl Worker {
         match tile {
             TileType::Farmland { crop, stage } => {
                 if *stage >= map.static_data.crops_data[*crop].time_to_grow {
-                    // successfully complete task
-                    money = map.static_data.crops_data[*crop].sell_price;
-                    exp = map.static_data.crops_data[*crop].exp; // higher crop_id == more exp
+                    let multiplier = {
+                        let mut temp = 1;
+                        if upgrade_handler
+                            .dynamic_data
+                            .purchased_upgrades
+                            .contains(&(*crop * 3))
+                        {
+                            temp *= 2;
+                        }
+                        if upgrade_handler
+                            .dynamic_data
+                            .purchased_upgrades
+                            .contains(&(*crop * 3 + 1))
+                        {
+                            temp *= 2;
+                        }
+                        if upgrade_handler
+                            .dynamic_data
+                            .purchased_upgrades
+                            .contains(&(*crop * 3 + 2))
+                        {
+                            temp *= 2;
+                        }
+
+                        temp
+                    };
+
+                    money = map.static_data.crops_data[*crop].sell_price * multiplier;
+                    exp = map.static_data.crops_data[*crop].exp * multiplier;
                     *stage = 0;
                     // free this tile from work
                     if let Some(occupation_tile) =
@@ -200,8 +229,37 @@ impl Worker {
             }
             TileType::Tree { tree, stage, .. } => {
                 if *stage >= map.static_data.tree_data[*tree].time_to_fruit {
-                    money = map.static_data.tree_data[*tree].sell_price;
-                    exp = map.static_data.tree_data[*tree].exp;
+                    // we're basically offsetting the upgrade thingy, so uhh, still kinda hardcoded but idc
+                    let crops_len = map.static_data.crops_data.len();
+                    let multiplier = {
+                        let mut temp = 1;
+                        if upgrade_handler
+                            .dynamic_data
+                            .purchased_upgrades
+                            .contains(&(crops_len * 3 + *tree * 3))
+                        {
+                            temp *= 2;
+                        }
+                        if upgrade_handler
+                            .dynamic_data
+                            .purchased_upgrades
+                            .contains(&(crops_len * 3 + *tree * 3 + 1))
+                        {
+                            temp *= 2;
+                        }
+                        if upgrade_handler
+                            .dynamic_data
+                            .purchased_upgrades
+                            .contains(&(crops_len * 3 + *tree * 3 + 2))
+                        {
+                            temp *= 2;
+                        }
+
+                        temp
+                    };
+
+                    money = map.static_data.tree_data[*tree].sell_price * multiplier;
+                    exp = map.static_data.tree_data[*tree].exp * multiplier;
                     *stage = 0;
 
                     if let Some(occupation_tile) =
@@ -216,9 +274,38 @@ impl Worker {
                 }
             }
             TileType::AnimalDrop { animal } => {
-                money = animal_handler.static_data.animal_data[*animal as usize].drop_cost;
-                // todo: make separate exp value im animal_data
-                exp = animal_handler.static_data.animal_data[*animal as usize].drop_cost;
+                let crops_len = map.static_data.crops_data.len();
+                let trees_len = map.static_data.tree_data.len();
+                let multiplier = {
+                    let mut temp = 1;
+                    if upgrade_handler
+                        .dynamic_data
+                        .purchased_upgrades
+                        .contains(&(crops_len * 3 + trees_len * 3 + *animal * 3))
+                    {
+                        temp *= 2;
+                    }
+                    if upgrade_handler
+                        .dynamic_data
+                        .purchased_upgrades
+                        .contains(&(crops_len * 3 + trees_len * 3 + *animal * 3 + 1))
+                    {
+                        temp *= 2;
+                    }
+                    if upgrade_handler
+                        .dynamic_data
+                        .purchased_upgrades
+                        .contains(&(crops_len * 3 + trees_len * 3 + *animal * 3 + 2))
+                    {
+                        temp *= 2;
+                    }
+
+                    temp
+                };
+
+                money =
+                    animal_handler.static_data.animal_data[*animal as usize].drop_cost * multiplier;
+                exp = animal_handler.static_data.animal_data[*animal as usize].exp * multiplier;
 
                 if let Some(occupation_tile) =
                     map.dynamic_data.occupation_map.get_mut(&self.position)

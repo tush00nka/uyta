@@ -10,11 +10,8 @@ use crate::{
     map::{Map, TILE_PIXEL_SIZE},
     player::Player,
     texture_handler::TextureHandler,
-    utils::parse_json,
+    utils::parse_json, UI_BUTTON_SIZE, UI_GAPS,
 };
-
-const UI_BUTTON_SIZE: f32 = 60.;
-const UI_GAPS: f32 = 20.;
 
 #[derive(Deserialize)]
 pub struct ToolbarItem {

@@ -19,11 +19,12 @@ use crate::player::Player;
 
 mod worker;
 use crate::tutorial::Tutorial;
-use crate::ui::{Canvas, MenuMode};
+use crate::shop_ui::{Canvas, MenuMode};
+use crate::upgrades::UpgradeHandler;
 use crate::worker::WorkerHandler;
 
 mod pause_menu;
-mod ui;
+mod shop_ui;
 
 mod renderer;
 mod tutorial;
@@ -31,10 +32,15 @@ mod utils;
 
 mod animal;
 
+mod upgrades;
+
 const SCREEN_WIDTH: i32 = 1280;
 const SCREEN_HEIGHT: i32 = 720;
 
 const TILE_UPDATE_TIME: f32 = 0.5;
+
+const UI_BUTTON_SIZE: f32 = 60.;
+const UI_GAPS: f32 = 20.;
 
 fn init_shader(shader: &mut Shader, rl: &mut RaylibHandle) {
     let freq_xloc = shader.get_shader_location("freqX");
@@ -99,6 +105,7 @@ fn main() {
     let mut player = Player::new();
     let mut worker_handler = WorkerHandler::new();
     let mut animal_handler = AnimalHandler::new();
+    let mut upgrade_handler = UpgradeHandler::new();
     let mut canvas = Canvas::new();
 
     let mut game_settings = GameSettigns::new();
@@ -220,7 +227,7 @@ fn main() {
 
             map.update_tiles();
 
-            worker_handler.advance_workers(&mut player, &mut map, &animal_handler, &sounds);
+            worker_handler.advance_workers(&mut player, &mut map, &animal_handler, &upgrade_handler, &sounds);
             animal_handler.move_animals(&mut map);
         }
 
@@ -240,10 +247,11 @@ fn main() {
         renderer::draw_fg(
             &mut d,
             &mut canvas,
+            &mut upgrade_handler,
             &map,
             &animal_handler,
             &texture_handler,
-            &player,
+            &mut player,
             &pause_menu,
             &tutorial,
             &font,
@@ -251,6 +259,7 @@ fn main() {
         );
     }
 
+    upgrade_handler.save();
     worker_handler.save();
     animal_handler.save();
     player.save();

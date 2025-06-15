@@ -22,6 +22,7 @@ pub struct Animal {
 pub struct AnimalData {
     time_to_drop: usize,
     pub drop_cost: usize,
+    pub exp: usize,
 }
 
 #[derive(Deserialize)]

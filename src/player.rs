@@ -7,7 +7,7 @@ use crate::{
     animal::Animal, AnimalHandler,
     map::{Map, TileType},
     tutorial::Tutorial,
-    ui::{Canvas, MenuMode},
+    shop_ui::{Canvas, MenuMode},
     utils::{get_game_width, parse_json},
     worker::{Worker, WorkerHandler},
 };
@@ -15,6 +15,7 @@ use crate::{
 #[derive(Serialize, Deserialize)]
 pub struct Player {
     pub money: usize,
+    pub alltime_max_money: usize,
     display_money: usize,
     pub level: usize,
     pub exp: usize,
@@ -32,6 +33,7 @@ impl Player {
 
         Self {
             money: 100,
+            alltime_max_money: 100,
             display_money: 0,
             level: 1,
             exp: 0,
@@ -43,6 +45,10 @@ impl Player {
         let money_diff = self.money as isize - self.display_money as isize;
         if money_diff == 0 {
             return;
+        }
+
+        if self.alltime_max_money < self.money {
+            self.alltime_max_money = self.money;
         }
 
         self.display_money = self.money;
