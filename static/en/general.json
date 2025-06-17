@@ -8,7 +8,7 @@
     "quit": "Quit game",
     "needs_restart": "Needs Restart",
 
-    "locked": "Unlocks at level {}",
+    "locked": "Unlocks at level",
     "level": "Level",
 
     "million": "million",

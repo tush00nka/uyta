@@ -416,7 +416,7 @@ impl Canvas {
                 let x = rl.get_mouse_position().x;
                 let y = rl.get_mouse_position().y - UI_BUTTON_SIZE / 2.;
                 let tooltip_text = if pool[0].unlock_level > player.level {
-                    format!("Откроется на уровне {}", pool[0].unlock_level)
+                    format!("{} {}", locale_handler.language_data.get("locked").unwrap(), pool[0].unlock_level)
                 } else {
                     label.to_string()
                 };
@@ -477,7 +477,7 @@ impl Canvas {
                 };
 
                 let tooltip_text = if pool[i].unlock_level > player.level {
-                    format!("Откроется на уровне {}", pool[i].unlock_level)
+                    format!("{} {}", locale_handler.language_data.get("locked").unwrap(), pool[i].unlock_level)
                 } else {
                     if pool[i].price <= 0 {
                         format!("{}", pool[i].tooltip)

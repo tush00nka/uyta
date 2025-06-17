@@ -94,7 +94,7 @@ impl Player {
         );
         rl.draw_text_ex(
             font,
-            &format!("Уровень {}", self.level),
+            &format!("{} {}", locale_handler.language_data.get("level").unwrap(), self.level),
             Vector2::new(screen_width as f32 / 4. + 10., 10.),
             24.,
             0.,
