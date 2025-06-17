@@ -22,13 +22,17 @@ pub struct Tutorial {
 }
 
 impl Tutorial {
-    pub fn new() -> Self {
+    pub fn new(language_code: String) -> Self {
         let player: Result<Player, serde_json::Error> = parse_json("dynamic/player_save.json");
 
-        let hidden = match player {
+        let mut hidden = match player {
             Ok(_) => true,
             Err(_) => false,
         };
+
+        if language_code != "ru".to_string() {
+            hidden = true;
+        }
 
         Self {
             steps: vec![

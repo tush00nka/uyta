@@ -74,7 +74,7 @@ fn main() {
     let (mut rl, thread) = raylib::init()
         .size(SCREEN_WIDTH, SCREEN_HEIGHT)
         .resizable()
-        .title("Уйта")
+        .title("Uyta")
         .build();
 
     let rl_audio = RaylibAudio::init_audio_device().expect("error init audio device");
@@ -122,7 +122,7 @@ fn main() {
     let mut upgrade_handler = UpgradeHandler::new(game_settings.language.clone());
 
     let mut pause_menu = PauseMenu::new(&mut rl, &locale_handler);
-    let mut tutorial = Tutorial::new();
+    let mut tutorial = Tutorial::new(game_settings.language.clone());
 
     let font = rl
         .load_font_ex(
