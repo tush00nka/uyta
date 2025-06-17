@@ -8,12 +8,7 @@ use raylib::{
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    UI_BUTTON_SIZE, UI_GAPS,
-    animal::AnimalHandler,
-    map::{Map, TILE_PIXEL_SIZE},
-    player::Player,
-    texture_handler::TextureHandler,
-    utils::{parse_json, shrink_number_for_display},
+    animal::AnimalHandler, localization::LocaleHandler, map::{Map, TILE_PIXEL_SIZE}, player::Player, texture_handler::TextureHandler, utils::{parse_json, shrink_number_for_display}, UI_BUTTON_SIZE, UI_GAPS
 };
 
 #[derive(Deserialize)]
@@ -72,8 +67,8 @@ pub struct ToolbarData {
 }
 
 impl ToolbarData {
-    fn new() -> Self {
-        let static_data = parse_json("static/toolbar.json").expect("no toolbar");
+    fn new(language_code: String) -> Self {
+        let static_data = parse_json(&format!("static/{}/toolbar.json", language_code)).expect("no toolbar");
 
         let res = parse_json("dynamic/toolbar_save.json");
 
@@ -86,6 +81,11 @@ impl ToolbarData {
             static_data,
             dynamic_data,
         }
+    }
+
+    fn reload_static(&mut self, language_code: String) {
+        let static_data = parse_json(&format!("static/{}/toolbar.json", language_code)).expect("no upgrade data??");
+        self.static_data = static_data;
     }
 
     pub fn save(&self) {
@@ -113,7 +113,7 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn new() -> Self {
+    pub fn new(language_code: String) -> Self {
         Self {
             mode: MenuMode::Crops,
             selected: 0,
@@ -144,8 +144,12 @@ impl Canvas {
                 ),
             ],
             subcontent: vec![],
-            toolbar_data: ToolbarData::new(),
+            toolbar_data: ToolbarData::new(language_code),
         }
+    }
+
+    pub fn reload_toolbar_static(&mut self, language_code: String) {
+        self.toolbar_data.reload_static(language_code);
     }
 
     pub fn draw(
@@ -375,7 +379,7 @@ impl Canvas {
         }
     }
 
-    pub fn update(&mut self, rl: &mut RaylibDrawHandle, player: &Player, font: &Font) {
+    pub fn update(&mut self, rl: &mut RaylibDrawHandle, player: &Player, font: &Font, locale_handler: &LocaleHandler) {
         for i in 0..self.content.len() {
             let rect = self.content[i];
             if unsafe { CheckCollisionPointRec(rl.get_mouse_position().into(), rect.into()) } {
@@ -383,22 +387,22 @@ impl Canvas {
                     0 => (
                         &self.toolbar_data.static_data.crops,
                         MenuMode::Crops,
-                        "Растения".to_string(),
+                        locale_handler.language_data.get("plants").unwrap(),
                     ),
                     1 => (
                         &self.toolbar_data.static_data.trees,
                         MenuMode::Trees,
-                        "Деревья".to_string(),
+                        locale_handler.language_data.get("trees").unwrap(),
                     ),
                     2 => (
                         &self.toolbar_data.static_data.animals,
                         MenuMode::Animals,
-                        "Животные".to_string(),
+                        locale_handler.language_data.get("animals").unwrap(),
                     ),
                     _ => (
                         &self.toolbar_data.static_data.misc,
                         MenuMode::Misc,
-                        "Прочее".to_string(),
+                        locale_handler.language_data.get("misc").unwrap(),
                     ),
                 };
 
@@ -414,7 +418,7 @@ impl Canvas {
                 let tooltip_text = if pool[0].unlock_level > player.level {
                     format!("Откроется на уровне {}", pool[0].unlock_level)
                 } else {
-                    label
+                    label.to_string()
                 };
 
                 let tooltip_rect = Rectangle::new(
@@ -483,7 +487,7 @@ impl Canvas {
                             price = (price as f32 * 1.1) as usize;
                         }
 
-                        format!("{}\n{}", pool[i].tooltip, shrink_number_for_display(price))
+                        format!("{}\n{}", pool[i].tooltip, shrink_number_for_display(price, locale_handler))
                     }
                 };
 

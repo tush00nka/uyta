@@ -5,6 +5,7 @@ use raylib::prelude::*;
 
 mod texture_handler;
 use crate::animal::AnimalHandler;
+use crate::localization::LocaleHandler;
 use crate::pause_menu::{ButtonState, GameSettigns, PauseMenu, PauseMenuState};
 use crate::texture_handler::TextureHandler;
 
@@ -18,8 +19,8 @@ mod player;
 use crate::player::Player;
 
 mod worker;
-use crate::tutorial::Tutorial;
 use crate::shop_ui::{Canvas, MenuMode};
+use crate::tutorial::Tutorial;
 use crate::upgrades::UpgradeHandler;
 use crate::worker::WorkerHandler;
 
@@ -33,6 +34,8 @@ mod utils;
 mod animal;
 
 mod upgrades;
+
+mod localization;
 
 const SCREEN_WIDTH: i32 = 1280;
 const SCREEN_HEIGHT: i32 = 720;
@@ -105,8 +108,6 @@ fn main() {
     let mut player = Player::new();
     let mut worker_handler = WorkerHandler::new();
     let mut animal_handler = AnimalHandler::new();
-    let mut upgrade_handler = UpgradeHandler::new();
-    let mut canvas = Canvas::new();
 
     let mut game_settings = GameSettigns::new();
     rl_audio.set_master_volume(game_settings.master_volume);
@@ -114,7 +115,13 @@ fn main() {
         rl.toggle_fullscreen();
     }
 
-    let mut pause_menu = PauseMenu::new(&mut rl);
+    let mut locale_handler = LocaleHandler::new();
+    locale_handler.set_locale(game_settings.language.clone());
+
+    let mut canvas = Canvas::new(game_settings.language.clone());
+    let mut upgrade_handler = UpgradeHandler::new(game_settings.language.clone());
+
+    let mut pause_menu = PauseMenu::new(&mut rl, &locale_handler);
     let mut tutorial = Tutorial::new();
 
     let font = rl
@@ -122,7 +129,7 @@ fn main() {
             &thread,
             "static/tilita.ttf",
             32,
-            Some("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789+-%[]()FWASD,.!?"),
+            Some("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789+-%[](),.!?"),
         )
         .expect("no font???");
 
@@ -159,8 +166,8 @@ fn main() {
 
         shader.set_shader_value(seconds_loc, seconds);
 
-        pause_menu.toggle_pause(&mut rl);
-        let pause_blocks_mouse = pause_menu.update_buttons(&mut rl);
+        pause_menu.toggle_pause(&mut rl, &locale_handler);
+        let pause_blocks_mouse = pause_menu.update_buttons(&mut rl, &locale_handler);
 
         match pause_menu.state {
             PauseMenuState::Main => {
@@ -170,7 +177,7 @@ fn main() {
                 }
 
                 if pause_menu.buttons[0].state == ButtonState::Pressed {
-                    pause_menu.switch_state(&mut rl, PauseMenuState::Settings);
+                    pause_menu.switch_state(&mut rl, PauseMenuState::Settings, &locale_handler);
                 }
             }
             PauseMenuState::Settings => {
@@ -185,12 +192,28 @@ fn main() {
                     game_settings.master_volume = new_volume;
                 }
                 if pause_menu.buttons[2].state == ButtonState::Pressed {
+                    let codes: Vec<String> = locale_handler.localizations.clone().into_keys().collect();
+                    let mut index = codes.iter().position(|code| *code == locale_handler.current_locale).unwrap();
+
+                    if index+1 >= codes.len() {
+                        index = 0;
+                    }
+                    else {
+                        index += 1;
+                    }
+                    locale_handler.set_locale(codes[index].clone());
+                    pause_menu.switch_state(&mut rl, pause_menu.state, &locale_handler);
+                    game_settings.language = codes[index].clone();
+                    canvas.reload_toolbar_static(game_settings.language.clone());
+                    upgrade_handler.reload_static(game_settings.language.clone());
+                }
+                if pause_menu.buttons[3].state == ButtonState::Pressed {
                     rl.toggle_fullscreen();
                     game_settings.is_fullscreen = rl.is_window_fullscreen();
                 }
-                if pause_menu.buttons[3].state == ButtonState::Pressed {
+                if pause_menu.buttons[4].state == ButtonState::Pressed {
                     game_settings.save();
-                    pause_menu.switch_state(&mut rl, PauseMenuState::Main);
+                    pause_menu.switch_state(&mut rl, PauseMenuState::Main, &locale_handler);
                 }
             }
         }
@@ -227,7 +250,13 @@ fn main() {
 
             map.update_tiles();
 
-            worker_handler.advance_workers(&mut player, &mut map, &animal_handler, &upgrade_handler, &sounds);
+            worker_handler.advance_workers(
+                &mut player,
+                &mut map,
+                &animal_handler,
+                &upgrade_handler,
+                &sounds,
+            );
             animal_handler.move_animals(&mut map);
         }
 
@@ -255,6 +284,7 @@ fn main() {
             &pause_menu,
             &tutorial,
             &font,
+            &locale_handler,
             rl_audio.get_master_volume(),
         );
     }

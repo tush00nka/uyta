@@ -2,7 +2,7 @@ use raylib::{ffi::CheckCollisionPointRec, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    map::TILE_PIXEL_SIZE, player::Player, utils::{get_game_width, parse_json, shrink_number_for_display}, UI_BUTTON_SIZE, UI_GAPS
+    localization::LocaleHandler, map::TILE_PIXEL_SIZE, player::Player, utils::{get_game_width, parse_json, shrink_number_for_display}, UI_BUTTON_SIZE, UI_GAPS
 };
 
 #[derive(Deserialize)]
@@ -28,8 +28,8 @@ pub struct UpgradeHandler {
 }
 
 impl UpgradeHandler {
-    pub fn new() -> Self {
-        let static_data = parse_json("static/upgrades.json").expect("no upgrade data??");
+    pub fn new(language_code: String) -> Self {
+        let static_data = parse_json(&format!("static/{}/upgrades.json", language_code)).expect("no upgrade data??");
 
         let res = parse_json("dynamic/upgrades_save.json");
         let dynamic_data = match res {
@@ -45,12 +45,18 @@ impl UpgradeHandler {
         }
     }
 
+    pub fn reload_static(&mut self, language_code: String) {
+        let static_data = parse_json(&format!("static/{}/upgrades.json", language_code)).expect("no upgrade data??");
+        self.static_data = static_data;
+    }
+
     pub fn draw(
         &mut self,
         rl: &mut RaylibDrawHandle,
         texture: &Texture2D,
         font: &Font,
         player: &mut Player,
+        locale_handler: &LocaleHandler
     ) {
         let mut offset = 0;
         for i in 0..self.static_data.upgrade_data.len() {
@@ -150,7 +156,7 @@ impl UpgradeHandler {
             );
             rl.draw_text_ex(
                 font,
-                &shrink_number_for_display(data.cost),
+                &shrink_number_for_display(data.cost, locale_handler),
                 Vector2::new(x + 5., y + UI_BUTTON_SIZE + UI_BUTTON_SIZE / 3.),
                 UI_BUTTON_SIZE / 2.,
                 0.,

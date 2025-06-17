@@ -1,0 +1,21 @@
+{
+    "menu": "Меню",
+    "settings": "Настройки",
+    "fullscreen": "Во весь экран",
+    "windowed": "В окне",
+    "master_volume": "Общая громкость",
+    "save_settings": "Сохранить",
+    "quit": "Выйти из игры",
+    "needs_restart": "Требуется перезапуск",
+
+    "locked": "Откроется на уровне {}",
+    "level": "Уровень",
+    "million": "млн",
+    "billion": "млрд",
+    "trillion": "трлн",
+
+    "plants": "Растения",
+    "trees": "Деревья",
+    "animals": "Животные",
+    "misc": "Прочее"
+}

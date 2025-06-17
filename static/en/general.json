@@ -1,0 +1,22 @@
+{
+    "menu": "Menu",
+    "settings": "Settings",
+    "fullscreen": "Fullscreen",
+    "windowed": "Windowed",
+    "master_volume": "Master Volume",
+    "save_settings": "OK",
+    "quit": "Quit game",
+    "needs_restart": "Needs Restart",
+
+    "locked": "Unlocks at level {}",
+    "level": "Level",
+
+    "million": "million",
+    "billion": "billion",
+    "trillion": "trillion",
+
+    "plants": "Plants",
+    "trees": "Trees",
+    "animals": "Animals",
+    "misc": "Miscellaneous"
+}

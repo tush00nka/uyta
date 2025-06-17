@@ -1,0 +1,85 @@
+{
+    "crops": [
+        {
+            "tooltip": "Carrot",
+            "unlock_level": 1,
+            "price": 20
+        },
+        {
+            "tooltip": "Cabbage",
+            "unlock_level": 3,
+            "price": 50
+        },
+        {
+            "tooltip": "Pumpkin",
+            "unlock_level": 5,
+            "price": 100
+        },
+        {
+            "tooltip": "Potato",
+            "unlock_level": 7,
+            "price": 500
+        },
+        {
+            "tooltip": "Strawberry",
+            "unlock_level": 11,
+            "price": 1500
+        }
+    ],
+    "trees": [
+        {
+            "tooltip": "Apple Tree",
+            "unlock_level": 10,
+            "price": 1000
+        },
+        {
+            "tooltip": "Orange Tree",
+            "unlock_level": 15,
+            "price": 5000
+        },
+        {
+            "tooltip": "Cherry Tree",
+            "unlock_level": 20,
+            "price": 8000
+        },
+        {
+            "tooltip": "Pomegranate Tree",
+            "unlock_level": 25,
+            "price": 12000
+        },
+        {
+            "tooltip": "Coconut Palm",
+            "unlock_level": 30,
+            "price": 15000
+        }
+    ],
+    "animals": [
+        {
+            "tooltip": "Chicken",
+            "unlock_level": 14,
+            "price": 5000
+        },
+        {
+            "tooltip": "Pig",
+            "unlock_level": 24,
+            "price": 10000
+        },
+        {
+            "tooltip": "Sheep",
+            "unlock_level": 32,
+            "price": 20000
+        }
+    ],
+    "misc": [
+        {
+            "tooltip": "Worker",
+            "unlock_level": 2,
+            "price": 100
+        },
+        {
+            "tooltip": "Remove Plants",
+            "unlock_level": 5,
+            "price": 0
+        }
+    ]
+}

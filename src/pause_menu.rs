@@ -1,7 +1,9 @@
 use raylib::{ffi::CheckCollisionPointRec, prelude::*};
 use serde::{Deserialize, Serialize};
 
-use crate::{map::TILE_SCALE, utils::{get_game_height, get_game_width, parse_json}};
+use crate::{
+    localization::LocaleHandler, map::TILE_SCALE, utils::{get_game_height, get_game_width, parse_json}
+};
 
 pub struct Button {
     rect: Rectangle,
@@ -32,6 +34,7 @@ pub struct PauseMenu {
 pub struct GameSettigns {
     pub master_volume: f32,
     pub is_fullscreen: bool,
+    pub language: String,
 }
 
 impl GameSettigns {
@@ -43,6 +46,7 @@ impl GameSettigns {
                 return Self {
                     master_volume: 0.5,
                     is_fullscreen: true,
+                    language: "en".to_owned(),
                 };
             }
         }
@@ -57,19 +61,24 @@ impl GameSettigns {
 }
 
 impl PauseMenu {
-    pub fn new(rl: &mut RaylibHandle) -> Self {
+    pub fn new(rl: &mut RaylibHandle, locale_handler: &LocaleHandler) -> Self {
         let mut menu = Self {
             is_paused: false,
             buttons: vec![],
             state: PauseMenuState::Main,
         };
 
-        menu.switch_state(rl, PauseMenuState::Main);
+        menu.switch_state(rl, PauseMenuState::Main, locale_handler);
 
         menu
     }
 
-    pub fn switch_state(&mut self, rl: &mut RaylibHandle, state: PauseMenuState) {
+    pub fn switch_state(
+        &mut self,
+        rl: &mut RaylibHandle,
+        state: PauseMenuState,
+        locale_handler: &LocaleHandler,
+    ) {
         let screen_width = get_game_width(rl) as f32;
         let screen_height = get_game_height(rl) as f32;
         let menu_width = screen_width as f32 * 0.5;
@@ -84,7 +93,7 @@ impl PauseMenu {
                         menu_width / 2.,
                         50.,
                     ),
-                    label: "Настройки".to_string(),
+                    label: locale_handler.language_data.get("settings").unwrap().to_string(),
                     state: ButtonState::Normal,
                 };
                 let quit = Button {
@@ -94,7 +103,7 @@ impl PauseMenu {
                         menu_width / 2.,
                         50.,
                     ),
-                    label: "Выйти из игры".to_string(),
+                    label: locale_handler.language_data.get("quit").unwrap().to_string(),
                     state: ButtonState::Normal,
                 };
 
@@ -121,11 +130,25 @@ impl PauseMenu {
                     label: "+".to_string(),
                     state: ButtonState::Normal,
                 };
-                let fullscreen_label = if rl.is_window_fullscreen() { "В окне".to_string() } else { "Во весь экран".to_string() };
-                let fullscreen_toggle = Button {
+                let cicle_language = Button {
                     rect: Rectangle::new(
                         screen_width / 2. - menu_width / 4.,
                         screen_height / 2. - menu_height / 2. + 120.,
+                        menu_width / 2.,
+                        50.,
+                    ),
+                    label: locale_handler.localizations.get(&locale_handler.current_locale).unwrap().to_string(),
+                    state: ButtonState::Normal
+                };
+                let fullscreen_label = if rl.is_window_fullscreen() {
+                    locale_handler.language_data.get("windowed").unwrap().to_string()
+                } else {
+                    locale_handler.language_data.get("fullscreen").unwrap().to_string()
+                };
+                let fullscreen_toggle = Button {
+                    rect: Rectangle::new(
+                        screen_width / 2. - menu_width / 4.,
+                        screen_height / 2. - menu_height / 2. + 180.,
                         menu_width / 2.,
                         50.,
                     ),
@@ -135,35 +158,35 @@ impl PauseMenu {
                 let save = Button {
                     rect: Rectangle::new(
                         screen_width / 2. - menu_width / 4.,
-                        screen_height / 2. - menu_height / 2. + 180.,
+                        screen_height / 2. - menu_height / 2. + 240.,
                         menu_width / 2.,
                         50.,
                     ),
-                    label: "Сохранить".to_string(),
+                    label: locale_handler.language_data.get("save_settings").unwrap().to_string(),
                     state: ButtonState::Normal,
                 };
 
-                self.buttons = vec![sfx_sub, sfx_add, fullscreen_toggle, save];
+                self.buttons = vec![sfx_sub, sfx_add, cicle_language, fullscreen_toggle, save];
             }
         }
 
         self.state = state;
     }
 
-    pub fn toggle_pause(&mut self, rl: &mut RaylibHandle) {
+    pub fn toggle_pause(&mut self, rl: &mut RaylibHandle, locale_handler: &LocaleHandler) {
         if rl.is_key_released(KeyboardKey::KEY_ESCAPE) {
             self.is_paused = !self.is_paused;
-            self.switch_state(rl, self.state);
+            self.switch_state(rl, self.state, locale_handler);
         }
     }
 
-    pub fn update_buttons(&mut self, rl: &mut RaylibHandle) -> bool {
+    pub fn update_buttons(&mut self, rl: &mut RaylibHandle, locale_handler: &LocaleHandler) -> bool {
         if !self.is_paused {
             return false;
         }
 
         if rl.is_window_resized() {
-            self.switch_state(rl, self.state);
+            self.switch_state(rl, self.state, locale_handler);
         }
 
         let mut blocks_mouse = false;
@@ -197,7 +220,7 @@ impl PauseMenu {
         blocks_mouse
     }
 
-    pub fn draw(&self, rl: &mut RaylibDrawHandle, font: &Font, master_volume: f32) {
+    pub fn draw(&self, rl: &mut RaylibDrawHandle, font: &Font, master_volume: f32, locale_handler: &LocaleHandler) {
         if !self.is_paused {
             return;
         }
@@ -217,7 +240,7 @@ impl PauseMenu {
         );
         rl.draw_text_ex(
             font,
-            "Меню",
+            locale_handler.language_data.get("menu").unwrap(),
             Vector2::new(
                 (screen_width / 2 - 24) as f32,
                 (screen_height / 2 - menu_height / 2 + 10) as f32,
@@ -252,7 +275,8 @@ impl PauseMenu {
             rl.draw_text_ex(
                 font,
                 &format!(
-                    "Общая громкость\n{}%",
+                    "{}\n{}%",
+                    locale_handler.language_data.get("master_volume").unwrap(),
                     (master_volume * 100.).round() as usize
                 ),
                 Vector2::new(

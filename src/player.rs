@@ -4,13 +4,7 @@ use raylib::{audio::Sound, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    AnimalHandler,
-    animal::Animal,
-    map::{Map, TileType},
-    shop_ui::{Canvas, MenuMode},
-    tutorial::Tutorial,
-    utils::{get_game_width, parse_json, shrink_number_for_display},
-    worker::{Worker, WorkerHandler},
+    animal::Animal, localization::LocaleHandler, map::{Map, TileType}, shop_ui::{Canvas, MenuMode}, tutorial::Tutorial, utils::{get_game_width, parse_json, shrink_number_for_display}, worker::{Worker, WorkerHandler}, AnimalHandler
 };
 
 #[derive(Serialize, Deserialize)]
@@ -69,12 +63,12 @@ impl Player {
         }
     }
 
-    pub fn draw_stats(&self, rl: &mut RaylibDrawHandle, font: &Font) {
+    pub fn draw_stats(&self, rl: &mut RaylibDrawHandle, font: &Font, locale_handler: &LocaleHandler) {
         rl.draw_rectangle(10, 10, 130, 28, Color::BLACK.alpha(0.5));
 
         rl.draw_text_ex(
             font,
-            &shrink_number_for_display(self.display_money),
+            &shrink_number_for_display(self.display_money, locale_handler),
             Vector2::new(14., 14.),
             24.,
             0.,
