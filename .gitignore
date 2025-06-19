@@ -2,3 +2,5 @@
 /dynamic
 /emsdk
 /docs
+*.zip
+*.tar.xz
