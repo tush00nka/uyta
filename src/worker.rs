@@ -225,20 +225,29 @@ impl Worker {
                     {
                         *occupation_tile = false;
                     };
-                    let rand = rand::random_range(0..5);
-                    let sound = sounds.get(&format!("harvest{rand}")).unwrap();
-                    unsafe {
-                        SetSoundPitch(*sound, rand::random_range(0.9..1.1));
-                    }
-                    unsafe {
-                        PlaySound(*sound);
+                    if !cfg!(target_arch = "wasm32") {
+                        let rand = rand::random_range(0..5);
+                        // let sound = sounds.get(&format!("harvest{rand}")).unwrap();
+                        // sound.set_pitch(rand::random_range(0.9..1.1));
+                        // sound.play();
+                        unsafe { PlaySound(*sounds.get(&format!("harvest{rand}")).unwrap()) };
+
+                        let rand = rand::random_range(0..5);
+                        let sound = sounds.get(&format!("harvest{rand}")).unwrap();
+                        unsafe {
+                            SetSoundPitch(*sound, rand::random_range(0.9..1.1));
+                        }
+                        unsafe {
+                            PlaySound(*sound);
+                        }
                     }
                 }
             }
             TileType::AnimalDrop { animal } => {
                 let crops_len = map.static_data.crops_data.len();
                 let trees_len = map.static_data.tree_data.len();
-                let multiplier = upgrade_handler.get_multiplier_for_animal(*animal, crops_len, trees_len);
+                let multiplier =
+                    upgrade_handler.get_multiplier_for_animal(*animal, crops_len, trees_len);
 
                 money =
                     animal_handler.static_data.animal_data[*animal as usize].drop_cost * multiplier;
@@ -250,14 +259,15 @@ impl Worker {
                     *occupation_tile = false;
                 };
 
-                let sound = sounds.get(&format!("grass")).unwrap();
-                unsafe {
-                    SetSoundPitch(*sound, rand::random_range(0.9..1.1));
+                if !cfg!(target_arch = "wasm32") {
+                    let sound = sounds.get(&format!("grass")).unwrap();
+                    unsafe {
+                        SetSoundPitch(*sound, rand::random_range(0.9..1.1));
+                    }
+                    unsafe {
+                        PlaySound(*sound);
+                    }
                 }
-                unsafe {
-                    PlaySound(*sound);
-                }
-
                 map.dynamic_data
                     .tiles
                     .insert(self.position, TileType::Grass);
