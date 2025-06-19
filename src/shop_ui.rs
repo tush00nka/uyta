@@ -20,7 +20,7 @@ use crate::{
 
 #[derive(Deserialize)]
 pub struct ToolbarItem {
-    tooltip: String,
+    pub tooltip: String,
     unlock_level: usize,
     pub price: usize,
 }
@@ -89,6 +89,38 @@ impl ToolbarData {
             static_data,
             dynamic_data,
         }
+    }
+
+    pub fn get_price_for_crop(&self, index: usize) -> usize {
+        let mut price = self.static_data.crops[index].price;
+        for _ in 0..*self.dynamic_data.crop_amount.get(&index).unwrap() {
+            price = (price as f32 * 1.1) as usize;
+        }
+        price
+    }
+
+    pub fn get_price_for_tree(&self, index: usize) -> usize {
+        let mut price = self.static_data.trees[index].price;
+        for _ in 0..*self.dynamic_data.tree_amount.get(&index).unwrap() {
+            price = (price as f32 * 1.1) as usize;
+        }
+        price
+    }
+
+    pub fn get_price_for_animal(&self, index: usize) -> usize {
+        let mut price = self.static_data.animals[index].price;
+        for _ in 0..*self.dynamic_data.animal_amount.get(&index).unwrap() {
+            price = (price as f32 * 1.1) as usize;
+        }
+        price
+    }
+
+    pub fn get_price_for_misc(&self, index: usize) -> usize {
+        let mut price = self.static_data.misc[index].price;
+        for _ in 0..*self.dynamic_data.misc_amount.get(&index).unwrap() {
+            price = (price as f32 * 1.1) as usize;
+        }
+        price
     }
 
     fn reload_static(&mut self, language_code: String) {
@@ -567,7 +599,8 @@ impl Canvas {
 
                 let x = rl.get_mouse_position().x;
                 let y = rl.get_mouse_position().y
-                    - (UI_BUTTON_SIZE / 2. * (tooltip_text.lines().count() + tooltip_extra.lines().count()) as f32);
+                    - (UI_BUTTON_SIZE / 2.
+                        * (tooltip_text.lines().count() + tooltip_extra.lines().count()) as f32);
                 let longest_line = tooltip_text
                     .lines()
                     .chain(tooltip_extra.lines())

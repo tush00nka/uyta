@@ -1,7 +1,17 @@
 use raylib::prelude::*;
 
 use crate::{
-    animal::AnimalHandler, camera_controller::CameraController, localization::LocaleHandler, map::{Map, TILE_SCALE, TILE_SIZE}, pause_menu::PauseMenu, player::Player, shop_ui::Canvas, texture_handler::TextureHandler, tutorial::Tutorial, upgrades::UpgradeHandler, worker::WorkerHandler
+    animal::AnimalHandler,
+    camera_controller::CameraController,
+    localization::LocaleHandler,
+    map::{Map, TILE_SCALE, TILE_SIZE},
+    pause_menu::PauseMenu,
+    player::Player,
+    shop_ui::Canvas,
+    texture_handler::TextureHandler,
+    tutorial::Tutorial,
+    upgrades::UpgradeHandler,
+    worker::WorkerHandler,
 };
 
 pub fn draw_bg(rl: &mut RaylibDrawHandle, bg_shader: &mut Shader, bg_texture: &Texture2D) {
@@ -24,7 +34,13 @@ pub fn draw_for_camera(
 ) {
     let mut d2 = rl.begin_mode2D(camera_controller.camera);
 
-    map.draw(&mut d2, &texture_handler.textures, worker_handler, animal_handler, font);
+    map.draw(
+        &mut d2,
+        &texture_handler.textures,
+        worker_handler,
+        animal_handler,
+        font,
+    );
 
     if !map.dynamic_data.tiles.contains_key(&selected_tile) {
         return;
@@ -55,13 +71,76 @@ pub fn draw_fg(
     font: &Font,
     locale_handler: &LocaleHandler,
     master_volume: f32,
+    selected_tile: (i32, i32),
 ) {
+    // TODO: move to own func
+    if map.dynamic_data.tiles.contains_key(&selected_tile) {
+        let sel = canvas.selected;
+        let toolbar_static = &canvas.toolbar_data.static_data;
+        let (label, price) = match canvas.mode {
+            crate::shop_ui::MenuMode::Crops => (
+                toolbar_static.crops[sel].tooltip.clone(),
+                canvas.toolbar_data.get_price_for_crop(sel),
+            ),
+            crate::shop_ui::MenuMode::Trees => (
+                toolbar_static.trees[sel].tooltip.clone(),
+                canvas.toolbar_data.get_price_for_tree(sel),
+            ),
+            crate::shop_ui::MenuMode::Animals => (
+                toolbar_static.animals[sel].tooltip.clone(),
+                canvas.toolbar_data.get_price_for_animal(sel),
+            ),
+            crate::shop_ui::MenuMode::Misc => (
+                toolbar_static.misc[sel].tooltip.clone(),
+                canvas.toolbar_data.get_price_for_misc(sel),
+            ),
+        };
+
+        let text = if price > 0 {
+            label.to_owned() + "\n" + &price.to_string()
+        } else {
+            label.to_string()
+        };
+
+        let position = rl.get_mouse_position() + Vector2::new(0., -48.);
+
+        rl.draw_rectangle_v(
+            position,
+            Vector2::new(
+                text.lines()
+                    .max_by(|&a, &b| a.chars().count().cmp(&b.chars().count()))
+                    .unwrap()
+                    .chars()
+                    .count() as f32
+                    * 12.,
+                48.,
+            ),
+            Color::BLACK.alpha(0.75),
+        );
+
+        rl.draw_text_ex(font, &text, position, 24., 0., Color::WHITE);
+    }
+
     player.draw_stats(rl, font, locale_handler);
 
     canvas.draw(rl, map, animal_handler, texture_handler, player, font);
-    canvas.update(rl, map, animal_handler, player, font, locale_handler, &upgrade_handler);
+    canvas.update(
+        rl,
+        map,
+        animal_handler,
+        player,
+        font,
+        locale_handler,
+        &upgrade_handler,
+    );
 
-    upgrade_handler.draw(rl, texture_handler.textures.get("upgrades").unwrap(), font, player, locale_handler);
+    upgrade_handler.draw(
+        rl,
+        texture_handler.textures.get("upgrades").unwrap(),
+        font,
+        player,
+        locale_handler,
+    );
 
     tutorial.draw(rl, font);
 

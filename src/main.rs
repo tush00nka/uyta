@@ -286,6 +286,7 @@ fn main() {
             &font,
             &locale_handler,
             rl_audio.get_master_volume(),
+            selected_tile
         );
     }
 
