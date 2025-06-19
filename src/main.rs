@@ -75,7 +75,7 @@ fn init_shader(shader: &mut Shader) {
 
 fn main() {
     let (mut rl, thread) = if cfg!(target_arch = "wasm32") {
-        raylib::init().size(SCREEN_WIDTH, SCREEN_HEIGHT).title("Уйта").build()
+        raylib::init().size(SCREEN_WIDTH, SCREEN_HEIGHT).title("Uyta").build()
     } else {
         raylib::init()
             .size(SCREEN_WIDTH, SCREEN_HEIGHT)
