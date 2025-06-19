@@ -479,17 +479,24 @@ impl Canvas {
                 };
                 CheckCollisionPointRec(mouse_pos, rect)
             } {
-                let (toolbar_item, amount, output_price) = match self.mode {
+                let (toolbar_item, amount, output_price, output_exp) = match self.mode {
                     MenuMode::Crops => (
                         &self.toolbar_data.static_data.crops[i],
                         self.toolbar_data.dynamic_data.crop_amount.get(&i).unwrap(),
                         map.static_data.crops_data[i].sell_price
+                            * upgrade_handler.get_multiplier_for_crop(i),
+                        map.static_data.crops_data[i].exp
                             * upgrade_handler.get_multiplier_for_crop(i),
                     ),
                     MenuMode::Trees => (
                         &self.toolbar_data.static_data.trees[i],
                         self.toolbar_data.dynamic_data.tree_amount.get(&i).unwrap(),
                         map.static_data.tree_data[i].sell_price
+                            * upgrade_handler.get_multiplier_for_tree(
+                                i,
+                                self.toolbar_data.static_data.crops.len(),
+                            ),
+                        map.static_data.tree_data[i].exp
                             * upgrade_handler.get_multiplier_for_tree(
                                 i,
                                 self.toolbar_data.static_data.crops.len(),
@@ -506,12 +513,19 @@ impl Canvas {
                             * upgrade_handler.get_multiplier_for_animal(
                                 i,
                                 self.toolbar_data.static_data.crops.len(),
-                                self.toolbar_data.static_data.trees.len()
+                                self.toolbar_data.static_data.trees.len(),
+                            ),
+                        animal_handler.static_data.animal_data[i].exp
+                            * upgrade_handler.get_multiplier_for_animal(
+                                i,
+                                self.toolbar_data.static_data.crops.len(),
+                                self.toolbar_data.static_data.trees.len(),
                             ),
                     ),
                     MenuMode::Misc => (
                         &self.toolbar_data.static_data.misc[i],
                         self.toolbar_data.dynamic_data.misc_amount.get(&i).unwrap(),
+                        0,
                         0,
                     ),
                 };
@@ -531,36 +545,42 @@ impl Canvas {
                             price = (price as f32 * 1.1) as usize;
                         }
 
-                        if output_price > 0 {
-                            format!(
-                                "{}\n{}\n{} {}",
-                                toolbar_item.tooltip,
-                                shrink_number_for_display(price, locale_handler),
-                                output_price,
-                                locale_handler.language_data.get("per_harvest").unwrap()
-                            )
-                        } else {
-                            format!(
-                                "{}\n{}",
-                                toolbar_item.tooltip,
-                                shrink_number_for_display(price, locale_handler),
-                            )
-                        }
+                        format!(
+                            "{}\n{}",
+                            toolbar_item.tooltip,
+                            shrink_number_for_display(price, locale_handler),
+                        )
                     }
+                };
+
+                let tooltip_extra = if output_price > 0 {
+                    format!(
+                        "{} {}\n{} {}",
+                        output_price,
+                        locale_handler.language_data.get("per_harvest").unwrap(),
+                        output_exp,
+                        locale_handler.language_data.get("exp_per_harvest").unwrap(),
+                    )
+                } else {
+                    "".to_string()
                 };
 
                 let x = rl.get_mouse_position().x;
                 let y = rl.get_mouse_position().y
-                    - (UI_BUTTON_SIZE / 2. * tooltip_text.lines().count() as f32);
+                    - (UI_BUTTON_SIZE / 2. * (tooltip_text.lines().count() + tooltip_extra.lines().count()) as f32);
                 let longest_line = tooltip_text
                     .lines()
+                    .chain(tooltip_extra.lines())
                     .max_by(|&a, &b| a.chars().count().cmp(&b.chars().count()))
                     .unwrap();
                 let tooltip_rect = Rectangle::new(
                     x,
                     y,
                     longest_line.chars().count() as f32 * UI_BUTTON_SIZE / 3.5,
-                    tooltip_text.lines().count() as f32 * UI_BUTTON_SIZE / 2.,
+                    (tooltip_text.lines().count() + tooltip_extra.lines().count()) as f32
+                        * UI_BUTTON_SIZE
+                        / 2.
+                        + 5.,
                 );
 
                 rl.draw_rectangle_rec(tooltip_rect, Color::BLACK.alpha(0.75));
@@ -571,6 +591,18 @@ impl Canvas {
                     UI_BUTTON_SIZE / 2.,
                     0.,
                     Color::RAYWHITE,
+                );
+                rl.draw_text_ex(
+                    font,
+                    &tooltip_extra,
+                    Vector2::new(
+                        x + 5.,
+                        y + tooltip_rect.height
+                            - tooltip_extra.lines().count() as f32 * UI_BUTTON_SIZE / 2.,
+                    ),
+                    UI_BUTTON_SIZE / 2. - 8.,
+                    0.,
+                    Color::DARKGRAY,
                 );
 
                 if toolbar_item.unlock_level <= player.level {
