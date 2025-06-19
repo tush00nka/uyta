@@ -59,7 +59,7 @@ pub fn draw_fg(
     player.draw_stats(rl, font, locale_handler);
 
     canvas.draw(rl, map, animal_handler, texture_handler, player, font);
-    canvas.update(rl, player, font, locale_handler);
+    canvas.update(rl, map, animal_handler, player, font, locale_handler, &upgrade_handler);
 
     upgrade_handler.draw(rl, texture_handler.textures.get("upgrades").unwrap(), font, player, locale_handler);
 

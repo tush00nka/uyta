@@ -2,7 +2,11 @@ use raylib::{ffi::CheckCollisionPointRec, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    localization::LocaleHandler, map::TILE_PIXEL_SIZE, player::Player, utils::{get_game_width, parse_json, shrink_number_for_display}, UI_BUTTON_SIZE, UI_GAPS
+    UI_BUTTON_SIZE, UI_GAPS,
+    localization::LocaleHandler,
+    map::TILE_PIXEL_SIZE,
+    player::Player,
+    utils::{get_game_width, parse_json, shrink_number_for_display},
 };
 
 #[derive(Deserialize)]
@@ -29,7 +33,8 @@ pub struct UpgradeHandler {
 
 impl UpgradeHandler {
     pub fn new(language_code: String) -> Self {
-        let static_data = parse_json(&format!("static/{}/upgrades.json", language_code)).expect("no upgrade data??");
+        let static_data = parse_json(&format!("static/{}/upgrades.json", language_code))
+            .expect("no upgrade data??");
 
         let res = parse_json("dynamic/upgrades_save.json");
         let dynamic_data = match res {
@@ -46,8 +51,54 @@ impl UpgradeHandler {
     }
 
     pub fn reload_static(&mut self, language_code: String) {
-        let static_data = parse_json(&format!("static/{}/upgrades.json", language_code)).expect("no upgrade data??");
+        let static_data = parse_json(&format!("static/{}/upgrades.json", language_code))
+            .expect("no upgrade data??");
         self.static_data = static_data;
+    }
+
+    pub fn get_multiplier_for_crop(&self, crop: usize) -> usize {
+        let mut temp = 1;
+        if self.dynamic_data.purchased_upgrades.contains(&(crop * 3)) {
+            temp *= 2;
+        }
+        if self.dynamic_data.purchased_upgrades.contains(&(crop * 3 + 1)) {
+            temp *= 2;
+        }
+        if self.dynamic_data.purchased_upgrades.contains(&(crop * 3 + 2)) {
+            temp *= 2;
+        }
+
+        temp
+    }
+
+    pub fn get_multiplier_for_tree(&self, tree: usize, crops_len: usize) -> usize {
+        let mut temp = 1;
+        if self.dynamic_data.purchased_upgrades.contains(&(crops_len * 3 + tree * 3)) {
+            temp *= 2;
+        }
+        if self.dynamic_data.purchased_upgrades.contains(&(crops_len * 3 + tree * 3 + 1)) {
+            temp *= 2;
+        }
+        if self.dynamic_data.purchased_upgrades.contains(&(crops_len * 3 + tree * 3 + 2)) {
+            temp *= 2;
+        }
+
+        temp
+    }
+
+    pub fn get_multiplier_for_animal(&self, animal: usize, crops_len: usize, trees_len: usize) -> usize {
+        let mut temp = 1;
+        if self.dynamic_data.purchased_upgrades.contains(&(crops_len*3 + trees_len*3 + animal*3)) {
+            temp *= 2;
+        }
+        if self.dynamic_data.purchased_upgrades.contains(&(crops_len*3 + trees_len*3 + animal*3 + 1)) {
+            temp *= 2;
+        }
+        if self.dynamic_data.purchased_upgrades.contains(&(crops_len*3 + trees_len*3 +animal*3 + 2)) {
+            temp *= 2;
+        }
+
+        temp
     }
 
     pub fn draw(
@@ -56,7 +107,7 @@ impl UpgradeHandler {
         texture: &Texture2D,
         font: &Font,
         player: &mut Player,
-        locale_handler: &LocaleHandler
+        locale_handler: &LocaleHandler,
     ) {
         let mut offset = 0;
         for i in 0..self.static_data.upgrade_data.len() {
