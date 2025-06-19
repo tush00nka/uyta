@@ -147,14 +147,11 @@ impl Player {
                 }
 
                 if *crop != canvas.selected {
-                    // let crop_price = canvas.toolbar_data.dynamic_data.crop_prices.get_mut(&crop).unwrap();
-                    // *crop_price /= 1.1;
-
                     let amount = canvas
                         .toolbar_data
                         .dynamic_data
                         .crop_amount
-                        .get_mut(&canvas.selected)
+                        .get(&canvas.selected)
                         .unwrap();
 
                     let mut price = canvas.toolbar_data.static_data.crops[canvas.selected].price;
@@ -175,7 +172,7 @@ impl Player {
                             .toolbar_data
                             .dynamic_data
                             .crop_amount
-                            .get_mut(crop)
+                            .get_mut(&canvas.selected)
                             .unwrap();
                         *amount += 1;
 
