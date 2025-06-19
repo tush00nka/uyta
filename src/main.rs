@@ -7,6 +7,8 @@ use raylib::ffi::{
 use raylib::prelude::*;
 
 mod texture_handler;
+use crate::animal::AnimalHandler;
+use crate::localization::LocaleHandler;
 use crate::pause_menu::{ButtonState, GameSettigns, PauseMenu, PauseMenuState};
 use crate::texture_handler::TextureHandler;
 
@@ -20,21 +22,31 @@ mod player;
 use crate::player::Player;
 
 mod worker;
+use crate::shop_ui::{Canvas, MenuMode};
 use crate::tutorial::Tutorial;
-use crate::ui::{Canvas, MenuMode};
+use crate::upgrades::UpgradeHandler;
 use crate::worker::WorkerHandler;
 
 mod pause_menu;
-mod ui;
+mod shop_ui;
 
 mod renderer;
 mod tutorial;
 mod utils;
 
+mod animal;
+
+mod upgrades;
+
+mod localization;
+
 const SCREEN_WIDTH: i32 = 1280;
 const SCREEN_HEIGHT: i32 = 720;
 
 const TILE_UPDATE_TIME: f32 = 0.5;
+
+const UI_BUTTON_SIZE: f32 = 60.;
+const UI_GAPS: f32 = 20.;
 
 fn init_shader(shader: &mut Shader) {
     let freq_xloc = shader.get_shader_location("freqX");
@@ -71,6 +83,11 @@ fn main() {
             .title("Уйта")
             .build()
     };
+    let (mut rl, thread) = raylib::init()
+        .size(SCREEN_WIDTH, SCREEN_HEIGHT)
+        .resizable()
+        .title("Uyta")
+        .build();
 
     if !cfg!(target_arch = "wasm32") {
         unsafe { InitAudioDevice() };
@@ -106,7 +123,7 @@ fn main() {
     let mut map = Map::new();
     let mut player = Player::new();
     let mut worker_handler = WorkerHandler::new();
-    let mut canvas = Canvas::new();
+    let mut animal_handler = AnimalHandler::new();
 
     let mut game_settings = GameSettigns::new();
     // rl_audio.set_master_volume(game_settings.master_volume);
@@ -115,15 +132,21 @@ fn main() {
     //     rl.toggle_fullscreen();
     // }
 
-    let mut pause_menu = PauseMenu::new(&mut rl);
-    let mut tutorial = Tutorial::new();
+    let mut locale_handler = LocaleHandler::new();
+    locale_handler.set_locale(game_settings.language.clone());
+
+    let mut canvas = Canvas::new(game_settings.language.clone());
+    let mut upgrade_handler = UpgradeHandler::new(game_settings.language.clone());
+
+    let mut pause_menu = PauseMenu::new(&mut rl, &locale_handler);
+    let mut tutorial = Tutorial::new(game_settings.language.clone());
 
     let font = rl
         .load_font_ex(
             &thread,
             "static/tilita.ttf",
             32,
-            Some("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789+-%[]()FWASD,.!?"),
+            Some("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789+-%[](),.!?"),
         )
         .expect("no font???");
 
@@ -170,14 +193,14 @@ fn main() {
 
         shader.set_shader_value(seconds_loc, seconds);
 
-        pause_menu.toggle_pause(&mut rl);
-        let pause_blocks_mouse = pause_menu.update_buttons(&mut rl);
+        pause_menu.toggle_pause(&mut rl, &locale_handler);
+        let pause_blocks_mouse = pause_menu.update_buttons(&mut rl, &locale_handler);
 
         match pause_menu.state {
             PauseMenuState::Main => {
                 // todo: replace with a map maybe
                 if pause_menu.buttons[0].state == ButtonState::Pressed {
-                    pause_menu.switch_state(&mut rl, PauseMenuState::Settings);
+                    pause_menu.switch_state(&mut rl, PauseMenuState::Settings, &locale_handler);
                 }
 
                 if !cfg!(target_arch = "wasm32") {
@@ -207,18 +230,29 @@ fn main() {
                     // rl_audio.set_master_volume(new_volume);
                     // game_settings.master_volume = new_volume;
                 }
-                if !cfg!(target_arch = "wasm32") {
-                    if pause_menu.buttons[2].state == ButtonState::Pressed {
-                        rl.toggle_fullscreen();
-                        game_settings.is_fullscreen = rl.is_window_fullscreen();
+                if pause_menu.buttons[2].state == ButtonState::Pressed {
+                    let codes: Vec<String> = locale_handler.localizations.clone().into_keys().collect();
+                    let mut index = codes.iter().position(|code| *code == locale_handler.current_locale).unwrap();
+
+                    if index+1 >= codes.len() {
+                        index = 0;
                     }
+                    else {
+                        index += 1;
+                    }
+                    locale_handler.set_locale(codes[index].clone());
+                    pause_menu.switch_state(&mut rl, pause_menu.state, &locale_handler);
+                    game_settings.language = codes[index].clone();
+                    canvas.reload_toolbar_static(game_settings.language.clone());
+                    upgrade_handler.reload_static(game_settings.language.clone());
                 }
                 if pause_menu.buttons[3].state == ButtonState::Pressed {
-                    pause_menu.switch_state(&mut rl, PauseMenuState::Main);
-
-                    if !cfg!(target_arch = "wasm32") {
-                        game_settings.save();
-                    }
+                    rl.toggle_fullscreen();
+                    game_settings.is_fullscreen = rl.is_window_fullscreen();
+                }
+                if pause_menu.buttons[4].state == ButtonState::Pressed {
+                    game_settings.save();
+                    pause_menu.switch_state(&mut rl, PauseMenuState::Main, &locale_handler);
                 }
             }
         }
@@ -234,10 +268,11 @@ fn main() {
         if !pause_blocks_mouse {
             handle_input(
                 &mut rl,
-                &canvas,
+                &mut canvas,
                 &mut map,
                 &mut player,
                 &mut worker_handler,
+                &mut animal_handler,
                 selected_tile,
                 &mut tutorial,
             );
@@ -254,7 +289,14 @@ fn main() {
 
             map.update_tiles();
 
-            worker_handler.advance_workers(&mut player, &mut map, &sounds);
+            worker_handler.advance_workers(
+                &mut player,
+                &mut map,
+                &animal_handler,
+                &upgrade_handler,
+                &sounds,
+            );
+            animal_handler.move_animals(&mut map);
         }
 
         let mut d = rl.begin_drawing(&thread);
@@ -266,20 +308,25 @@ fn main() {
             &camera_controller,
             &texture_handler,
             &mut worker_handler,
+            &mut animal_handler,
             &font,
             selected_tile,
         );
         renderer::draw_fg(
             &mut d,
             &mut canvas,
+            &mut upgrade_handler,
             &map,
+            &animal_handler,
             &texture_handler,
-            &player,
+            &mut player,
             &pause_menu,
             &tutorial,
             &font,
             // rl_audio.get_master_volume(),
             unsafe { GetMasterVolume() },
+            &locale_handler,
+            rl_audio.get_master_volume(),
         );
     }
 
@@ -293,17 +340,21 @@ fn main() {
 
 #[cfg(not(target_arch = "wasm32"))]
 fn save_game(worker_handler: &WorkerHandler, player: &Player, map: &Map) {
+    canvas.toolbar_data.save();
+    upgrade_handler.save();
     worker_handler.save();
+    animal_handler.save();
     player.save();
     map.save();
 }
 
 fn handle_input(
     rl: &mut RaylibHandle,
-    canvas: &Canvas,
+    canvas: &mut Canvas,
     map: &mut Map,
     player: &mut Player,
     worker_handler: &mut WorkerHandler,
+    animal_handler: &mut AnimalHandler,
     selected_tile: (i32, i32),
     tutorial: &mut Tutorial,
 ) {
@@ -316,6 +367,9 @@ fn handle_input(
             }
             MenuMode::Trees => {
                 player.plant_trees(canvas, map, &selected_tile);
+            }
+            MenuMode::Animals => {
+                player.spawn_animals(canvas, map, &selected_tile, animal_handler);
             }
             MenuMode::Misc => {
                 player.perform_misc(canvas, worker_handler, &selected_tile, map);

@@ -1,6 +1,6 @@
 use raylib::prelude::*;
 
-use crate::{player::Player, utils::parse_json};
+use crate::{player::Player, utils::{get_game_height, parse_json}};
 
 struct TutorialStep {
     label: String,
@@ -22,17 +22,22 @@ pub struct Tutorial {
 }
 
 impl Tutorial {
-    pub fn new() -> Self {
+    pub fn new(language_code: String) -> Self {
         let player: Result<Player, serde_json::Error> = parse_json("dynamic/player_save.json");
 
-        let hidden = match player {
+        let mut hidden = match player {
             Ok(_) => true,
             Err(_) => false,
         };
 
+        if language_code != "ru".to_string() {
+            hidden = true;
+        }
+
         Self {
             steps: vec![
                 TutorialStep::new("Перемещайте камеру при помощи [W, A, S, D]".to_string()),
+                TutorialStep::new("Отцентрируйте камеру при помощи [С]".to_string()),
                 TutorialStep::new("Посадите морковь на острове при помощи [ЛКМ]".to_string()),
             ],
             hidden
@@ -62,6 +67,8 @@ impl Tutorial {
             text += &format!("[{}] {}\n", mark, step.label);
         }
 
+        let height = get_game_height(rl);
+
         if all_completed {
             let label = "Вы прошли обучение! Нажмите [F1], чтобы скрыть подсказки";
             rl.draw_text_ex(
@@ -69,11 +76,11 @@ impl Tutorial {
                 label,
                 Vector2::new(
                     10.,
-                    rl.get_screen_height() as f32 - 24. * self.steps.len() as f32 - 34.,
+                    height as f32 - 24. * self.steps.len() as f32 - 34.,
                 ),
                 24.,
                 0.,
-                Color::DARKORANGE,
+                Color::ORANGE,
             );
         }
 
@@ -82,7 +89,7 @@ impl Tutorial {
             &text,
             Vector2::new(
                 10.,
-                rl.get_screen_height() as f32 - 24. * self.steps.len() as f32 - 10.,
+                height as f32 - 24. * self.steps.len() as f32 - 10.,
             ),
             24.,
             0.,

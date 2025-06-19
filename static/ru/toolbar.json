@@ -18,39 +18,56 @@
         {
             "tooltip": "Картофель",
             "unlock_level": 7,
-            "price": 300
+            "price": 500
         },
         {
             "tooltip": "Клубника",
-            "unlock_level": 9,
-            "price": 750
+            "unlock_level": 11,
+            "price": 1500
         }
     ],
     "trees": [
         {
             "tooltip": "Яблоня",
-            "unlock_level": 5,
+            "unlock_level": 10,
             "price": 1000
         },
         {
             "tooltip": "Апельсиновое дерево",
-            "unlock_level": 10,
-            "price": 3000
+            "unlock_level": 15,
+            "price": 5000
         },
         {
             "tooltip": "Вишня",
-            "unlock_level": 15,
-            "price": 6000
+            "unlock_level": 20,
+            "price": 8000
         },
         {
             "tooltip": "Гранат",
-            "unlock_level": 20,
-            "price": 9000
+            "unlock_level": 25,
+            "price": 12000
         },
         {
             "tooltip": "Кокосовая пальма",
-            "unlock_level": 25,
-            "price": 12000
+            "unlock_level": 30,
+            "price": 15000
+        }
+    ],
+    "animals": [
+        {
+            "tooltip": "Курица",
+            "unlock_level": 14,
+            "price": 5000
+        },
+        {
+            "tooltip": "Свинья",
+            "unlock_level": 24,
+            "price": 10000
+        },
+        {
+            "tooltip": "Овца",
+            "unlock_level": 32,
+            "price": 20000
         }
     ],
     "misc": [

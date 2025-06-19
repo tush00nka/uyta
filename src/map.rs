@@ -4,7 +4,12 @@ use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use std::collections::HashMap;
 
-use crate::{player::Player, utils::parse_json, worker::WorkerHandler};
+use crate::{
+    animal::AnimalHandler,
+    player::Player,
+    utils::parse_json,
+    worker::WorkerHandler,
+};
 
 pub const CHUNK_WIDTH: usize = 5;
 pub const CHUNK_HEIGHT: usize = 5;
@@ -42,6 +47,9 @@ pub enum TileType {
         crop: usize,
         stage: usize,
     },
+    AnimalDrop {
+        animal: usize,
+    },
 }
 
 #[derive(Deserialize)]
@@ -57,7 +65,6 @@ pub struct MapDynamicData {
     pub tiles: HashMap<(i32, i32), TileType>,
     #[serde_as(as = "Vec<(_, _)>")]
     pub occupation_map: HashMap<(i32, i32), bool>,
-    #[serde_as(as = "Vec<(_, _)>")]
     land_expansion_points: Vec<(i32, i32)>,
     next_expansion_cost: usize,
 }
@@ -174,7 +181,7 @@ impl Map {
         }
 
         player.money -= self.dynamic_data.next_expansion_cost;
-        self.dynamic_data.next_expansion_cost *= 3;
+        self.dynamic_data.next_expansion_cost = (self.dynamic_data.next_expansion_cost as f32 * 1.5).round() as usize;
 
         let point = self.dynamic_data.land_expansion_points[index.unwrap()];
         self.dynamic_data
@@ -215,6 +222,7 @@ impl Map {
         rl: &mut RaylibDrawHandle,
         textures: &HashMap<String, Texture2D>,
         worker_handler: &mut WorkerHandler,
+        animal_handler: &mut AnimalHandler,
         font: &Font,
     ) {
         let expansion_texture = textures.get("land_expansion").unwrap();
@@ -254,9 +262,8 @@ impl Map {
 
         for (position, tile) in self.dynamic_data.tiles.iter().sorted() {
             let texture_id = match tile {
-                TileType::Grass => "grass",
-                TileType::Tree { .. } => "grass",
                 TileType::Farmland { .. } => "dirt",
+                _ => "grass",
             };
 
             let pixel_pos = Vector2::new(
@@ -379,6 +386,27 @@ impl Map {
                         Color::WHITE,
                     );
                 }
+                TileType::AnimalDrop { animal } => {
+                    let source =
+                        Rectangle::new(0., 0., TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32);
+                    let destination = Rectangle::new(
+                        (position.0 * TILE_SIZE) as f32,
+                        (position.1 * TILE_SIZE) as f32,
+                        TILE_SIZE as f32,
+                        TILE_SIZE as f32,
+                    );
+
+                    let id: &str = &format!("animal_drop{}", *animal as usize);
+
+                    rl.draw_texture_pro(
+                        textures.get(id).unwrap_or(textures.get("error").unwrap()),
+                        source,
+                        destination,
+                        Vector2::zero(),
+                        0.,
+                        Color::WHITE,
+                    );
+                }
                 _ => {}
             }
 
@@ -388,12 +416,22 @@ impl Map {
                     worker.draw(rl, worker_texture);
                 }
             });
+            animal_handler
+                .dynamic_data
+                .animals
+                .iter_mut()
+                .for_each(|animal| {
+                    if animal.position == *position {
+                        animal.draw(rl, &textures);
+                    }
+                })
         }
     }
 
     #[cfg(not(target_arch = "wasm32"))]
     pub fn save(&self) {
         let serialized = serde_json::to_string_pretty(&self.dynamic_data).expect("err");
+        std::fs::create_dir_all("dynamic").expect("Couldn't create dir");
         std::fs::write("dynamic/map_save.json", serialized)
             .expect("Couldn't write map data to json");
     }

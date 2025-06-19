@@ -7,8 +7,10 @@ use raylib::{ffi::{PlaySound, Sound}, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
+    animal::AnimalHandler,
     map::{Map, TILE_PIXEL_SIZE, TILE_SIZE, TileType},
     player::Player,
+    upgrades::UpgradeHandler,
     utils::parse_json,
 };
 
@@ -42,11 +44,13 @@ impl WorkerHandler {
         &mut self,
         player: &mut Player,
         map: &mut Map,
-        sounds: &HashMap<String, Sound>,
+        animal_handler: &AnimalHandler,
+        upgrade_handler: &UpgradeHandler,
+        sounds: &HashMap<String, Sound<'_>>,
     ) {
         self.workers.iter_mut().for_each(|worker| {
             // feels weird and illegal
-            let (money, exp) = worker.follow_path(map, &sounds);
+            let (money, exp) = worker.follow_path(map, animal_handler, upgrade_handler, &sounds);
             player.money += money;
             player.exp += exp;
         });
@@ -55,6 +59,7 @@ impl WorkerHandler {
     #[cfg(not(target_arch="wasm32"))]
     pub fn save(&self) {
         let serialized = serde_json::to_string_pretty(self).expect("couldn't save workers data");
+        std::fs::create_dir_all("dynamic").expect("Couldn't create dir");
         std::fs::write("dynamic/workers_save.json", serialized)
             .expect("Couldn't write map data to json file");
     }
@@ -106,34 +111,46 @@ impl Worker {
                         }
                     }
 
+                    let tile_position_vec =
+                        Vector2::new(tile_position.0 as f32, tile_position.1 as f32);
+
                     match tile {
                         TileType::Grass => {}
                         TileType::Farmland { crop, stage } => {
                             if *stage >= map.static_data.crops_data[*crop].time_to_grow {
-                                // existing ready to harvest crop
-                                let crop_position =
-                                    Vector2::new(tile_position.0 as f32, tile_position.1 as f32);
                                 let worker_position =
                                     Vector2::new(self.position.0 as f32, self.position.1 as f32);
 
-                                if crop_position.distance_to(worker_position) < shortest_distance {
+                                if tile_position_vec.distance_to(worker_position)
+                                    < shortest_distance
+                                {
                                     closest = *tile_position;
-                                    shortest_distance = crop_position.distance_to(worker_position);
+                                    shortest_distance =
+                                        tile_position_vec.distance_to(worker_position);
                                 }
                             }
                         }
                         TileType::Tree { tree, stage, .. } => {
                             if *stage >= map.static_data.tree_data[*tree].time_to_fruit {
-                                // ready to collect from tree
-                                let tree_position =
-                                    Vector2::new(tile_position.0 as f32, tile_position.1 as f32);
                                 let worker_position =
                                     Vector2::new(self.position.0 as f32, self.position.1 as f32);
 
-                                if tree_position.distance_to(worker_position) < shortest_distance {
+                                if tile_position_vec.distance_to(worker_position)
+                                    < shortest_distance
+                                {
                                     closest = *tile_position;
-                                    shortest_distance = tree_position.distance_to(worker_position);
+                                    shortest_distance =
+                                        tile_position_vec.distance_to(worker_position);
                                 }
+                            }
+                        }
+                        TileType::AnimalDrop { .. } => {
+                            let worker_position =
+                                Vector2::new(self.position.0 as f32, self.position.1 as f32);
+
+                            if tile_position_vec.distance_to(worker_position) < shortest_distance {
+                                closest = *tile_position;
+                                shortest_distance = tile_position_vec.distance_to(worker_position);
                             }
                         }
                     }
@@ -152,7 +169,9 @@ impl Worker {
     pub fn follow_path(
         &mut self,
         map: &mut Map,
-        sounds: &HashMap<String, Sound>,
+        animal_handler: &AnimalHandler,
+        upgrade_handler: &UpgradeHandler,
+        sounds: &HashMap<String, Sound<'_>>,
     ) -> (usize, usize) {
         if let Some(next_position) = self.path.get(0) {
             self.position = *next_position;
@@ -168,9 +187,35 @@ impl Worker {
         match tile {
             TileType::Farmland { crop, stage } => {
                 if *stage >= map.static_data.crops_data[*crop].time_to_grow {
-                    // successfully complete task
-                    money = map.static_data.crops_data[*crop].sell_price;
-                    exp = map.static_data.crops_data[*crop].exp; // higher crop_id == more exp
+                    let multiplier = {
+                        let mut temp = 1;
+                        if upgrade_handler
+                            .dynamic_data
+                            .purchased_upgrades
+                            .contains(&(*crop * 3))
+                        {
+                            temp *= 2;
+                        }
+                        if upgrade_handler
+                            .dynamic_data
+                            .purchased_upgrades
+                            .contains(&(*crop * 3 + 1))
+                        {
+                            temp *= 2;
+                        }
+                        if upgrade_handler
+                            .dynamic_data
+                            .purchased_upgrades
+                            .contains(&(*crop * 3 + 2))
+                        {
+                            temp *= 2;
+                        }
+
+                        temp
+                    };
+
+                    money = map.static_data.crops_data[*crop].sell_price * multiplier;
+                    exp = map.static_data.crops_data[*crop].exp * multiplier;
                     *stage = 0;
                     // free this tile from work
                     if let Some(occupation_tile) =
@@ -189,8 +234,37 @@ impl Worker {
             }
             TileType::Tree { tree, stage, .. } => {
                 if *stage >= map.static_data.tree_data[*tree].time_to_fruit {
-                    money = map.static_data.tree_data[*tree].sell_price;
-                    exp = map.static_data.tree_data[*tree].exp;
+                    // we're basically offsetting the upgrade thingy, so uhh, still kinda hardcoded but idc
+                    let crops_len = map.static_data.crops_data.len();
+                    let multiplier = {
+                        let mut temp = 1;
+                        if upgrade_handler
+                            .dynamic_data
+                            .purchased_upgrades
+                            .contains(&(crops_len * 3 + *tree * 3))
+                        {
+                            temp *= 2;
+                        }
+                        if upgrade_handler
+                            .dynamic_data
+                            .purchased_upgrades
+                            .contains(&(crops_len * 3 + *tree * 3 + 1))
+                        {
+                            temp *= 2;
+                        }
+                        if upgrade_handler
+                            .dynamic_data
+                            .purchased_upgrades
+                            .contains(&(crops_len * 3 + *tree * 3 + 2))
+                        {
+                            temp *= 2;
+                        }
+
+                        temp
+                    };
+
+                    money = map.static_data.tree_data[*tree].sell_price * multiplier;
+                    exp = map.static_data.tree_data[*tree].exp * multiplier;
                     *stage = 0;
 
                     if let Some(occupation_tile) =
@@ -198,14 +272,59 @@ impl Worker {
                     {
                         *occupation_tile = false;
                     };
-                    if !cfg!(target_arch="wasm32") {
-                        let rand = rand::random_range(0..5);
-                        // let sound = sounds.get(&format!("harvest{rand}")).unwrap();
-                        // sound.set_pitch(rand::random_range(0.9..1.1));
-                        // sound.play();
-                        unsafe { PlaySound(*sounds.get(&format!("harvest{rand}")).unwrap()) };
-                    }
+                    let rand = rand::random_range(0..5);
+                    let sound = sounds.get(&format!("harvest{rand}")).unwrap();
+                    sound.set_pitch(rand::random_range(0.9..1.1));
+                    sound.play();
                 }
+            }
+            TileType::AnimalDrop { animal } => {
+                let crops_len = map.static_data.crops_data.len();
+                let trees_len = map.static_data.tree_data.len();
+                let multiplier = {
+                    let mut temp = 1;
+                    if upgrade_handler
+                        .dynamic_data
+                        .purchased_upgrades
+                        .contains(&(crops_len * 3 + trees_len * 3 + *animal * 3))
+                    {
+                        temp *= 2;
+                    }
+                    if upgrade_handler
+                        .dynamic_data
+                        .purchased_upgrades
+                        .contains(&(crops_len * 3 + trees_len * 3 + *animal * 3 + 1))
+                    {
+                        temp *= 2;
+                    }
+                    if upgrade_handler
+                        .dynamic_data
+                        .purchased_upgrades
+                        .contains(&(crops_len * 3 + trees_len * 3 + *animal * 3 + 2))
+                    {
+                        temp *= 2;
+                    }
+
+                    temp
+                };
+
+                money =
+                    animal_handler.static_data.animal_data[*animal as usize].drop_cost * multiplier;
+                exp = animal_handler.static_data.animal_data[*animal as usize].exp * multiplier;
+
+                if let Some(occupation_tile) =
+                    map.dynamic_data.occupation_map.get_mut(&self.position)
+                {
+                    *occupation_tile = false;
+                };
+
+                let sound = sounds.get(&format!("grass")).unwrap();
+                sound.set_pitch(rand::random_range(0.9..1.1));
+                sound.play();
+
+                map.dynamic_data
+                    .tiles
+                    .insert(self.position, TileType::Grass);
             }
             _ => {}
         }

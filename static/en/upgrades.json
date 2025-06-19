@@ -1,0 +1,199 @@
+{
+    "upgrade_data": [
+        {
+            "label": "Bronze carrot",
+            "description": "Carrot produces twice as much\nmoney and experience",
+            "cost": 1000
+        },
+        {
+            "label": "Silver carrot",
+            "description": "Carrot produces twice as much\nmoney and experience",
+            "cost": 10000
+        },
+        {
+            "label": "Golden carrot",
+            "description": "Carrot produces twice as much\nmoney and experience",
+            "cost": 100000
+        },
+        {
+            "label": "Bronze cabbage",
+            "description": "Cabbage produces twice as much\nmoney and experience",
+            "cost": 2000
+        },
+        {
+            "label": "Silver cabbage",
+            "description": "Cabbage produces twice as much\nmoney and experience",
+            "cost": 20000
+        },
+        {
+            "label": "Golden cabbage",
+            "description": "Cabbage produces twice as much\nmoney and experience",
+            "cost": 200000
+        },
+        {
+            "label": "Bronze pumpkin",
+            "description": "Pumpkin produces twice as much\nmoney and experience",
+            "cost": 3000
+        },
+        {
+            "label": "Silver pumpkin",
+            "description": "Pumpkin produces twice as much\nmoney and experience",
+            "cost": 30000
+        },
+        {
+            "label": "Golden pumpkin",
+            "description": "Pumpkin produces twice as much\nmoney and experience",
+            "cost": 300000
+        },
+        {
+            "label": "Bronze potato",
+            "description": "Potato produces twice as much\nmoney and experience",
+            "cost": 4000
+        },
+        {
+            "label": "Silver potato",
+            "description": "Potato produces twice as much\nmoney and experience",
+            "cost": 40000
+        },
+        {
+            "label": "Golden potato",
+            "description": "Potato produces twice as much\nmoney and experience",
+            "cost": 400000
+        },
+        {
+            "label": "Bronze strawberry",
+            "description": "Strawberry produces twice as much\nmoney and experience",
+            "cost": 5000
+        },
+        {
+            "label": "Silver strawberry",
+            "description": "Strawberry produces twice as much\nmoney and experience",
+            "cost": 50000
+        },
+        {
+            "label": "Golden strawberry",
+            "description": "Strawberry produces twice as much\nmoney and experience",
+            "cost": 500000
+        },
+        {
+            "label": "Bronze apple tree",
+            "description": "Apple tree produces twice as much\nmoney and experience",
+            "cost": 10000
+        },
+        {
+            "label": "Silver apple tree",
+            "description": "Apple tree produces twice as much\nmoney and experience",
+            "cost": 100000
+        },
+        {
+            "label": "Golden apple tree",
+            "description": "Apple tree produces twice as much\nmoney and experience",
+            "cost": 1000000
+        },
+        {
+            "label": "Bronze orange tree",
+            "description": "Orange tree produces twice as much\nmoney and experience",
+            "cost": 20000
+        },
+        {
+            "label": "Silver orange tree",
+            "description": "Orange tree` produces twice as much\nmoney and experience",
+            "cost": 200000
+        },
+        {
+            "label": "Golden orange tree",
+            "description": "Orange tree produces twice as much\nmoney and experience",
+            "cost": 2000000
+        },
+        {
+            "label": "Bronze cherry tree",
+            "description": "Cherry tree produces twice as much\nmoney and experience",
+            "cost": 30000
+        },
+        {
+            "label": "Silver cherry tree",
+            "description": "Cherry tree produces twice as much\nmoney and experience",
+            "cost": 300000
+        },
+        {
+            "label": "Golden cherry tree",
+            "description": "Cherry tree produces twice as much\nmoney and experience",
+            "cost": 3000000
+        },
+        {
+            "label": "Bronze pomegranate tree",
+            "description": "Pomegranate tree produces twice as much\nmoney and experience",
+            "cost": 40000
+        },
+        {
+            "label": "Silver pomegranate tree",
+            "description": "Pomegranate tree produces twice as much\nmoney and experience",
+            "cost": 400000
+        },
+        {
+            "label": "Golden pomegranate tree",
+            "description": "Pomegranate tree produces twice as much\nmoney and experience",
+            "cost": 4000000
+        },
+        {
+            "label": "Bronze palm",
+            "description": "Coconut palm produces twice as much\nmoney and experience",
+            "cost": 50000
+        },
+        {
+            "label": "Silver palm",
+            "description": "Coconut palm produces twice as much\nmoney and experience",
+            "cost": 500000
+        },
+        {
+            "label": "Golden palm",
+            "description": "Coconut palm produces twice as much\nmoney and experience",
+            "cost": 5000000
+        },
+                {
+            "label": "Bronze chicken",
+            "description": "Chicken produces twice as much\nmoney and experience",
+            "cost": 500000
+        },
+        {
+            "label": "Silver chicken",
+            "description": "Chicken produces twice as much\nmoney and experience",
+            "cost": 5000000
+        },
+        {
+            "label": "Golden chicken",
+            "description": "Chicken produces twice as much\nmoney and experience",
+            "cost": 50000000
+        },
+        {
+            "label": "Bronze pig",
+            "description": "Pig produces twice as much\nmoney and experience",
+            "cost": 600000
+        },
+        {
+            "label": "Silver pig",
+            "description": "Pig produces twice as much\nmoney and experience",
+            "cost": 6000000
+        },
+        {
+            "label": "Golden pig",
+            "description": "Pig produces twice as much\nmoney and experience",
+            "cost": 60000000
+        },
+        {
+            "label": "Bronze sheep",
+            "description": "Sheep produces twice as much\nmoney and experience",
+            "cost": 700000
+        },
+        {
+            "label": "Silver sheep",
+            "description": "Sheep produces twice as much\nmoney and experience",
+            "cost": 7000000
+        },
+        {
+            "label": "Golden sheep",
+            "description": "Sheep produces twice as much\nmoney and experience",
+            "cost": 70000000
+        }
+    ]
+}

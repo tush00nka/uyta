@@ -1,3 +1,4 @@
-target
-emsdk
-/dynamic/*
+/target
+/dynamic
+/emsdk
+/docs
