@@ -13,6 +13,8 @@
     "million": "млн",
     "billion": "млрд",
     "trillion": "трлн",
+    "per_harvest": "за сбор",
+    "exp_per_harvest": "опыта за сбор",
 
     "plants": "Растения",
     "trees": "Деревья",

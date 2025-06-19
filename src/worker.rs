@@ -190,32 +190,7 @@ impl Worker {
         match tile {
             TileType::Farmland { crop, stage } => {
                 if *stage >= map.static_data.crops_data[*crop].time_to_grow {
-                    let multiplier = {
-                        let mut temp = 1;
-                        if upgrade_handler
-                            .dynamic_data
-                            .purchased_upgrades
-                            .contains(&(*crop * 3))
-                        {
-                            temp *= 2;
-                        }
-                        if upgrade_handler
-                            .dynamic_data
-                            .purchased_upgrades
-                            .contains(&(*crop * 3 + 1))
-                        {
-                            temp *= 2;
-                        }
-                        if upgrade_handler
-                            .dynamic_data
-                            .purchased_upgrades
-                            .contains(&(*crop * 3 + 2))
-                        {
-                            temp *= 2;
-                        }
-
-                        temp
-                    };
+                    let multiplier = upgrade_handler.get_multiplier_for_crop(*crop);
 
                     money = map.static_data.crops_data[*crop].sell_price * multiplier;
                     exp = map.static_data.crops_data[*crop].exp * multiplier;
@@ -239,32 +214,7 @@ impl Worker {
                 if *stage >= map.static_data.tree_data[*tree].time_to_fruit {
                     // we're basically offsetting the upgrade thingy, so uhh, still kinda hardcoded but idc
                     let crops_len = map.static_data.crops_data.len();
-                    let multiplier = {
-                        let mut temp = 1;
-                        if upgrade_handler
-                            .dynamic_data
-                            .purchased_upgrades
-                            .contains(&(crops_len * 3 + *tree * 3))
-                        {
-                            temp *= 2;
-                        }
-                        if upgrade_handler
-                            .dynamic_data
-                            .purchased_upgrades
-                            .contains(&(crops_len * 3 + *tree * 3 + 1))
-                        {
-                            temp *= 2;
-                        }
-                        if upgrade_handler
-                            .dynamic_data
-                            .purchased_upgrades
-                            .contains(&(crops_len * 3 + *tree * 3 + 2))
-                        {
-                            temp *= 2;
-                        }
-
-                        temp
-                    };
+                    let multiplier = upgrade_handler.get_multiplier_for_tree(*tree, crops_len);
 
                     money = map.static_data.tree_data[*tree].sell_price * multiplier;
                     exp = map.static_data.tree_data[*tree].exp * multiplier;
@@ -288,32 +238,7 @@ impl Worker {
             TileType::AnimalDrop { animal } => {
                 let crops_len = map.static_data.crops_data.len();
                 let trees_len = map.static_data.tree_data.len();
-                let multiplier = {
-                    let mut temp = 1;
-                    if upgrade_handler
-                        .dynamic_data
-                        .purchased_upgrades
-                        .contains(&(crops_len * 3 + trees_len * 3 + *animal * 3))
-                    {
-                        temp *= 2;
-                    }
-                    if upgrade_handler
-                        .dynamic_data
-                        .purchased_upgrades
-                        .contains(&(crops_len * 3 + trees_len * 3 + *animal * 3 + 1))
-                    {
-                        temp *= 2;
-                    }
-                    if upgrade_handler
-                        .dynamic_data
-                        .purchased_upgrades
-                        .contains(&(crops_len * 3 + trees_len * 3 + *animal * 3 + 2))
-                    {
-                        temp *= 2;
-                    }
-
-                    temp
-                };
+                let multiplier = upgrade_handler.get_multiplier_for_animal(*animal, crops_len, trees_len);
 
                 money =
                     animal_handler.static_data.animal_data[*animal as usize].drop_cost * multiplier;

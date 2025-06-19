@@ -8,12 +8,19 @@ use raylib::{
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    animal::AnimalHandler, localization::LocaleHandler, map::{Map, TILE_PIXEL_SIZE}, player::Player, texture_handler::TextureHandler, utils::{parse_json, shrink_number_for_display}, UI_BUTTON_SIZE, UI_GAPS
+    UI_BUTTON_SIZE, UI_GAPS,
+    animal::AnimalHandler,
+    localization::LocaleHandler,
+    map::{Map, TILE_PIXEL_SIZE},
+    player::Player,
+    texture_handler::TextureHandler,
+    upgrades::UpgradeHandler,
+    utils::{parse_json, shrink_number_for_display},
 };
 
 #[derive(Deserialize)]
 pub struct ToolbarItem {
-    tooltip: String,
+    pub tooltip: String,
     unlock_level: usize,
     pub price: usize,
 }
@@ -68,7 +75,8 @@ pub struct ToolbarData {
 
 impl ToolbarData {
     fn new(language_code: String) -> Self {
-        let static_data = parse_json(&format!("static/{}/toolbar.json", language_code)).expect("no toolbar");
+        let static_data =
+            parse_json(&format!("static/{}/toolbar.json", language_code)).expect("no toolbar");
 
         let res = parse_json("dynamic/toolbar_save.json");
 
@@ -83,8 +91,41 @@ impl ToolbarData {
         }
     }
 
+    pub fn get_price_for_crop(&self, index: usize) -> usize {
+        let mut price = self.static_data.crops[index].price;
+        for _ in 0..*self.dynamic_data.crop_amount.get(&index).unwrap() {
+            price = (price as f32 * 1.1) as usize;
+        }
+        price
+    }
+
+    pub fn get_price_for_tree(&self, index: usize) -> usize {
+        let mut price = self.static_data.trees[index].price;
+        for _ in 0..*self.dynamic_data.tree_amount.get(&index).unwrap() {
+            price = (price as f32 * 1.1) as usize;
+        }
+        price
+    }
+
+    pub fn get_price_for_animal(&self, index: usize) -> usize {
+        let mut price = self.static_data.animals[index].price;
+        for _ in 0..*self.dynamic_data.animal_amount.get(&index).unwrap() {
+            price = (price as f32 * 1.1) as usize;
+        }
+        price
+    }
+
+    pub fn get_price_for_misc(&self, index: usize) -> usize {
+        let mut price = self.static_data.misc[index].price;
+        for _ in 0..*self.dynamic_data.misc_amount.get(&index).unwrap() {
+            price = (price as f32 * 1.1) as usize;
+        }
+        price
+    }
+
     fn reload_static(&mut self, language_code: String) {
-        let static_data = parse_json(&format!("static/{}/toolbar.json", language_code)).expect("no upgrade data??");
+        let static_data = parse_json(&format!("static/{}/toolbar.json", language_code))
+            .expect("no upgrade data??");
         self.static_data = static_data;
     }
 
@@ -379,7 +420,16 @@ impl Canvas {
         }
     }
 
-    pub fn update(&mut self, rl: &mut RaylibDrawHandle, player: &Player, font: &Font, locale_handler: &LocaleHandler) {
+    pub fn update(
+        &mut self,
+        rl: &mut RaylibDrawHandle,
+        map: &Map,
+        animal_handler: &AnimalHandler,
+        player: &Player,
+        font: &Font,
+        locale_handler: &LocaleHandler,
+        upgrade_handler: &UpgradeHandler,
+    ) {
         for i in 0..self.content.len() {
             let rect = self.content[i];
             if unsafe { CheckCollisionPointRec(rl.get_mouse_position().into(), rect.into()) } {
@@ -416,7 +466,11 @@ impl Canvas {
                 let x = rl.get_mouse_position().x;
                 let y = rl.get_mouse_position().y - UI_BUTTON_SIZE / 2.;
                 let tooltip_text = if pool[0].unlock_level > player.level {
-                    format!("{} {}", locale_handler.language_data.get("locked").unwrap(), pool[0].unlock_level)
+                    format!(
+                        "{} {}",
+                        locale_handler.language_data.get("locked").unwrap(),
+                        pool[0].unlock_level
+                    )
                 } else {
                     label.to_string()
                 };
@@ -457,49 +511,121 @@ impl Canvas {
                 };
                 CheckCollisionPointRec(mouse_pos, rect)
             } {
-                let (pool, amount_pool) = match self.mode {
+                let (toolbar_item, amount, output_price, output_exp) = match self.mode {
                     MenuMode::Crops => (
-                        &self.toolbar_data.static_data.crops,
-                        &self.toolbar_data.dynamic_data.crop_amount,
+                        &self.toolbar_data.static_data.crops[i],
+                        self.toolbar_data.dynamic_data.crop_amount.get(&i).unwrap(),
+                        map.static_data.crops_data[i].sell_price
+                            * upgrade_handler.get_multiplier_for_crop(i),
+                        map.static_data.crops_data[i].exp
+                            * upgrade_handler.get_multiplier_for_crop(i),
                     ),
                     MenuMode::Trees => (
-                        &self.toolbar_data.static_data.trees,
-                        &self.toolbar_data.dynamic_data.tree_amount,
+                        &self.toolbar_data.static_data.trees[i],
+                        self.toolbar_data.dynamic_data.tree_amount.get(&i).unwrap(),
+                        map.static_data.tree_data[i].sell_price
+                            * upgrade_handler.get_multiplier_for_tree(
+                                i,
+                                self.toolbar_data.static_data.crops.len(),
+                            ),
+                        map.static_data.tree_data[i].exp
+                            * upgrade_handler.get_multiplier_for_tree(
+                                i,
+                                self.toolbar_data.static_data.crops.len(),
+                            ),
                     ),
                     MenuMode::Animals => (
-                        &self.toolbar_data.static_data.animals,
-                        &self.toolbar_data.dynamic_data.animal_amount,
+                        &self.toolbar_data.static_data.animals[i],
+                        self.toolbar_data
+                            .dynamic_data
+                            .animal_amount
+                            .get(&i)
+                            .unwrap(),
+                        animal_handler.static_data.animal_data[i].drop_cost
+                            * upgrade_handler.get_multiplier_for_animal(
+                                i,
+                                self.toolbar_data.static_data.crops.len(),
+                                self.toolbar_data.static_data.trees.len(),
+                            ),
+                        animal_handler.static_data.animal_data[i].exp
+                            * upgrade_handler.get_multiplier_for_animal(
+                                i,
+                                self.toolbar_data.static_data.crops.len(),
+                                self.toolbar_data.static_data.trees.len(),
+                            ),
                     ),
                     MenuMode::Misc => (
-                        &self.toolbar_data.static_data.misc,
-                        &self.toolbar_data.dynamic_data.misc_amount,
+                        &self.toolbar_data.static_data.misc[i],
+                        self.toolbar_data.dynamic_data.misc_amount.get(&i).unwrap(),
+                        0,
+                        0,
                     ),
                 };
 
-                let tooltip_text = if pool[i].unlock_level > player.level {
-                    format!("{} {}", locale_handler.language_data.get("locked").unwrap(), pool[i].unlock_level)
+                let tooltip_text = if toolbar_item.unlock_level > player.level {
+                    format!(
+                        "{} {}",
+                        locale_handler.language_data.get("locked").unwrap(),
+                        toolbar_item.unlock_level
+                    )
                 } else {
-                    if pool[i].price <= 0 {
-                        format!("{}", pool[i].tooltip)
+                    if toolbar_item.price <= 0 {
+                        format!("{}", toolbar_item.tooltip)
                     } else {
-                        let mut price = pool[i].price;
-                        for _ in 0..*amount_pool.get(&i).unwrap() {
+                        let mut price = toolbar_item.price;
+                        for _ in 0..*amount {
                             price = (price as f32 * 1.1) as usize;
                         }
 
-                        format!("{}\n{}", pool[i].tooltip, shrink_number_for_display(price as u128, locale_handler))
+                        format!(
+                            "{}\n{}",
+                            toolbar_item.tooltip,
+                            shrink_number_for_display(price, locale_handler),
+                        )
                     }
+                };
+
+                let tooltip_extra = if output_price > 0 {
+                    format!(
+                        "{} {}\n{} {}",
+                        output_price,
+                        locale_handler.language_data.get("per_harvest").unwrap(),
+                        output_exp,
+                        locale_handler.language_data.get("exp_per_harvest").unwrap(),
+                    )
+                } else {
+                    "".to_string()
+                };
+
+                let tooltip_extra = if output_price > 0 {
+                    format!(
+                        "{} {}\n{} {}",
+                        output_price,
+                        locale_handler.language_data.get("per_harvest").unwrap(),
+                        output_exp,
+                        locale_handler.language_data.get("exp_per_harvest").unwrap(),
+                    )
+                } else {
+                    "".to_string()
                 };
 
                 let x = rl.get_mouse_position().x;
                 let y = rl.get_mouse_position().y
-                    - (UI_BUTTON_SIZE / 2. * tooltip_text.lines().count() as f32);
+                    - (UI_BUTTON_SIZE / 2.
+                        * (tooltip_text.lines().count() + tooltip_extra.lines().count()) as f32);
+                let longest_line = tooltip_text
+                    .lines()
+                    .chain(tooltip_extra.lines())
+                    .max_by(|&a, &b| a.chars().count().cmp(&b.chars().count()))
+                    .unwrap();
                 let tooltip_rect = Rectangle::new(
                     x,
                     y,
-                    tooltip_text.lines().next().unwrap().chars().count() as f32 * UI_BUTTON_SIZE
-                        / 3.5,
-                    tooltip_text.lines().count() as f32 * UI_BUTTON_SIZE / 2.,
+                    longest_line.chars().count() as f32 * UI_BUTTON_SIZE / 3.5,
+                    (tooltip_text.lines().count() + tooltip_extra.lines().count()) as f32
+                        * UI_BUTTON_SIZE
+                        / 2.
+                        + 5.,
                 );
 
                 rl.draw_rectangle_rec(tooltip_rect, Color::BLACK.alpha(0.75));
@@ -511,8 +637,20 @@ impl Canvas {
                     0.,
                     Color::RAYWHITE,
                 );
+                rl.draw_text_ex(
+                    font,
+                    &tooltip_extra,
+                    Vector2::new(
+                        x + 5.,
+                        y + tooltip_rect.height
+                            - tooltip_extra.lines().count() as f32 * UI_BUTTON_SIZE / 2.,
+                    ),
+                    UI_BUTTON_SIZE / 2. - 8.,
+                    0.,
+                    Color::DARKGRAY,
+                );
 
-                if pool[i].unlock_level <= player.level {
+                if toolbar_item.unlock_level <= player.level {
                     if rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_LEFT) {
                         self.selected = i;
                     }
