@@ -80,14 +80,9 @@ fn main() {
         raylib::init()
             .size(SCREEN_WIDTH, SCREEN_HEIGHT)
             .resizable()
-            .title("Уйта")
+            .title("Uyta")
             .build()
     };
-    let (mut rl, thread) = raylib::init()
-        .size(SCREEN_WIDTH, SCREEN_HEIGHT)
-        .resizable()
-        .title("Uyta")
-        .build();
 
     if !cfg!(target_arch = "wasm32") {
         unsafe { InitAudioDevice() };
@@ -324,9 +319,9 @@ fn main() {
             &tutorial,
             &font,
             // rl_audio.get_master_volume(),
-            unsafe { GetMasterVolume() },
             &locale_handler,
-            rl_audio.get_master_volume(),
+            unsafe { GetMasterVolume() },
+            // rl_audio.get_master_volume(),
         );
     }
 
@@ -335,11 +330,11 @@ fn main() {
     }
 
     #[cfg(not(target_arch = "wasm32"))]
-    save_game(&worker_handler, &player, &map);
+    save_game(&worker_handler, &player, &map, &canvas, &upgrade_handler, &animal_handler);
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-fn save_game(worker_handler: &WorkerHandler, player: &Player, map: &Map) {
+fn save_game(worker_handler: &WorkerHandler, player: &Player, map: &Map, canvas: &Canvas, upgrade_handler: &UpgradeHandler, animal_handler: &AnimalHandler) {
     canvas.toolbar_data.save();
     upgrade_handler.save();
     worker_handler.save();

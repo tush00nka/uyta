@@ -31,7 +31,7 @@ pub fn get_game_height(rl: &mut RaylibHandle) -> i32 {
     }
 }
 
-pub fn shrink_number_for_display(number: usize, locale_handler: &LocaleHandler) -> String {
+pub fn shrink_number_for_display(number: u128, locale_handler: &LocaleHandler) -> String {
     if number >= 1_000_000_000_000 {
         let leftover = (number % 1_000_000_000_000) / 1_000_000_000;
         let zeros = "0".repeat(3 - leftover.to_string().chars().count());

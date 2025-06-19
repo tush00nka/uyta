@@ -3,7 +3,10 @@ use std::{
     f32::INFINITY,
 };
 
-use raylib::{ffi::{PlaySound, Sound}, prelude::*};
+use raylib::{
+    ffi::{PlaySound, SetSoundPitch, Sound},
+    prelude::*,
+};
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -46,7 +49,7 @@ impl WorkerHandler {
         map: &mut Map,
         animal_handler: &AnimalHandler,
         upgrade_handler: &UpgradeHandler,
-        sounds: &HashMap<String, Sound<'_>>,
+        sounds: &HashMap<String, Sound>,
     ) {
         self.workers.iter_mut().for_each(|worker| {
             // feels weird and illegal
@@ -56,7 +59,7 @@ impl WorkerHandler {
         });
     }
 
-    #[cfg(not(target_arch="wasm32"))]
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn save(&self) {
         let serialized = serde_json::to_string_pretty(self).expect("couldn't save workers data");
         std::fs::create_dir_all("dynamic").expect("Couldn't create dir");
@@ -171,7 +174,7 @@ impl Worker {
         map: &mut Map,
         animal_handler: &AnimalHandler,
         upgrade_handler: &UpgradeHandler,
-        sounds: &HashMap<String, Sound<'_>>,
+        sounds: &HashMap<String, Sound>,
     ) -> (usize, usize) {
         if let Some(next_position) = self.path.get(0) {
             self.position = *next_position;
@@ -223,11 +226,11 @@ impl Worker {
                     {
                         *occupation_tile = false;
                     };
-                    if !cfg!(target_arch="wasm32") {
+                    if !cfg!(target_arch = "wasm32") {
                         let rand = rand::random_range(0..5);
-                    // let sound = sounds.get(&format!("harvest{rand}")).unwrap();
-                    // sound.set_pitch(rand::random_range(0.9..1.1));
-                    // sound.play();
+                        // let sound = sounds.get(&format!("harvest{rand}")).unwrap();
+                        // sound.set_pitch(rand::random_range(0.9..1.1));
+                        // sound.play();
                         unsafe { PlaySound(*sounds.get(&format!("harvest{rand}")).unwrap()) };
                     }
                 }
@@ -274,8 +277,12 @@ impl Worker {
                     };
                     let rand = rand::random_range(0..5);
                     let sound = sounds.get(&format!("harvest{rand}")).unwrap();
-                    sound.set_pitch(rand::random_range(0.9..1.1));
-                    sound.play();
+                    unsafe {
+                        SetSoundPitch(*sound, rand::random_range(0.9..1.1));
+                    }
+                    unsafe {
+                        PlaySound(*sound);
+                    }
                 }
             }
             TileType::AnimalDrop { animal } => {
@@ -319,8 +326,12 @@ impl Worker {
                 };
 
                 let sound = sounds.get(&format!("grass")).unwrap();
-                sound.set_pitch(rand::random_range(0.9..1.1));
-                sound.play();
+                unsafe {
+                    SetSoundPitch(*sound, rand::random_range(0.9..1.1));
+                }
+                unsafe {
+                    PlaySound(*sound);
+                }
 
                 map.dynamic_data
                     .tiles

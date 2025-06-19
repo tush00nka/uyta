@@ -185,9 +185,9 @@ impl PauseMenu {
             return false;
         }
 
-        // if rl.is_window_resized() {
-        //     self.switch_state(rl, self.state);
-        // }
+        if rl.is_window_resized() {
+            self.switch_state(rl, self.state, locale_handler);
+        }
 
         let mut blocks_mouse = false;
 

@@ -487,7 +487,7 @@ impl Canvas {
                             price = (price as f32 * 1.1) as usize;
                         }
 
-                        format!("{}\n{}", pool[i].tooltip, shrink_number_for_display(price, locale_handler))
+                        format!("{}\n{}", pool[i].tooltip, shrink_number_for_display(price as u128, locale_handler))
                     }
                 };
 

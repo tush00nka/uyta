@@ -76,7 +76,7 @@ impl Player {
 
         rl.draw_text_ex(
             font,
-            &shrink_number_for_display(self.display_money, locale_handler),
+            &shrink_number_for_display(self.display_money as u128, locale_handler),
             Vector2::new(14., 14.),
             24.,
             0.,
