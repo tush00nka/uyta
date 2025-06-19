@@ -585,7 +585,7 @@ impl Canvas {
                     }
                 };
 
-                let tooltip_extra = if output_price > 0 {
+                let tooltip_extra = if output_price > 0 && toolbar_item.unlock_level <= player.level {
                     format!(
                         "{} {}\n{} {}",
                         output_price,
