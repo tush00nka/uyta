@@ -280,15 +280,15 @@ impl Canvas {
 
             let tooltip_pool;
             let amount_pool;
-            let texture_id;
+            let texture;
             let source;
             match self.mode {
                 MenuMode::Crops => {
                     tooltip_pool = &self.toolbar_data.static_data.crops;
                     amount_pool = &self.toolbar_data.dynamic_data.crop_amount;
-                    texture_id = format!("crop{i}");
+                    texture = texture_handler.textures.get(&format!("crop{i}")).unwrap();
                     source = Rectangle::new(
-                        -TILE_PIXEL_SIZE as f32,
+                        (texture.width - TILE_PIXEL_SIZE) as f32,
                         0.0,
                         TILE_PIXEL_SIZE as f32,
                         TILE_PIXEL_SIZE as f32,
@@ -297,9 +297,9 @@ impl Canvas {
                 MenuMode::Trees => {
                     tooltip_pool = &self.toolbar_data.static_data.trees;
                     amount_pool = &self.toolbar_data.dynamic_data.tree_amount;
-                    texture_id = format!("tree{i}");
+                    texture = texture_handler.textures.get(&format!("tree{i}")).unwrap();
                     source = Rectangle::new(
-                        -TILE_PIXEL_SIZE as f32,
+                        (texture.width - TILE_PIXEL_SIZE) as f32,
                         0.0,
                         TILE_PIXEL_SIZE as f32,
                         TILE_PIXEL_SIZE as f32,
@@ -308,14 +308,14 @@ impl Canvas {
                 MenuMode::Animals => {
                     tooltip_pool = &self.toolbar_data.static_data.animals;
                     amount_pool = &self.toolbar_data.dynamic_data.animal_amount;
-                    texture_id = format!("animal{i}");
+                    texture = texture_handler.textures.get(&format!("animal{i}")).unwrap();
                     source =
                         Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32);
                 }
                 MenuMode::Misc => {
                     tooltip_pool = &self.toolbar_data.static_data.misc;
                     amount_pool = &self.toolbar_data.dynamic_data.misc_amount;
-                    texture_id = format!("misc{i}");
+                    texture = texture_handler.textures.get(&format!("misc{i}")).unwrap();
                     source =
                         Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32);
                 }
@@ -328,7 +328,7 @@ impl Canvas {
             };
 
             rl.draw_texture_pro(
-                texture_handler.textures.get(&texture_id).unwrap(),
+                texture,
                 source,
                 rect,
                 Vector2::zero(),

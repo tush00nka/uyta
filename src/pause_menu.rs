@@ -251,6 +251,12 @@ impl PauseMenu {
         );
 
         for button in self.buttons.iter() {
+            if cfg!(target_arch="wasm32") {
+                if button.label == *locale_handler.language_data.get("fullscreen").unwrap() {
+                    continue;
+                }
+            }
+
             let color = match button.state {
                 ButtonState::Normal => Color::GRAY,
                 ButtonState::Hovered => Color::RAYWHITE,
