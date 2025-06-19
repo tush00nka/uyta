@@ -8,14 +8,7 @@ use raylib::{
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    UI_BUTTON_SIZE, UI_GAPS,
-    animal::AnimalHandler,
-    localization::LocaleHandler,
-    map::{Map, TILE_PIXEL_SIZE},
-    player::Player,
-    texture_handler::TextureHandler,
-    upgrades::UpgradeHandler,
-    utils::{parse_json, shrink_number_for_display},
+    animal::AnimalHandler, localization::LocaleHandler, map::{Map, TILE_PIXEL_SIZE}, pause_menu::GameSettigns, player::Player, texture_handler::TextureHandler, upgrades::UpgradeHandler, utils::{parse_json, shrink_number_for_display}, UI_BUTTON_SIZE, UI_GAPS
 };
 
 #[derive(Deserialize)]
@@ -429,6 +422,7 @@ impl Canvas {
         font: &Font,
         locale_handler: &LocaleHandler,
         upgrade_handler: &UpgradeHandler,
+        settings: &GameSettigns, 
     ) {
         for i in 0..self.content.len() {
             let rect = self.content[i];
@@ -580,7 +574,7 @@ impl Canvas {
                         format!(
                             "{}\n{}",
                             toolbar_item.tooltip,
-                            shrink_number_for_display(price, locale_handler),
+                            shrink_number_for_display(price, locale_handler, settings),
                         )
                     }
                 };

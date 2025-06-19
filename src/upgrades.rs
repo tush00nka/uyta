@@ -2,11 +2,7 @@ use raylib::{ffi::CheckCollisionPointRec, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    UI_BUTTON_SIZE, UI_GAPS,
-    localization::LocaleHandler,
-    map::TILE_PIXEL_SIZE,
-    player::Player,
-    utils::{get_game_width, parse_json, shrink_number_for_display},
+    localization::LocaleHandler, map::TILE_PIXEL_SIZE, pause_menu::GameSettigns, player::Player, utils::{get_game_width, parse_json, shrink_number_for_display}, UI_BUTTON_SIZE, UI_GAPS
 };
 
 #[derive(Deserialize)]
@@ -29,6 +25,7 @@ pub struct UpgradeDynamic {
 pub struct UpgradeHandler {
     pub static_data: UpgradeStatic,
     pub dynamic_data: UpgradeDynamic,
+    pub ui_blocks_mouse: bool,
 }
 
 impl UpgradeHandler {
@@ -47,6 +44,7 @@ impl UpgradeHandler {
         Self {
             static_data,
             dynamic_data,
+            ui_blocks_mouse: false
         }
     }
 
@@ -108,6 +106,7 @@ impl UpgradeHandler {
         font: &Font,
         player: &mut Player,
         locale_handler: &LocaleHandler,
+        settings: &GameSettigns,
     ) {
         let mut offset = 0;
         for i in 0..self.static_data.upgrade_data.len() {
@@ -149,6 +148,7 @@ impl UpgradeHandler {
         }
 
         offset = 0;
+        self.ui_blocks_mouse = false;
         for i in 0..self.static_data.upgrade_data.len() {
             if self.static_data.upgrade_data[i].cost / 2 > player.alltime_max_money {
                 offset += 1;
@@ -176,6 +176,8 @@ impl UpgradeHandler {
             } {
                 continue;
             }
+
+            self.ui_blocks_mouse = true;
 
             let x = rl.get_mouse_position().x
                 - data.description.chars().count() as f32 / 2. * UI_BUTTON_SIZE / 4.;
@@ -207,7 +209,7 @@ impl UpgradeHandler {
             );
             rl.draw_text_ex(
                 font,
-                &shrink_number_for_display(data.cost, locale_handler),
+                &shrink_number_for_display(data.cost, locale_handler, settings),
                 Vector2::new(x + 5., y + UI_BUTTON_SIZE + UI_BUTTON_SIZE / 3.),
                 UI_BUTTON_SIZE / 2.,
                 0.,

@@ -4,7 +4,15 @@ use raylib::{audio::Sound, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    animal::Animal, localization::LocaleHandler, map::{Map, TileType}, shop_ui::{Canvas, MenuMode}, tutorial::Tutorial, utils::{get_game_width, parse_json, shrink_number_for_display}, worker::{Worker, WorkerHandler}, AnimalHandler
+    AnimalHandler,
+    animal::Animal,
+    localization::LocaleHandler,
+    map::{Map, TileType},
+    pause_menu::GameSettigns,
+    shop_ui::{Canvas, MenuMode},
+    tutorial::Tutorial,
+    utils::{get_game_width, parse_json, shrink_number_for_display},
+    worker::{Worker, WorkerHandler},
 };
 
 #[derive(Serialize, Deserialize)]
@@ -63,12 +71,18 @@ impl Player {
         }
     }
 
-    pub fn draw_stats(&self, rl: &mut RaylibDrawHandle, font: &Font, locale_handler: &LocaleHandler) {
+    pub fn draw_stats(
+        &self,
+        rl: &mut RaylibDrawHandle,
+        font: &Font,
+        locale_handler: &LocaleHandler,
+        settings: &GameSettigns,
+    ) {
         rl.draw_rectangle(10, 10, 130, 28, Color::BLACK.alpha(0.5));
 
         rl.draw_text_ex(
             font,
-            &shrink_number_for_display(self.display_money, locale_handler),
+            &shrink_number_for_display(self.display_money, locale_handler, settings),
             Vector2::new(14., 14.),
             24.,
             0.,
@@ -94,7 +108,11 @@ impl Player {
         );
         rl.draw_text_ex(
             font,
-            &format!("{} {}", locale_handler.language_data.get("level").unwrap(), self.level),
+            &format!(
+                "{} {}",
+                locale_handler.language_data.get("level").unwrap(),
+                self.level
+            ),
             Vector2::new(screen_width as f32 / 4. + 10., 10.),
             24.,
             0.,
@@ -279,7 +297,9 @@ impl Player {
             price = (price as f32 * 1.1) as usize;
         }
 
-        if canvas.selected == 0 && self.money >= price && map.dynamic_data.tiles.contains_key(selected_tile)
+        if canvas.selected == 0
+            && self.money >= price
+            && map.dynamic_data.tiles.contains_key(selected_tile)
         {
             worker_handler.add_worker(Worker::new(selected_tile.0, selected_tile.1));
             self.money -= price;

@@ -6,8 +6,10 @@ use std::collections::HashMap;
 
 use crate::{
     animal::AnimalHandler,
+    localization::LocaleHandler,
+    pause_menu::GameSettigns,
     player::Player,
-    utils::parse_json,
+    utils::{parse_json, shrink_number_for_display},
     worker::WorkerHandler,
 };
 
@@ -178,7 +180,8 @@ impl Map {
         }
 
         player.money -= self.dynamic_data.next_expansion_cost;
-        self.dynamic_data.next_expansion_cost = (self.dynamic_data.next_expansion_cost as f32 * 1.5).round() as usize;
+        self.dynamic_data.next_expansion_cost =
+            (self.dynamic_data.next_expansion_cost as f32 * 1.5).round() as usize;
 
         let point = self.dynamic_data.land_expansion_points[index.unwrap()];
         self.dynamic_data
@@ -221,6 +224,8 @@ impl Map {
         worker_handler: &mut WorkerHandler,
         animal_handler: &mut AnimalHandler,
         font: &Font,
+        settings: &GameSettigns,
+        locale_handler: &LocaleHandler,
     ) {
         let expansion_texture = textures.get("land_expansion").unwrap();
 
@@ -237,7 +242,14 @@ impl Map {
             );
             rl.draw_text_ex(
                 font,
-                &format!("{}", self.dynamic_data.next_expansion_cost),
+                &format!(
+                    "{}",
+                    shrink_number_for_display(
+                        self.dynamic_data.next_expansion_cost,
+                        locale_handler,
+                        settings
+                    )
+                ),
                 Vector2::new(
                     (expansion_point.0 * TILE_SIZE
                         + self
