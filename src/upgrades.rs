@@ -61,10 +61,18 @@ impl UpgradeHandler {
         if self.dynamic_data.purchased_upgrades.contains(&(crop * 3)) {
             temp *= 2;
         }
-        if self.dynamic_data.purchased_upgrades.contains(&(crop * 3 + 1)) {
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crop * 3 + 1))
+        {
             temp *= 2;
         }
-        if self.dynamic_data.purchased_upgrades.contains(&(crop * 3 + 2)) {
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crop * 3 + 2))
+        {
             temp *= 2;
         }
 
@@ -73,28 +81,57 @@ impl UpgradeHandler {
 
     pub fn get_multiplier_for_tree(&self, tree: usize, crops_len: usize) -> usize {
         let mut temp = 1;
-        if self.dynamic_data.purchased_upgrades.contains(&(crops_len * 3 + tree * 3)) {
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crops_len * 3 + tree * 3))
+        {
             temp *= 2;
         }
-        if self.dynamic_data.purchased_upgrades.contains(&(crops_len * 3 + tree * 3 + 1)) {
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crops_len * 3 + tree * 3 + 1))
+        {
             temp *= 2;
         }
-        if self.dynamic_data.purchased_upgrades.contains(&(crops_len * 3 + tree * 3 + 2)) {
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crops_len * 3 + tree * 3 + 2))
+        {
             temp *= 2;
         }
 
         temp
     }
 
-    pub fn get_multiplier_for_animal(&self, animal: usize, crops_len: usize, trees_len: usize) -> usize {
+    pub fn get_multiplier_for_animal(
+        &self,
+        animal: usize,
+        crops_len: usize,
+        trees_len: usize,
+    ) -> usize {
         let mut temp = 1;
-        if self.dynamic_data.purchased_upgrades.contains(&(crops_len*3 + trees_len*3 + animal*3)) {
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crops_len * 3 + trees_len * 3 + animal * 3))
+        {
             temp *= 2;
         }
-        if self.dynamic_data.purchased_upgrades.contains(&(crops_len*3 + trees_len*3 + animal*3 + 1)) {
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crops_len * 3 + trees_len * 3 + animal * 3 + 1))
+        {
             temp *= 2;
         }
-        if self.dynamic_data.purchased_upgrades.contains(&(crops_len*3 + trees_len*3 +animal*3 + 2)) {
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crops_len * 3 + trees_len * 3 + animal * 3 + 2))
+        {
             temp *= 2;
         }
 

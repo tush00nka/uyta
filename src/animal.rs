@@ -52,8 +52,6 @@ impl AnimalHandler {
                 dynamic_data,
             },
             Err(_) => {
-                println!("no animal");
-
                 Self {
                     static_data,
                     dynamic_data: AnimalDynamic { animals: vec![] },
