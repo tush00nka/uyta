@@ -580,21 +580,9 @@ impl Canvas {
                         format!(
                             "{}\n{}",
                             toolbar_item.tooltip,
-                            shrink_number_for_display(price, locale_handler),
+                            shrink_number_for_display(price as u128, locale_handler),
                         )
                     }
-                };
-
-                let tooltip_extra = if output_price > 0 {
-                    format!(
-                        "{} {}\n{} {}",
-                        output_price,
-                        locale_handler.language_data.get("per_harvest").unwrap(),
-                        output_exp,
-                        locale_handler.language_data.get("exp_per_harvest").unwrap(),
-                    )
-                } else {
-                    "".to_string()
                 };
 
                 let tooltip_extra = if output_price > 0 {

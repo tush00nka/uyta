@@ -318,9 +318,11 @@ fn main() {
             &pause_menu,
             &tutorial,
             &font,
+
             // rl_audio.get_master_volume(),
             &locale_handler,
             unsafe { GetMasterVolume() },
+            selected_tile
             // rl_audio.get_master_volume(),
         );
     }
