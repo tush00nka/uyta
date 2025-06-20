@@ -21,17 +21,22 @@
     "settings": "Settings",
     "fullscreen": "Fullscreen",
     "windowed": "Windowed",
-    "master_volume": "Master Volume",
+    "number_display": "Number format",
+    "short_numbers": "1 k",
+    "long_numbers": "1000",
+    "master_volume": "Master volume",
     "save_settings": "OK",
     "quit": "Quit game",
-    "needs_restart": "Needs Restart",
+    "needs_restart": "Needs restart",
 
     "locked": "Unlocks at level",
     "level": "Level",
 
+    "thousand": "k",
     "million": "million",
     "billion": "billion",
     "trillion": "trillion",
+
     "per_harvest": "per harvest",
     "exp_per_harvest": "xp per harvest",
 
@@ -331,6 +336,9 @@
     "settings": "Настройки",
     "fullscreen": "Во весь экран",
     "windowed": "В окне",
+    "number_display": "Формат чисел",
+    "short_numbers": "1 тыс",
+    "long_numbers": "1000",
     "master_volume": "Общая громкость",
     "save_settings": "Сохранить",
     "quit": "Выйти из игры",
@@ -338,9 +346,11 @@
 
     "locked": "Откроется на уровне",
     "level": "Уровень",
+    "thousand": "тыс",
     "million": "млн",
     "billion": "млрд",
     "trillion": "трлн",
+
     "per_harvest": "за сбор",
     "exp_per_harvest": "опыта за сбор",
 
