@@ -560,7 +560,7 @@ impl Canvas {
                         format!(
                             "{}\n{}",
                             toolbar_item.tooltip,
-                            shrink_number_for_display(price as u128, locale_handler),
+                            shrink_number_for_display(price as u128, locale_handler, settings),
                         )
                     }
                 };

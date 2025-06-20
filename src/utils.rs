@@ -31,7 +31,7 @@ pub fn get_game_height(rl: &mut RaylibHandle) -> i32 {
     }
 }
 
-pub fn shrink_number_for_display(number: usize, locale_handler: &LocaleHandler, settings: &GameSettigns) -> String {
+pub fn shrink_number_for_display(number: u128, locale_handler: &LocaleHandler, settings: &GameSettigns) -> String {
     if !settings.short_numbers {
         return number.to_string();
     }

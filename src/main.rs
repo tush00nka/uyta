@@ -349,7 +349,8 @@ fn main() {
             &font,
             &locale_handler,
             unsafe { GetMasterVolume() },
-            selected_tile
+            selected_tile,
+            &game_settings
             // rl_audio.get_master_volume(),
         );
     }

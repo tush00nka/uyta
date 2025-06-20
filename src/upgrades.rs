@@ -246,7 +246,7 @@ impl UpgradeHandler {
             );
             rl.draw_text_ex(
                 font,
-                &shrink_number_for_display(data.cost as u128, locale_handler),
+                &shrink_number_for_display(data.cost as u128, locale_handler, settings),
                 Vector2::new(x + 5., y + UI_BUTTON_SIZE + UI_BUTTON_SIZE / 3.),
                 UI_BUTTON_SIZE / 2.,
                 0.,

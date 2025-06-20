@@ -248,7 +248,7 @@ impl Map {
                 &format!(
                     "{}",
                     shrink_number_for_display(
-                        self.dynamic_data.next_expansion_cost,
+                        self.dynamic_data.next_expansion_cost as u128,
                         locale_handler,
                         settings
                     )
