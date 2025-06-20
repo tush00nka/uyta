@@ -320,7 +320,7 @@ impl Player {
                     let replaced_amount = canvas
                         .toolbar_data
                         .dynamic_data
-                        .crop_amount
+                        .tree_amount
                         .get_mut(tree)
                         .unwrap();
                     *replaced_amount -= 1;

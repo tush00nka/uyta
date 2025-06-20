@@ -300,11 +300,11 @@ fn main() {
             &font,
             selected_tile,
             &game_settings,
-            &locale_handler
+            &locale_handler,
         );
         renderer::draw_fg(
             &mut d,
-            &mut canvas,
+            &mut canvas, // basically a shop ui at this point, as i've separated the ui
             &mut upgrade_handler,
             &map,
             &animal_handler,
@@ -316,7 +316,7 @@ fn main() {
             &locale_handler,
             rl_audio.get_master_volume(),
             selected_tile,
-            &game_settings
+            &game_settings,
         );
     }
 
