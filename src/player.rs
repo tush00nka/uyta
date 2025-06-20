@@ -4,14 +4,21 @@ use raylib::{ffi::{PlaySound, Sound}, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    animal::Animal, localization::LocaleHandler, map::{Map, TileType}, shop_ui::{Canvas, MenuMode}, tutorial::Tutorial, utils::{get_game_width, parse_json, shrink_number_for_display}, worker::{Worker, WorkerHandler}, AnimalHandler
+    AnimalHandler,
+    animal::Animal,
+    localization::LocaleHandler,
+    map::{Map, TileType},
+    pause_menu::GameSettigns,
+    shop_ui::{Canvas, MenuMode},
+    tutorial::Tutorial,
+    utils::{get_game_width, parse_json, shrink_number_for_display},
+    worker::{Worker, WorkerHandler},
 };
 
 #[derive(Serialize, Deserialize)]
 pub struct Player {
     pub money: usize,
     pub alltime_max_money: usize,
-    display_money: usize,
     pub level: usize,
     pub exp: usize,
     exp_to_lvl_up: usize,
@@ -30,7 +37,6 @@ impl Player {
         Self {
             money: 100,
             alltime_max_money: 100,
-            display_money: 0,
             level: 1,
             exp: 0,
             exp_to_lvl_up: 20,
@@ -38,26 +44,9 @@ impl Player {
     }
 
     pub fn update_money(&mut self) {
-        if cfg!(target_arch="wasm32") {
-            self.display_money = self.money;
-            return;
-        }
-
-        let money_diff = self.money as isize - self.display_money as isize;
-        if money_diff == 0 {
-            return;
-        }
-
         if self.alltime_max_money < self.money {
             self.alltime_max_money = self.money;
         }
-
-        self.display_money = self.money;
-
-        // self.display_money = (self.display_money as isize
-        //     + money_diff / money_diff.abs()
-        //         * 10_i32.pow((money_diff.to_string().chars().count() as u32 - 1).max(0)) as isize)
-        //     as usize;
     }
 
     pub fn update_exp(&mut self, sounds: &HashMap<String, Sound>) {
@@ -71,12 +60,18 @@ impl Player {
         }
     }
 
-    pub fn draw_stats(&self, rl: &mut RaylibDrawHandle, font: &Font, locale_handler: &LocaleHandler) {
+    pub fn draw_stats(
+        &self,
+        rl: &mut RaylibDrawHandle,
+        font: &Font,
+        locale_handler: &LocaleHandler,
+        settings: &GameSettigns,
+    ) {
         rl.draw_rectangle(10, 10, 130, 28, Color::BLACK.alpha(0.5));
 
         rl.draw_text_ex(
             font,
-            &shrink_number_for_display(self.display_money as u128, locale_handler),
+            &shrink_number_for_display(self.money, locale_handler, settings),
             Vector2::new(14., 14.),
             24.,
             0.,
@@ -102,12 +97,36 @@ impl Player {
         );
         rl.draw_text_ex(
             font,
-            &format!("{} {}", locale_handler.language_data.get("level").unwrap(), self.level),
+            &format!(
+                "{} {}",
+                locale_handler.language_data.get("level").unwrap(),
+                self.level
+            ),
             Vector2::new(screen_width as f32 / 4. + 10., 10.),
             24.,
             0.,
             Color::WHITE,
         );
+
+        if check_collision_point_poly(
+            rl.get_mouse_position(),
+            &[
+                Vector2::new(screen_width as f32 / 4., 10.),
+                Vector2::new(3. * screen_width as f32 / 4., 10.),
+                Vector2::new(3. * screen_width as f32 / 4., 34.),
+                Vector2::new(screen_width as f32 / 4., 34.),
+            ],
+        ) {
+            let text = format!("{}/{}", self.exp, self.exp_to_lvl_up);
+            rl.draw_text_ex(
+                font,
+                &text,
+                rl.get_mouse_position() + Vector2::new(12., -12.),
+                24.,
+                0.,
+                Color::WHITE,
+            );
+        }
     }
 
     pub fn plant_crops(
@@ -287,7 +306,9 @@ impl Player {
             price = (price as f32 * 1.1) as usize;
         }
 
-        if canvas.selected == 0 && self.money >= price && map.dynamic_data.tiles.contains_key(selected_tile)
+        if canvas.selected == 0
+            && self.money >= price
+            && map.dynamic_data.tiles.contains_key(selected_tile)
         {
             worker_handler.add_worker(Worker::new(selected_tile.0, selected_tile.1));
             self.money -= price;
@@ -308,7 +329,7 @@ impl Player {
                     let replaced_amount = canvas
                         .toolbar_data
                         .dynamic_data
-                        .crop_amount
+                        .tree_amount
                         .get_mut(tree)
                         .unwrap();
                     *replaced_amount -= 1;

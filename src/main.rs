@@ -134,6 +134,7 @@ fn main() {
     let mut upgrade_handler = UpgradeHandler::new(game_settings.language.clone());
 
     let mut pause_menu = PauseMenu::new(&mut rl, &locale_handler);
+
     let mut tutorial = Tutorial::new(game_settings.language.clone());
 
     let font = rl
@@ -141,7 +142,7 @@ fn main() {
             &thread,
             "static/tilita.ttf",
             32,
-            Some("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789+-%[](),.!?"),
+            Some("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789+-%[](),.:!?/"),
         )
         .expect("no font???");
 
@@ -205,6 +206,25 @@ fn main() {
                 }
             }
             PauseMenuState::Settings => {
+                let format = if game_settings.short_numbers {
+                    locale_handler
+                        .language_data
+                        .get("short_numbers")
+                        .unwrap()
+                        .to_string()
+                } else {
+                    locale_handler
+                        .language_data
+                        .get("long_numbers")
+                        .unwrap()
+                        .to_string()
+                };
+                pause_menu.buttons[2].label = format!(
+                    "{}: {}",
+                    locale_handler.language_data.get("number_display").unwrap(),
+                    format,
+                );
+
                 if pause_menu.buttons[0].state == ButtonState::Pressed {
                     unsafe {
                         let new_volume = (GetMasterVolume() - 0.1).max(0.);
@@ -226,13 +246,19 @@ fn main() {
                     // game_settings.master_volume = new_volume;
                 }
                 if pause_menu.buttons[2].state == ButtonState::Pressed {
-                    let codes: Vec<String> = locale_handler.localizations.clone().into_keys().collect();
-                    let mut index = codes.iter().position(|code| *code == locale_handler.current_locale).unwrap();
+                    game_settings.short_numbers = !game_settings.short_numbers;
+                }
+                if pause_menu.buttons[3].state == ButtonState::Pressed {
+                    let codes: Vec<String> =
+                        locale_handler.localizations.clone().into_keys().collect();
+                    let mut index = codes
+                        .iter()
+                        .position(|code| *code == locale_handler.current_locale)
+                        .unwrap();
 
-                    if index+1 >= codes.len() {
+                    if index + 1 >= codes.len() {
                         index = 0;
-                    }
-                    else {
+                    } else {
                         index += 1;
                     }
                     locale_handler.set_locale(codes[index].clone());
@@ -241,11 +267,11 @@ fn main() {
                     canvas.reload_toolbar_static(game_settings.language.clone());
                     upgrade_handler.reload_static(game_settings.language.clone());
                 }
-                if pause_menu.buttons[3].state == ButtonState::Pressed {
+                if pause_menu.buttons[4].state == ButtonState::Pressed {
                     rl.toggle_fullscreen();
                     game_settings.is_fullscreen = rl.is_window_fullscreen();
                 }
-                if pause_menu.buttons[4].state == ButtonState::Pressed {
+                if pause_menu.buttons[5].state == ButtonState::Pressed {
                     game_settings.save();
                     pause_menu.switch_state(&mut rl, PauseMenuState::Main, &locale_handler);
                 }
@@ -264,6 +290,7 @@ fn main() {
             handle_input(
                 &mut rl,
                 &mut canvas,
+                &upgrade_handler,
                 &mut map,
                 &mut player,
                 &mut worker_handler,
@@ -306,10 +333,12 @@ fn main() {
             &mut animal_handler,
             &font,
             selected_tile,
+            &game_settings,
+            &locale_handler,
         );
         renderer::draw_fg(
             &mut d,
-            &mut canvas,
+            &mut canvas, // basically a shop ui at this point, as i've separated the ui
             &mut upgrade_handler,
             &map,
             &animal_handler,
@@ -346,6 +375,7 @@ fn save_game(worker_handler: &WorkerHandler, player: &Player, map: &Map, canvas:
 fn handle_input(
     rl: &mut RaylibHandle,
     canvas: &mut Canvas,
+    upgrade_handler: &UpgradeHandler,
     map: &mut Map,
     player: &mut Player,
     worker_handler: &mut WorkerHandler,
@@ -354,6 +384,7 @@ fn handle_input(
     tutorial: &mut Tutorial,
 ) {
     if !canvas.blocks_mouse(rl.get_mouse_position())
+        && !upgrade_handler.ui_blocks_mouse
         && rl.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT)
     {
         match canvas.mode {

@@ -2,12 +2,14 @@ use raylib::{ffi::CheckCollisionPointRec, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    localization::LocaleHandler, map::TILE_SCALE, utils::{get_game_height, get_game_width, parse_json}
+    localization::LocaleHandler,
+    map::TILE_SCALE,
+    utils::{get_game_height, get_game_width, parse_json},
 };
 
 pub struct Button {
     rect: Rectangle,
-    label: String,
+    pub label: String,
     pub state: ButtonState,
 }
 
@@ -34,6 +36,7 @@ pub struct PauseMenu {
 pub struct GameSettigns {
     pub master_volume: f32,
     pub is_fullscreen: bool,
+    pub short_numbers: bool,
     pub language: String,
 }
 
@@ -46,6 +49,7 @@ impl GameSettigns {
                 return Self {
                     master_volume: 0.5,
                     is_fullscreen: true,
+                    short_numbers: true,
                     language: "en".to_owned(),
                 };
             }
@@ -93,7 +97,11 @@ impl PauseMenu {
                         menu_width / 2.,
                         50.,
                     ),
-                    label: locale_handler.language_data.get("settings").unwrap().to_string(),
+                    label: locale_handler
+                        .language_data
+                        .get("settings")
+                        .unwrap()
+                        .to_string(),
                     state: ButtonState::Normal,
                 };
                 let quit = Button {
@@ -103,7 +111,11 @@ impl PauseMenu {
                         menu_width / 2.,
                         50.,
                     ),
-                    label: locale_handler.language_data.get("quit").unwrap().to_string(),
+                    label: locale_handler
+                        .language_data
+                        .get("quit")
+                        .unwrap()
+                        .to_string(),
                     state: ButtonState::Normal,
                 };
 
@@ -130,25 +142,51 @@ impl PauseMenu {
                     label: "+".to_string(),
                     state: ButtonState::Normal,
                 };
-                let cicle_language = Button {
+                let number_display = Button {
                     rect: Rectangle::new(
                         screen_width / 2. - menu_width / 4.,
                         screen_height / 2. - menu_height / 2. + 120.,
                         menu_width / 2.,
                         50.,
                     ),
-                    label: locale_handler.localizations.get(&locale_handler.current_locale).unwrap().to_string(),
-                    state: ButtonState::Normal
+                    label: format!(
+                        "{}: {}",
+                        locale_handler.language_data.get("number_display").unwrap(),
+                        locale_handler.language_data.get("short_numbers").unwrap()
+                    ),
+                    state: ButtonState::Normal,
+                };
+                let cicle_language = Button {
+                    rect: Rectangle::new(
+                        screen_width / 2. - menu_width / 4.,
+                        screen_height / 2. - menu_height / 2. + 180.,
+                        menu_width / 2.,
+                        50.,
+                    ),
+                    label: locale_handler
+                        .localizations
+                        .get(&locale_handler.current_locale)
+                        .unwrap()
+                        .to_string(),
+                    state: ButtonState::Normal,
                 };
                 let fullscreen_label = if rl.is_window_fullscreen() {
-                    locale_handler.language_data.get("windowed").unwrap().to_string()
+                    locale_handler
+                        .language_data
+                        .get("windowed")
+                        .unwrap()
+                        .to_string()
                 } else {
-                    locale_handler.language_data.get("fullscreen").unwrap().to_string()
+                    locale_handler
+                        .language_data
+                        .get("fullscreen")
+                        .unwrap()
+                        .to_string()
                 };
                 let fullscreen_toggle = Button {
                     rect: Rectangle::new(
                         screen_width / 2. - menu_width / 4.,
-                        screen_height / 2. - menu_height / 2. + 180.,
+                        screen_height / 2. - menu_height / 2. + 240.,
                         menu_width / 2.,
                         50.,
                     ),
@@ -158,15 +196,26 @@ impl PauseMenu {
                 let save = Button {
                     rect: Rectangle::new(
                         screen_width / 2. - menu_width / 4.,
-                        screen_height / 2. - menu_height / 2. + 240.,
+                        screen_height / 2. - menu_height / 2. + 300.,
                         menu_width / 2.,
                         50.,
                     ),
-                    label: locale_handler.language_data.get("save_settings").unwrap().to_string(),
+                    label: locale_handler
+                        .language_data
+                        .get("save_settings")
+                        .unwrap()
+                        .to_string(),
                     state: ButtonState::Normal,
                 };
 
-                self.buttons = vec![sfx_sub, sfx_add, cicle_language, fullscreen_toggle, save];
+                self.buttons = vec![
+                    sfx_sub,
+                    sfx_add,
+                    number_display,
+                    cicle_language,
+                    fullscreen_toggle,
+                    save,
+                ];
             }
         }
 
@@ -180,7 +229,11 @@ impl PauseMenu {
         }
     }
 
-    pub fn update_buttons(&mut self, rl: &mut RaylibHandle, locale_handler: &LocaleHandler) -> bool {
+    pub fn update_buttons(
+        &mut self,
+        rl: &mut RaylibHandle,
+        locale_handler: &LocaleHandler,
+    ) -> bool {
         if !self.is_paused {
             return false;
         }
@@ -220,7 +273,13 @@ impl PauseMenu {
         blocks_mouse
     }
 
-    pub fn draw(&self, rl: &mut RaylibDrawHandle, font: &Font, master_volume: f32, locale_handler: &LocaleHandler) {
+    pub fn draw(
+        &self,
+        rl: &mut RaylibDrawHandle,
+        font: &Font,
+        master_volume: f32,
+        locale_handler: &LocaleHandler,
+    ) {
         if !self.is_paused {
             return;
         }

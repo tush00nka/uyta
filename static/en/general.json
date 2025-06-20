@@ -3,17 +3,22 @@
     "settings": "Settings",
     "fullscreen": "Fullscreen",
     "windowed": "Windowed",
-    "master_volume": "Master Volume",
+    "number_display": "Number format",
+    "short_numbers": "1 k",
+    "long_numbers": "1000",
+    "master_volume": "Master volume",
     "save_settings": "OK",
     "quit": "Quit game",
-    "needs_restart": "Needs Restart",
+    "needs_restart": "Needs restart",
 
     "locked": "Unlocks at level",
     "level": "Level",
 
+    "thousand": "k",
     "million": "million",
     "billion": "billion",
     "trillion": "trillion",
+
     "per_harvest": "per harvest",
     "exp_per_harvest": "xp per harvest",
 
