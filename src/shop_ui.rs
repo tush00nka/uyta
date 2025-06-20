@@ -8,7 +8,15 @@ use raylib::{
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    animal::AnimalHandler, localization::LocaleHandler, map::{Map, TILE_PIXEL_SIZE}, pause_menu::GameSettigns, player::Player, texture_handler::TextureHandler, upgrades::UpgradeHandler, utils::{parse_json, shrink_number_for_display}, UI_BUTTON_SIZE, UI_GAPS
+    UI_BUTTON_SIZE, UI_GAPS,
+    animal::AnimalHandler,
+    localization::LocaleHandler,
+    map::{Map, TILE_PIXEL_SIZE},
+    pause_menu::GameSettigns,
+    player::Player,
+    texture_handler::TextureHandler,
+    upgrades::UpgradeHandler,
+    utils::{parse_json, shrink_number_for_display},
 };
 
 #[derive(Deserialize)]
@@ -388,28 +396,6 @@ impl Canvas {
                     Color::RAYWHITE
                 },
             );
-
-            // if self.selected != i {
-            //     continue;
-            // }
-
-            // let price = if tooltip_pool[i].price > 0 {
-            //     tooltip_pool[i].price.to_string()
-            // } else {
-            //     "".to_string()
-            // };
-
-            // rl.draw_text_ex(
-            //     font,
-            //     &format!("{}\n{}", tooltip_pool[i].tooltip, price),
-            //     Vector2::new(
-            //         2. * (UI_BUTTON_SIZE + UI_GAPS) + UI_GAPS,
-            //         i as f32 * (UI_BUTTON_SIZE + UI_GAPS / 2.) + UI_BUTTON_SIZE + UI_GAPS,
-            //     ),
-            //     UI_BUTTON_SIZE / 2.,
-            //     0.,
-            //     Color::RAYWHITE,
-            // );
         }
     }
 
@@ -422,7 +408,7 @@ impl Canvas {
         font: &Font,
         locale_handler: &LocaleHandler,
         upgrade_handler: &UpgradeHandler,
-        settings: &GameSettigns, 
+        settings: &GameSettigns,
     ) {
         for i in 0..self.content.len() {
             let rect = self.content[i];
@@ -579,7 +565,8 @@ impl Canvas {
                     }
                 };
 
-                let tooltip_extra = if output_price > 0 && toolbar_item.unlock_level <= player.level {
+                let tooltip_extra = if output_price > 0 && toolbar_item.unlock_level <= player.level
+                {
                     format!(
                         "{} {}\n{} {}",
                         output_price,

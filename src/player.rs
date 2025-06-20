@@ -19,7 +19,6 @@ use crate::{
 pub struct Player {
     pub money: usize,
     pub alltime_max_money: usize,
-    display_money: usize,
     pub level: usize,
     pub exp: usize,
     exp_to_lvl_up: usize,
@@ -37,7 +36,6 @@ impl Player {
         Self {
             money: 100,
             alltime_max_money: 100,
-            display_money: 0,
             level: 1,
             exp: 0,
             exp_to_lvl_up: 20,
@@ -45,21 +43,9 @@ impl Player {
     }
 
     pub fn update_money(&mut self) {
-        let money_diff = self.money as isize - self.display_money as isize;
-        if money_diff == 0 {
-            return;
-        }
-
         if self.alltime_max_money < self.money {
             self.alltime_max_money = self.money;
         }
-
-        self.display_money = self.money;
-
-        // self.display_money = (self.display_money as isize
-        //     + money_diff / money_diff.abs()
-        //         * 10_i32.pow((money_diff.to_string().chars().count() as u32 - 1).max(0)) as isize)
-        //     as usize;
     }
 
     pub fn update_exp(&mut self, sounds: &HashMap<String, Sound<'_>>) {
@@ -82,7 +68,7 @@ impl Player {
 
         rl.draw_text_ex(
             font,
-            &shrink_number_for_display(self.display_money, locale_handler, settings),
+            &shrink_number_for_display(self.money, locale_handler, settings),
             Vector2::new(14., 14.),
             24.,
             0.,
@@ -118,6 +104,26 @@ impl Player {
             0.,
             Color::WHITE,
         );
+
+        if check_collision_point_poly(
+            rl.get_mouse_position(),
+            &[
+                Vector2::new(screen_width as f32 / 4., 10.),
+                Vector2::new(3. * screen_width as f32 / 4., 10.),
+                Vector2::new(3. * screen_width as f32 / 4., 34.),
+                Vector2::new(screen_width as f32 / 4., 34.),
+            ],
+        ) {
+            let text = format!("{}/{}", self.exp, self.exp_to_lvl_up);
+            rl.draw_text_ex(
+                font,
+                &text,
+                rl.get_mouse_position() + Vector2::new(12., -12.),
+                24.,
+                0.,
+                Color::WHITE,
+            );
+        }
     }
 
     pub fn plant_crops(

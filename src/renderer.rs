@@ -32,7 +32,7 @@ pub fn draw_for_camera(
     font: &Font,
     selected_tile: (i32, i32),
     settings: &GameSettigns,
-    locale_handler: &LocaleHandler
+    locale_handler: &LocaleHandler,
 ) {
     let mut d2 = rl.begin_mode2D(camera_controller.camera);
 
@@ -43,13 +43,14 @@ pub fn draw_for_camera(
         animal_handler,
         font,
         settings,
-        locale_handler
+        locale_handler,
     );
 
     if !map.dynamic_data.tiles.contains_key(&selected_tile) {
         return;
     }
 
+    // draw tile selection box
     d2.draw_rectangle_lines_ex(
         Rectangle::new(
             (selected_tile.0 * TILE_SIZE) as f32,
@@ -78,8 +79,48 @@ pub fn draw_fg(
     selected_tile: (i32, i32),
     settings: &GameSettigns,
 ) {
-    // TODO: move to own func
-    if map.dynamic_data.tiles.contains_key(&selected_tile) && !canvas.blocks_mouse(rl.get_mouse_position()) && !upgrade_handler.ui_blocks_mouse {
+    draw_placing_tooltip(rl, font, map, canvas, upgrade_handler, selected_tile);
+
+    player.draw_stats(rl, font, locale_handler, settings);
+
+    canvas.draw(rl, map, animal_handler, texture_handler, player, font);
+    canvas.update(
+        rl,
+        map,
+        animal_handler,
+        player,
+        font,
+        locale_handler,
+        &upgrade_handler,
+        settings,
+    );
+
+    upgrade_handler.draw(
+        rl,
+        texture_handler.textures.get("upgrades").unwrap(),
+        font,
+        player,
+        locale_handler,
+        settings,
+    );
+
+    tutorial.draw(rl, font);
+
+    pause_menu.draw(rl, font, master_volume, locale_handler);
+}
+
+fn draw_placing_tooltip(
+    rl: &mut RaylibDrawHandle,
+    font: &Font,
+    map: &Map,
+    canvas: &Canvas,
+    upgrade_handler: &UpgradeHandler,
+    selected_tile: (i32, i32),
+) {
+    if map.dynamic_data.tiles.contains_key(&selected_tile)
+        && !canvas.blocks_mouse(rl.get_mouse_position())
+        && !upgrade_handler.ui_blocks_mouse
+    {
         let sel = canvas.selected;
         let toolbar_static = &canvas.toolbar_data.static_data;
         let (label, price) = match canvas.mode {
@@ -125,31 +166,4 @@ pub fn draw_fg(
 
         rl.draw_text_ex(font, &text, position, 24., 0., Color::WHITE);
     }
-
-    player.draw_stats(rl, font, locale_handler, settings);
-
-    canvas.draw(rl, map, animal_handler, texture_handler, player, font);
-    canvas.update(
-        rl,
-        map,
-        animal_handler,
-        player,
-        font,
-        locale_handler,
-        &upgrade_handler,
-        settings
-    );
-
-    upgrade_handler.draw(
-        rl,
-        texture_handler.textures.get("upgrades").unwrap(),
-        font,
-        player,
-        locale_handler,
-        settings
-    );
-
-    tutorial.draw(rl, font);
-
-    pause_menu.draw(rl, font, master_volume, locale_handler);
 }
