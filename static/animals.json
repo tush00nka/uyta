@@ -16,9 +16,14 @@
             "exp": 10000
         },
         {
+            "time_to_drop": 50,
+            "drop_cost": 25000,
+            "exp": 25000
+        },
+        {
             "time_to_drop": 100,
-            "drop_cost": 50000,
-            "exp": 50000
+            "drop_cost": 60000,
+            "exp": 60000
         }
     ]
 }

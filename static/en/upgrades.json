@@ -196,19 +196,34 @@
             "cost": 70000000
         },
         {
+            "label": "Bronze cow",
+            "description": "Cow produces twice as much\nmoney and experience",
+            "cost": 800000
+        },
+        {
+            "label": "Silver cow",
+            "description": "Cow produces twice as much\nmoney and experience",
+            "cost": 8000000
+        },
+        {
+            "label": "Golden cow",
+            "description": "Cow produces twice as much\nmoney and experience",
+            "cost": 80000000
+        },
+        {
             "label": "Bronze rabbit",
             "description": "Rabbit produces twice as much\nmoney and experience",
-            "cost": 800000
+            "cost": 900000
         },
         {
             "label": "Silver rabbit",
             "description": "Rabbit produces twice as much\nmoney and experience",
-            "cost": 8000000
+            "cost": 9000000
         },
         {
             "label": "Golden rabbit",
             "description": "Rabbit produces twice as much\nmoney and experience",
-            "cost": 80000000
+            "cost": 90000000
         }
     ]
 }

@@ -70,9 +70,14 @@
             "price": 20000
         },
         {
-            "tooltip": "Кролик",
+            "tooltip": "Корова",
             "unlock_level": 40,
             "price": 30000
+        },
+        {
+            "tooltip": "Кролик",
+            "unlock_level": 48,
+            "price": 40000
         }
     ],
     "misc": [
