@@ -1,93 +1,76 @@
 {
     "crops": [
         {
-            "tooltip": "Морковь",
             "unlock_level": 1,
             "price": 20
         },
         {
-            "tooltip": "Капуста",
             "unlock_level": 3,
             "price": 50
         },
         {
-            "tooltip": "Тыква",
             "unlock_level": 5,
             "price": 100
         },
         {
-            "tooltip": "Картофель",
             "unlock_level": 7,
             "price": 500
         },
         {
-            "tooltip": "Клубника",
             "unlock_level": 11,
             "price": 1500
         }
     ],
     "trees": [
         {
-            "tooltip": "Яблоня",
             "unlock_level": 10,
             "price": 1000
         },
         {
-            "tooltip": "Апельсиновое дерево",
             "unlock_level": 15,
             "price": 5000
         },
         {
-            "tooltip": "Вишня",
             "unlock_level": 20,
             "price": 8000
         },
         {
-            "tooltip": "Гранат",
             "unlock_level": 25,
             "price": 12000
         },
         {
-            "tooltip": "Кокосовая пальма",
             "unlock_level": 30,
             "price": 15000
         }
     ],
     "animals": [
         {
-            "tooltip": "Курица",
             "unlock_level": 14,
             "price": 5000
         },
         {
-            "tooltip": "Свинья",
             "unlock_level": 24,
             "price": 10000
         },
         {
-            "tooltip": "Овца",
             "unlock_level": 32,
             "price": 20000
         },
         {
-            "tooltip": "Корова",
             "unlock_level": 40,
             "price": 30000
         },
         {
-            "tooltip": "Кролик",
             "unlock_level": 48,
             "price": 40000
         }
     ],
     "misc": [
         {
-            "tooltip": "Рабочий",
             "unlock_level": 2,
             "price": 100
         },
         {
-            "tooltip": "Убрать растения",
             "unlock_level": 5,
             "price": 0
         }

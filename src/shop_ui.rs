@@ -25,12 +25,80 @@ pub struct ToolbarItem {
     unlock_level: usize,
     pub price: usize,
 }
+
+impl ToolbarItem {
+    fn new(tooltip: String, data: ToolbarItemData) -> Self {
+        Self {
+            tooltip,
+            unlock_level: data.unlock_level,
+            price: data.price,
+        }
+    }
+}
+
+#[derive(Deserialize, Clone, Copy)]
+struct ToolbarItemData {
+    unlock_level: usize,
+    price: usize,
+}
+
 #[derive(Deserialize)]
 pub struct ToolbarStatic {
     pub crops: Vec<ToolbarItem>,
     pub trees: Vec<ToolbarItem>,
     pub animals: Vec<ToolbarItem>,
     pub misc: Vec<ToolbarItem>,
+}
+
+impl ToolbarStatic {
+    fn new(language_data: &HashMap<String, String>) -> Self {
+        let data: HashMap<String, Vec<ToolbarItemData>> = parse_json("static/toolbar.json").expect("no toolbar");
+
+        let (mut crops, mut trees, mut animals, mut misc) = (vec![], vec![], vec![], vec![]);
+
+        let crops_data = data.get("crops").unwrap();
+        for (index, data) in crops_data.iter().enumerate() {
+            let tooltip = language_data
+                .get(&format!("plant{index}"))
+                .unwrap()
+                .to_string();
+            crops.push(ToolbarItem::new(tooltip, *data));
+        }
+
+        let trees_data = data.get("trees").unwrap();
+        for (index, data) in trees_data.iter().enumerate() {
+            let tooltip = language_data
+                .get(&format!("tree{index}"))
+                .unwrap()
+                .to_string();
+            trees.push(ToolbarItem::new(tooltip, *data));
+        }
+
+        let animals_data = data.get("animals").unwrap();
+        for (index, data) in animals_data.iter().enumerate() {
+            let tooltip = language_data
+                .get(&format!("animal{index}"))
+                .unwrap()
+                .to_string();
+            animals.push(ToolbarItem::new(tooltip, *data));
+        }
+
+        let misc_data = data.get("misc").unwrap();
+        for (index, data) in misc_data.iter().enumerate() {
+            let tooltip = language_data
+                .get(&format!("misc{index}"))
+                .unwrap()
+                .to_string();
+            misc.push(ToolbarItem::new(tooltip, *data));
+        }
+
+        Self {
+            crops,
+            trees,
+            animals,
+            misc,
+        }
+    }
 }
 
 #[derive(Deserialize, Serialize)]
@@ -75,12 +143,9 @@ pub struct ToolbarData {
 }
 
 impl ToolbarData {
-    fn new(language_code: String) -> Self {
-        let static_data =
-            parse_json(&format!("static/{}/toolbar.json", language_code)).expect("no toolbar");
-
+    fn new(language_data: &HashMap<String, String>) -> Self {
+        let static_data = ToolbarStatic::new(language_data);
         let res = parse_json("dynamic/toolbar_save.json");
-
         let dynamic_data = match res {
             Ok(dynamic_data) => dynamic_data,
             Err(_) => ToolbarDynamic::new(&static_data),
@@ -124,10 +189,8 @@ impl ToolbarData {
         price
     }
 
-    fn reload_static(&mut self, language_code: String) {
-        let static_data = parse_json(&format!("static/{}/toolbar.json", language_code))
-            .expect("no upgrade data??");
-        self.static_data = static_data;
+    fn reload_static(&mut self, language_data: &HashMap<String, String>) {
+        self.static_data = ToolbarStatic::new(language_data);
     }
 
     pub fn save(&self) {
@@ -155,7 +218,7 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn new(language_code: String) -> Self {
+    pub fn new(language_data: &HashMap<String, String>) -> Self {
         Self {
             mode: MenuMode::Crops,
             selected: 0,
@@ -186,12 +249,12 @@ impl Canvas {
                 ),
             ],
             subcontent: vec![],
-            toolbar_data: ToolbarData::new(language_code),
+            toolbar_data: ToolbarData::new(language_data),
         }
     }
 
-    pub fn reload_toolbar_static(&mut self, language_code: String) {
-        self.toolbar_data.reload_static(language_code);
+    pub fn reload_toolbar_static(&mut self, language_data: &HashMap<String, String>) {
+        self.toolbar_data.reload_static(language_data);
     }
 
     pub fn draw(

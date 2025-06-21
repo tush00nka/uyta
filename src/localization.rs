@@ -20,6 +20,6 @@ impl LocaleHandler {
 
     pub fn set_locale(&mut self, code: String) {
         self.current_locale = code.clone();
-        self.language_data = parse_json(&format!("static/{}/general.json", code)).expect("no such language");
+        self.language_data = parse_json(&format!("static/localizations/{}.json", code)).expect("no such language");
     }
 }
