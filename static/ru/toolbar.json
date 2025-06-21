@@ -68,6 +68,11 @@
             "tooltip": "Овца",
             "unlock_level": 32,
             "price": 20000
+        },
+        {
+            "tooltip": "Кролик",
+            "unlock_level": 40,
+            "price": 30000
         }
     ],
     "misc": [

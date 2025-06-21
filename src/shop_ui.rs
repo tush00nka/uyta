@@ -327,7 +327,7 @@ impl Canvas {
             match self.mode {
                 MenuMode::Crops => {
                     tooltip_pool = &self.toolbar_data.static_data.crops;
-                    amount_pool = &self.toolbar_data.dynamic_data.crop_amount;
+                    amount_pool = &mut self.toolbar_data.dynamic_data.crop_amount;
                     texture_id = format!("crop{i}");
                     source = Rectangle::new(
                         -TILE_PIXEL_SIZE as f32,
@@ -338,7 +338,7 @@ impl Canvas {
                 }
                 MenuMode::Trees => {
                     tooltip_pool = &self.toolbar_data.static_data.trees;
-                    amount_pool = &self.toolbar_data.dynamic_data.tree_amount;
+                    amount_pool = &mut self.toolbar_data.dynamic_data.tree_amount;
                     texture_id = format!("tree{i}");
                     source = Rectangle::new(
                         -TILE_PIXEL_SIZE as f32,
@@ -349,14 +349,14 @@ impl Canvas {
                 }
                 MenuMode::Animals => {
                     tooltip_pool = &self.toolbar_data.static_data.animals;
-                    amount_pool = &self.toolbar_data.dynamic_data.animal_amount;
+                    amount_pool = &mut self.toolbar_data.dynamic_data.animal_amount;
                     texture_id = format!("animal{i}");
                     source =
                         Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32);
                 }
                 MenuMode::Misc => {
                     tooltip_pool = &self.toolbar_data.static_data.misc;
-                    amount_pool = &self.toolbar_data.dynamic_data.misc_amount;
+                    amount_pool = &mut self.toolbar_data.dynamic_data.misc_amount;
                     texture_id = format!("misc{i}");
                     source =
                         Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32);
@@ -378,7 +378,12 @@ impl Canvas {
                 color,
             );
 
-            if *amount_pool.get(&i).unwrap() <= 0 {
+            if let Some(amount) = amount_pool.get(&i) {
+                if *amount <= 0 {
+                    continue;
+                }
+            } else {
+                amount_pool.insert(i, 0);
                 continue;
             }
 

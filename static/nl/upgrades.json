@@ -194,6 +194,21 @@
             "label": "Golden sheep",
             "description": "Sheep produces twice as much\nmoney and experience",
             "cost": 70000000
+        },
+        {
+            "label": "Bronze rabbit",
+            "description": "Rabbit produces twice as much\nmoney and experience",
+            "cost": 800000
+        },
+        {
+            "label": "Silver rabbit",
+            "description": "Rabbit produces twice as much\nmoney and experience",
+            "cost": 8000000
+        },
+        {
+            "label": "Golden rabbit",
+            "description": "Rabbit produces twice as much\nmoney and experience",
+            "cost": 80000000
         }
     ]
 }
