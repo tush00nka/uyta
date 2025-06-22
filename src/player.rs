@@ -114,7 +114,11 @@ impl Player {
                 Vector2::new(screen_width as f32 / 4., 34.),
             ],
         ) {
-            let text = format!("{}/{}", self.exp, self.exp_to_lvl_up);
+            let text = format!(
+                "{}/{}",
+                shrink_number_for_display(self.exp, locale_handler, settings),
+                shrink_number_for_display(self.exp_to_lvl_up, locale_handler, settings)
+            );
             rl.draw_text_ex(
                 font,
                 &text,
@@ -301,13 +305,15 @@ impl Player {
             }
             TileType::Flower { flower } => {
                 if canvas.selected != 0 && *flower != canvas.selected - 1 {
-                    let price = canvas.toolbar_data.get_price_for_beekeeping(canvas.selected);
+                    let price = canvas
+                        .toolbar_data
+                        .get_price_for_beekeeping(canvas.selected);
                     if self.money >= price {
                         let replaced_amount = canvas
                             .toolbar_data
                             .dynamic_data
                             .beekeeping_amount
-                            .get_mut(&(*flower+1))
+                            .get_mut(&(*flower + 1))
                             .unwrap();
                         *replaced_amount -= 1;
 
