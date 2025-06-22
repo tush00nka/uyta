@@ -27,6 +27,12 @@
         }
     ]
 }{
+    "localizations": {
+        "ru": "Ğ ÑƒÑÑĞºĞ¸Ğ¹",
+        "en": "English",
+        "nl": "Nederlands"
+    }
+}{
     "menu": "Menu",
     "settings": "Settings",
     "fullscreen": "Fullscreen",
@@ -53,335 +59,136 @@
     "plants": "Plants",
     "trees": "Trees",
     "animals": "Animals",
-    "misc": "Miscellaneous"
-}{
-    "crops": [
-        {
-            "tooltip": "Carrot",
-            "unlock_level": 1,
-            "price": 20
-        },
-        {
-            "tooltip": "Cabbage",
-            "unlock_level": 3,
-            "price": 50
-        },
-        {
-            "tooltip": "Pumpkin",
-            "unlock_level": 5,
-            "price": 100
-        },
-        {
-            "tooltip": "Potato",
-            "unlock_level": 7,
-            "price": 500
-        },
-        {
-            "tooltip": "Strawberry",
-            "unlock_level": 11,
-            "price": 1500
-        }
-    ],
-    "trees": [
-        {
-            "tooltip": "Apple Tree",
-            "unlock_level": 10,
-            "price": 1000
-        },
-        {
-            "tooltip": "Orange Tree",
-            "unlock_level": 15,
-            "price": 5000
-        },
-        {
-            "tooltip": "Cherry Tree",
-            "unlock_level": 20,
-            "price": 8000
-        },
-        {
-            "tooltip": "Pomegranate Tree",
-            "unlock_level": 25,
-            "price": 12000
-        },
-        {
-            "tooltip": "Coconut Palm",
-            "unlock_level": 30,
-            "price": 15000
-        }
-    ],
-    "animals": [
-        {
-            "tooltip": "Chicken",
-            "unlock_level": 14,
-            "price": 5000
-        },
-        {
-            "tooltip": "Pig",
-            "unlock_level": 24,
-            "price": 10000
-        },
-        {
-            "tooltip": "Sheep",
-            "unlock_level": 32,
-            "price": 20000
-        },
-        {
-            "tooltip": "Cow",
-            "unlock_level": 40,
-            "price": 30000
-        },
-        {
-            "tooltip": "Rabbit",
-            "unlock_level": 48,
-            "price": 40000
-        }
-    ],
-    "misc": [
-        {
-            "tooltip": "Worker",
-            "unlock_level": 2,
-            "price": 100
-        },
-        {
-            "tooltip": "Remove Plants",
-            "unlock_level": 5,
-            "price": 0
-        }
-    ]
-}{
-    "upgrade_data": [
-        {
-            "label": "Bronze carrot",
-            "description": "Carrot produces twice as much\nmoney and experience",
-            "cost": 1000
-        },
-        {
-            "label": "Silver carrot",
-            "description": "Carrot produces twice as much\nmoney and experience",
-            "cost": 10000
-        },
-        {
-            "label": "Golden carrot",
-            "description": "Carrot produces twice as much\nmoney and experience",
-            "cost": 100000
-        },
-        {
-            "label": "Bronze cabbage",
-            "description": "Cabbage produces twice as much\nmoney and experience",
-            "cost": 2000
-        },
-        {
-            "label": "Silver cabbage",
-            "description": "Cabbage produces twice as much\nmoney and experience",
-            "cost": 20000
-        },
-        {
-            "label": "Golden cabbage",
-            "description": "Cabbage produces twice as much\nmoney and experience",
-            "cost": 200000
-        },
-        {
-            "label": "Bronze pumpkin",
-            "description": "Pumpkin produces twice as much\nmoney and experience",
-            "cost": 3000
-        },
-        {
-            "label": "Silver pumpkin",
-            "description": "Pumpkin produces twice as much\nmoney and experience",
-            "cost": 30000
-        },
-        {
-            "label": "Golden pumpkin",
-            "description": "Pumpkin produces twice as much\nmoney and experience",
-            "cost": 300000
-        },
-        {
-            "label": "Bronze potato",
-            "description": "Potato produces twice as much\nmoney and experience",
-            "cost": 4000
-        },
-        {
-            "label": "Silver potato",
-            "description": "Potato produces twice as much\nmoney and experience",
-            "cost": 40000
-        },
-        {
-            "label": "Golden potato",
-            "description": "Potato produces twice as much\nmoney and experience",
-            "cost": 400000
-        },
-        {
-            "label": "Bronze strawberry",
-            "description": "Strawberry produces twice as much\nmoney and experience",
-            "cost": 5000
-        },
-        {
-            "label": "Silver strawberry",
-            "description": "Strawberry produces twice as much\nmoney and experience",
-            "cost": 50000
-        },
-        {
-            "label": "Golden strawberry",
-            "description": "Strawberry produces twice as much\nmoney and experience",
-            "cost": 500000
-        },
-        {
-            "label": "Bronze apple tree",
-            "description": "Apple tree produces twice as much\nmoney and experience",
-            "cost": 10000
-        },
-        {
-            "label": "Silver apple tree",
-            "description": "Apple tree produces twice as much\nmoney and experience",
-            "cost": 100000
-        },
-        {
-            "label": "Golden apple tree",
-            "description": "Apple tree produces twice as much\nmoney and experience",
-            "cost": 1000000
-        },
-        {
-            "label": "Bronze orange tree",
-            "description": "Orange tree produces twice as much\nmoney and experience",
-            "cost": 20000
-        },
-        {
-            "label": "Silver orange tree",
-            "description": "Orange tree` produces twice as much\nmoney and experience",
-            "cost": 200000
-        },
-        {
-            "label": "Golden orange tree",
-            "description": "Orange tree produces twice as much\nmoney and experience",
-            "cost": 2000000
-        },
-        {
-            "label": "Bronze cherry tree",
-            "description": "Cherry tree produces twice as much\nmoney and experience",
-            "cost": 30000
-        },
-        {
-            "label": "Silver cherry tree",
-            "description": "Cherry tree produces twice as much\nmoney and experience",
-            "cost": 300000
-        },
-        {
-            "label": "Golden cherry tree",
-            "description": "Cherry tree produces twice as much\nmoney and experience",
-            "cost": 3000000
-        },
-        {
-            "label": "Bronze pomegranate tree",
-            "description": "Pomegranate tree produces twice as much\nmoney and experience",
-            "cost": 40000
-        },
-        {
-            "label": "Silver pomegranate tree",
-            "description": "Pomegranate tree produces twice as much\nmoney and experience",
-            "cost": 400000
-        },
-        {
-            "label": "Golden pomegranate tree",
-            "description": "Pomegranate tree produces twice as much\nmoney and experience",
-            "cost": 4000000
-        },
-        {
-            "label": "Bronze palm",
-            "description": "Coconut palm produces twice as much\nmoney and experience",
-            "cost": 50000
-        },
-        {
-            "label": "Silver palm",
-            "description": "Coconut palm produces twice as much\nmoney and experience",
-            "cost": 500000
-        },
-        {
-            "label": "Golden palm",
-            "description": "Coconut palm produces twice as much\nmoney and experience",
-            "cost": 5000000
-        },
-                {
-            "label": "Bronze chicken",
-            "description": "Chicken produces twice as much\nmoney and experience",
-            "cost": 500000
-        },
-        {
-            "label": "Silver chicken",
-            "description": "Chicken produces twice as much\nmoney and experience",
-            "cost": 5000000
-        },
-        {
-            "label": "Golden chicken",
-            "description": "Chicken produces twice as much\nmoney and experience",
-            "cost": 50000000
-        },
-        {
-            "label": "Bronze pig",
-            "description": "Pig produces twice as much\nmoney and experience",
-            "cost": 600000
-        },
-        {
-            "label": "Silver pig",
-            "description": "Pig produces twice as much\nmoney and experience",
-            "cost": 6000000
-        },
-        {
-            "label": "Golden pig",
-            "description": "Pig produces twice as much\nmoney and experience",
-            "cost": 60000000
-        },
-        {
-            "label": "Bronze sheep",
-            "description": "Sheep produces twice as much\nmoney and experience",
-            "cost": 700000
-        },
-        {
-            "label": "Silver sheep",
-            "description": "Sheep produces twice as much\nmoney and experience",
-            "cost": 7000000
-        },
-        {
-            "label": "Golden sheep",
-            "description": "Sheep produces twice as much\nmoney and experience",
-            "cost": 70000000
-        },
-        {
-            "label": "Bronze cow",
-            "description": "Cow produces twice as much\nmoney and experience",
-            "cost": 800000
-        },
-        {
-            "label": "Silver cow",
-            "description": "Cow produces twice as much\nmoney and experience",
-            "cost": 8000000
-        },
-        {
-            "label": "Golden cow",
-            "description": "Cow produces twice as much\nmoney and experience",
-            "cost": 80000000
-        },
-        {
-            "label": "Bronze rabbit",
-            "description": "Rabbit produces twice as much\nmoney and experience",
-            "cost": 900000
-        },
-        {
-            "label": "Silver rabbit",
-            "description": "Rabbit produces twice as much\nmoney and experience",
-            "cost": 9000000
-        },
-        {
-            "label": "Golden rabbit",
-            "description": "Rabbit produces twice as much\nmoney and experience",
-            "cost": 90000000
-        }
-    ]
-}{
-    "localizations": {
-        "ru": "Ğ ÑƒÑÑĞºĞ¸Ğ¹",
-        "en": "English",
-        "nl": "Nederlands"
-    }
+    "beekeeping": "Beekeeping",
+    "misc": "Miscellaneous",
+
+    "plant0": "Carrot",
+    "plant1": "Cabbage",
+    "plant2": "Pumpkin",
+    "plant3": "Potato",
+    "plant4": "Strawberry",
+
+    "tree0": "Apple tree",
+    "tree1": "Orange tree",
+    "tree2": "Cherry tree",
+    "tree3": "Pomegranate tree",
+    "tree4": "Coconut plam",
+
+    "animal0": "Chicken",
+    "animal1": "Pig",
+    "animal2": "Sheep",
+    "animal3": "Cow",
+    "animal4": "Rabbit",
+
+    "beekeeping0": "Beehive",
+    "beekeeping1": "Dandelion",
+    "beekeeping2": "Daisies",
+    "beekeeping3": "Tulip",
+    "beekeeping4": "Rose",
+    "beekeeping5": "Forget-me-not",
+
+    "misc0": "Worker",
+    "misc1": "Remove plants",
+
+    "upgrade0": "Bronze Carrot",
+    "upgrade_description0": "Carrots produce twice as much\nmoney and experience",
+    "upgrade1": "Silver Carrot",
+    "upgrade_description1": "Carrots produce twice as much\nmoney and experience",
+    "upgrade2": "Golden Carrot",
+    "upgrade_description2": "Carrots produce twice as much\nmoney and experience",
+    "upgrade3": "Bronze Cabbage",
+    "upgrade_description3": "Cabbages produce twice as much\nmoney and experience",
+    "upgrade4": "Silver Cabbage",
+    "upgrade_description4": "Cabbages produce twice as much\nmoney and experience",
+    "upgrade5": "Golden Cabbage",
+    "upgrade_description5": "Cabbages produce twice as much\nmoney and experience",
+    "upgrade6": "Bronze Pumpkin",
+    "upgrade_description6": "Pumpkins produce twice as much\nmoney and experience",
+    "upgrade7": "Silver Pumpkin",
+    "upgrade_description7": "Pumpkins produce twice as much\nmoney and experience",
+    "upgrade8": "Golden Pumpkin",
+    "upgrade_description8": "Pumpkins produce twice as much\nmoney and experience",
+    "upgrade9": "Bronze Potato",
+    "upgrade_description9": "Potatoes produce twice as much\nmoney and experience",
+    "upgrade10": "Silver Potato",
+    "upgrade_description10": "Potatoes produce twice as much\nmoney and experience",
+    "upgrade11": "Golden Potato",
+    "upgrade_description11": "Potatoes produce twice as much\nmoney and experience",
+    "upgrade12": "Bronze Strawberry",
+    "upgrade_description12": "Strawberries produce twice as much\nmoney and experience",
+    "upgrade13": "Silver Strawberry",
+    "upgrade_description13": "Strawberries produce twice as much\nmoney and experience",
+    "upgrade14": "Golden Strawberry",
+    "upgrade_description14": "Strawberries produce twice as much\nmoney and experience",
+
+    "upgrade15": "Bronze apple tree",
+    "upgrade_description15": "Apple trees produce twice as much\nmoney and experience",
+    "upgrade16": "Silver apple tree",
+    "upgrade_description16": "Apple Trees produce twice as much\nmoney and experience",
+    "upgrade17": "Golden apple tree",
+    "upgrade_description17": "Apple Trees produce twice as much\nmoney and experience",
+    "upgrade18": "Bronze orange tree",
+    "upgrade_description18": "Orange Trees produce twice as much\nmoney and experience",
+    "upgrade19": "Silver orange tree",
+    "upgrade_description19": "Orange Trees produce twice as much\nmoney and experience",
+    "upgrade20": "Golden orange tree",
+    "upgrade_description20": "Orange Trees produce twice as much\nmoney and experience",
+    "upgrade21": "Bronze cherry tree",
+    "upgrade_description21": "Cherry Trees produce twice as much\nmoney and experience",
+    "upgrade22": "Silver cherry tree",
+    "upgrade_description22": "Cherry Trees produce twice as much\nmoney and experience",
+    "upgrade23": "Golden cherry tree",
+    "upgrade_description23": "Cherry Trees produce twice as much\nmoney and experience",
+    "upgrade24": "Bronze pomegranate tree",
+    "upgrade_description24": "Pomegranate trees produce twice as much\nmoney and experience",
+    "upgrade25": "Silver pomegranate tree",
+    "upgrade_description25": "Pomegranate trees produce twice as much\nmoney and experience",
+    "upgrade26": "Golden pomegranate tree",
+    "upgrade_description26": "Pomegranate trees produce twice as much\nmoney and experience",
+    "upgrade27": "Bronze coconut palm",
+    "upgrade_description27": "Coconut palms produce twice as much\nmoney and experience",
+    "upgrade28": "Silver coconut palm",
+    "upgrade_description28": "Coconut palms produce twice as much\nmoney and experience",
+    "upgrade29": "Golden coconut palm",
+    "upgrade_description29": "Coconut palms produce twice as much\nmoney and experience",
+
+    "upgrade30": "Bronze chicken",
+    "upgrade_description30": "Chickens produce twice as much\nmoney and experience",
+    "upgrade31": "Silver chicken",
+    "upgrade_description31": "Chickens produce twice as much\nmoney and experience",
+    "upgrade32": "Golden chicken",
+    "upgrade_description32": "Chickens produce twice as much\nmoney and experience",
+    "upgrade33": "Bronze pig",
+    "upgrade_description33": "Pigs produce twice as much\nmoney and experience",
+    "upgrade34": "Silver pig",
+    "upgrade_description34": "Pigs produce twice as much\nmoney and experience",
+    "upgrade35": "Golden pig",
+    "upgrade_description35": "Pigs produce twice as much\nmoney and experience",
+    "upgrade36": "Bronze sheep",
+    "upgrade_description36": "Sheep produce twice as much\nmoney and experience",
+    "upgrade37": "Silver sheep",
+    "upgrade_description37": "Sheep produce twice as much\nmoney and experience",
+    "upgrade38": "Golden sheep",
+    "upgrade_description38": "Sheep produce twice as much\nmoney and experience",
+    "upgrade39": "Bronze cow",
+    "upgrade_description39": "Cows produce twice as much\nmoney and experience",
+    "upgrade40": "Silver cow",
+    "upgrade_description40": "Cows produce twice as much\nmoney and experience",
+    "upgrade41": "Golden cow",
+    "upgrade_description41": "Cows produce twice as much\nmoney and experience",
+    "upgrade42": "Bronze rabbit",
+    "upgrade_description42": "Rabbits produce twice as much\nmoney and experience",
+    "upgrade43": "Silver rabbit",
+    "upgrade_description43": "Rabbits produce twice as much\nmoney and experience",
+    "upgrade44": "Golden rabbit",
+    "upgrade_description44": "Rabbits produce twice as much\nmoney and experience",
+
+    "upgrade45": "Bronze beehive",
+    "upgrade_description45": "Beehives are twice as more\naffected by nearby flowers",
+    "upgrade46": "Silver beehive",
+    "upgrade_description46": "Beehives are twice as more\naffected by nearby flowers",
+    "upgrade47": "Golden beehive",
+    "upgrade_description47": "Beehives are twice as more\naffected by nearby flowers"
 }{
     "menu": "Menu",
     "settings": "Instellingen",
@@ -405,329 +212,127 @@
     "plants": "planten",
     "trees": "bomen",
     "animals": "dieren",
-    "misc": "divers"
-}{
-    "crops": [
-        {
-            "tooltip": "Carrot",
-            "unlock_level": 1,
-            "price": 20
-        },
-        {
-            "tooltip": "Cabbage",
-            "unlock_level": 3,
-            "price": 50
-        },
-        {
-            "tooltip": "Pumpkin",
-            "unlock_level": 5,
-            "price": 100
-        },
-        {
-            "tooltip": "Potato",
-            "unlock_level": 7,
-            "price": 500
-        },
-        {
-            "tooltip": "Strawberry",
-            "unlock_level": 11,
-            "price": 1500
-        }
-    ],
-    "trees": [
-        {
-            "tooltip": "Apple Tree",
-            "unlock_level": 10,
-            "price": 1000
-        },
-        {
-            "tooltip": "Orange Tree",
-            "unlock_level": 15,
-            "price": 5000
-        },
-        {
-            "tooltip": "Cherry Tree",
-            "unlock_level": 20,
-            "price": 8000
-        },
-        {
-            "tooltip": "Pomegranate Tree",
-            "unlock_level": 25,
-            "price": 12000
-        },
-        {
-            "tooltip": "Coconut Palm",
-            "unlock_level": 30,
-            "price": 15000
-        }
-    ],
-    "animals": [
-        {
-            "tooltip": "Chicken",
-            "unlock_level": 14,
-            "price": 5000
-        },
-        {
-            "tooltip": "Pig",
-            "unlock_level": 24,
-            "price": 10000
-        },
-        {
-            "tooltip": "Sheep",
-            "unlock_level": 32,
-            "price": 20000
-        },
-        {
-            "tooltip": "Cow",
-            "unlock_level": 40,
-            "price": 30000
-        },
-        {
-            "tooltip": "Rabbit",
-            "unlock_level": 48,
-            "price": 40000
-        }
-    ],
-    "misc": [
-        {
-            "tooltip": "Worker",
-            "unlock_level": 2,
-            "price": 100
-        },
-        {
-            "tooltip": "Remove Plants",
-            "unlock_level": 5,
-            "price": 0
-        }
-    ]
-}{
-    "upgrade_data": [
-        {
-            "label": "Bronze carrot",
-            "description": "Carrot produces twice as much\nmoney and experience",
-            "cost": 1000
-        },
-        {
-            "label": "Silver carrot",
-            "description": "Carrot produces twice as much\nmoney and experience",
-            "cost": 10000
-        },
-        {
-            "label": "Golden carrot",
-            "description": "Carrot produces twice as much\nmoney and experience",
-            "cost": 100000
-        },
-        {
-            "label": "Bronze cabbage",
-            "description": "Cabbage produces twice as much\nmoney and experience",
-            "cost": 2000
-        },
-        {
-            "label": "Silver cabbage",
-            "description": "Cabbage produces twice as much\nmoney and experience",
-            "cost": 20000
-        },
-        {
-            "label": "Golden cabbage",
-            "description": "Cabbage produces twice as much\nmoney and experience",
-            "cost": 200000
-        },
-        {
-            "label": "Bronze pumpkin",
-            "description": "Pumpkin produces twice as much\nmoney and experience",
-            "cost": 3000
-        },
-        {
-            "label": "Silver pumpkin",
-            "description": "Pumpkin produces twice as much\nmoney and experience",
-            "cost": 30000
-        },
-        {
-            "label": "Golden pumpkin",
-            "description": "Pumpkin produces twice as much\nmoney and experience",
-            "cost": 300000
-        },
-        {
-            "label": "Bronze potato",
-            "description": "Potato produces twice as much\nmoney and experience",
-            "cost": 4000
-        },
-        {
-            "label": "Silver potato",
-            "description": "Potato produces twice as much\nmoney and experience",
-            "cost": 40000
-        },
-        {
-            "label": "Golden potato",
-            "description": "Potato produces twice as much\nmoney and experience",
-            "cost": 400000
-        },
-        {
-            "label": "Bronze strawberry",
-            "description": "Strawberry produces twice as much\nmoney and experience",
-            "cost": 5000
-        },
-        {
-            "label": "Silver strawberry",
-            "description": "Strawberry produces twice as much\nmoney and experience",
-            "cost": 50000
-        },
-        {
-            "label": "Golden strawberry",
-            "description": "Strawberry produces twice as much\nmoney and experience",
-            "cost": 500000
-        },
-        {
-            "label": "Bronze apple tree",
-            "description": "Apple tree produces twice as much\nmoney and experience",
-            "cost": 10000
-        },
-        {
-            "label": "Silver apple tree",
-            "description": "Apple tree produces twice as much\nmoney and experience",
-            "cost": 100000
-        },
-        {
-            "label": "Golden apple tree",
-            "description": "Apple tree produces twice as much\nmoney and experience",
-            "cost": 1000000
-        },
-        {
-            "label": "Bronze orange tree",
-            "description": "Orange tree produces twice as much\nmoney and experience",
-            "cost": 20000
-        },
-        {
-            "label": "Silver orange tree",
-            "description": "Orange tree` produces twice as much\nmoney and experience",
-            "cost": 200000
-        },
-        {
-            "label": "Golden orange tree",
-            "description": "Orange tree produces twice as much\nmoney and experience",
-            "cost": 2000000
-        },
-        {
-            "label": "Bronze cherry tree",
-            "description": "Cherry tree produces twice as much\nmoney and experience",
-            "cost": 30000
-        },
-        {
-            "label": "Silver cherry tree",
-            "description": "Cherry tree produces twice as much\nmoney and experience",
-            "cost": 300000
-        },
-        {
-            "label": "Golden cherry tree",
-            "description": "Cherry tree produces twice as much\nmoney and experience",
-            "cost": 3000000
-        },
-        {
-            "label": "Bronze pomegranate tree",
-            "description": "Pomegranate tree produces twice as much\nmoney and experience",
-            "cost": 40000
-        },
-        {
-            "label": "Silver pomegranate tree",
-            "description": "Pomegranate tree produces twice as much\nmoney and experience",
-            "cost": 400000
-        },
-        {
-            "label": "Golden pomegranate tree",
-            "description": "Pomegranate tree produces twice as much\nmoney and experience",
-            "cost": 4000000
-        },
-        {
-            "label": "Bronze palm",
-            "description": "Coconut palm produces twice as much\nmoney and experience",
-            "cost": 50000
-        },
-        {
-            "label": "Silver palm",
-            "description": "Coconut palm produces twice as much\nmoney and experience",
-            "cost": 500000
-        },
-        {
-            "label": "Golden palm",
-            "description": "Coconut palm produces twice as much\nmoney and experience",
-            "cost": 5000000
-        },
-                {
-            "label": "Bronze chicken",
-            "description": "Chicken produces twice as much\nmoney and experience",
-            "cost": 500000
-        },
-        {
-            "label": "Silver chicken",
-            "description": "Chicken produces twice as much\nmoney and experience",
-            "cost": 5000000
-        },
-        {
-            "label": "Golden chicken",
-            "description": "Chicken produces twice as much\nmoney and experience",
-            "cost": 50000000
-        },
-        {
-            "label": "Bronze pig",
-            "description": "Pig produces twice as much\nmoney and experience",
-            "cost": 600000
-        },
-        {
-            "label": "Silver pig",
-            "description": "Pig produces twice as much\nmoney and experience",
-            "cost": 6000000
-        },
-        {
-            "label": "Golden pig",
-            "description": "Pig produces twice as much\nmoney and experience",
-            "cost": 60000000
-        },
-        {
-            "label": "Bronze sheep",
-            "description": "Sheep produces twice as much\nmoney and experience",
-            "cost": 700000
-        },
-        {
-            "label": "Silver sheep",
-            "description": "Sheep produces twice as much\nmoney and experience",
-            "cost": 7000000
-        },
-        {
-            "label": "Golden sheep",
-            "description": "Sheep produces twice as much\nmoney and experience",
-            "cost": 70000000
-        },
-        {
-            "label": "Bronze cow",
-            "description": "Cow produces twice as much\nmoney and experience",
-            "cost": 800000
-        },
-        {
-            "label": "Silver cow",
-            "description": "Cow produces twice as much\nmoney and experience",
-            "cost": 8000000
-        },
-        {
-            "label": "Golden cow",
-            "description": "Cow produces twice as much\nmoney and experience",
-            "cost": 80000000
-        },
-        {
-            "label": "Bronze rabbit",
-            "description": "Rabbit produces twice as much\nmoney and experience",
-            "cost": 900000
-        },
-        {
-            "label": "Silver rabbit",
-            "description": "Rabbit produces twice as much\nmoney and experience",
-            "cost": 9000000
-        },
-        {
-            "label": "Golden rabbit",
-            "description": "Rabbit produces twice as much\nmoney and experience",
-            "cost": 90000000
-        }
-    ]
+    "beekeeping": "Beekeeping",
+    "misc": "divers",
+    "plant0": "wortel",
+    "plant1": "kool",
+    "plant2": "pompoen",
+    "plant3": "aardappel",
+    "plant4": "aardbei",
+    "tree0": "appelboom",
+    "tree1": "sinaasappel",
+    "tree2": "kersenboom",
+    "tree3": "granaatappelboom",
+    "tree4": "kokospalm",
+    "animal0": "kip",
+    "animal1": "varken",
+    "animal2": "schaap",
+    "animal3": "koe",
+    "animal4": "konijn",
+    "beekeeping0": "Beehive",
+    "beekeeping1": "Dandelion",
+    "beekeeping2": "Daisies",
+    "beekeeping3": "Tulip",
+    "beekeeping4": "Rose",
+    "beekeeping5": "Forget-me-not",
+    "misc0": "werker",
+    "misc1": "verwijder planten",
+    "upgrade0": "bronzen wortel",
+    "upgrade_description0": "wortelen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade1": "zilveren wortel",
+    "upgrade_description1": "wortelen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade2": "gouden wortel",
+    "upgrade_description2": "wortelen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade3": "bronzen kool",
+    "upgrade_description3": "kolen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade4": "zilveren kool",
+    "upgrade_description4": "kolen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade5": "gouden kool",
+    "upgrade_description5": "kolen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade6": "bronzen pompoen",
+    "upgrade_description6": "pompoenen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade7": "zilveren pompoen",
+    "upgrade_description7": "pompoenen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade8": "gouden pompoen",
+    "upgrade_description8": "pompoenen  produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade9": "bronzen aardappel",
+    "upgrade_description9": "aardappelen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade10": "zilveren aardappel",
+    "upgrade_description10": "aardappelen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade11": "gouden aardappel",
+    "upgrade_description11": "aardappelen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade12": "bronzen aardbei",
+    "upgrade_description12": "aardbeien produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade13": "zilveren aardbei",
+    "upgrade_description13": "aardbeien produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade14": "gouden aardbei",
+    "upgrade_description14": "aardbeien produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade15": "bronzen appelboom",
+    "upgrade_description15": "appelbomen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade16": "zilveren appelboom",
+    "upgrade_description16": "appelbomen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade17": "gouden appelboom",
+    "upgrade_description17": "appelbomen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade18": "bronzen sinaasappelboom",
+    "upgrade_description18": "sinaasappelbomen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade19": "zilveren sinaasappelboom",
+    "upgrade_description19": "sinaasappelbomen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade20": "gouden sinaasappelboom",
+    "upgrade_description20": "sinaasappelbomen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade21": "bronzen kersenboom",
+    "upgrade_description21": "kersenbomen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade22": "zilveren kersenboom",
+    "upgrade_description22": "kersenbomen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade23": "gouden kersenboom",
+    "upgrade_description23": "kersenbomen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade24": "bronzen granaatappelboom",
+    "upgrade_description24": "granaatappelbomen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade25": "zilveren granaatappelboom",
+    "upgrade_description25": "granaatappelbomen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade26": "gouden granaatappelboom",
+    "upgrade_description26": "granaatappelbomen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade27": "bronzen kokospalm",
+    "upgrade_description27": "kokospalmen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade28": "zilveren kokospalm",
+    "upgrade_description28": "kokospalmen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade29": "gouden kokospalm",
+    "upgrade_description29": "kokospalmen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade30": "bronzen kip",
+    "upgrade_description30": "kippen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade31": "zilveren kip",
+    "upgrade_description31": "kippen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade32": "gouden kip",
+    "upgrade_description32": "kippen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade33": "bronzen varken",
+    "upgrade_description33": "varkens produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade34": "zilveren varken",
+    "upgrade_description34": "varkens produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade35": "gouden varken",
+    "upgrade_description35": "varkens produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade36": "bronzen schaap",
+    "upgrade_description36": "schapen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade37": "zilveren schaap",
+    "upgrade_description37": "schapen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade38": "gouden schaap",
+    "upgrade_description38": "schapen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade39": "bronzen koe",
+    "upgrade_description39": "koeien produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade40": "zilveren koe",
+    "upgrade_description40": "koeien produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade41": "gouden koe",
+    "upgrade_description41": "koeien produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade42": "bronzen konijn",
+    "upgrade_description42": "konijnen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade43": "zilveren konijn",
+    "upgrade_description43": "konijnen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade44": "gouden konijn",
+    "upgrade_description44": "konijnen produceren twee keer zoveel\ngeld en ervaring",
+    "upgrade45": "Bronze beehive",
+    "upgrade_description45": "Beehives are twice as more\naffected by nearby flowers",
+    "upgrade46": "Silver beehive",
+    "upgrade_description46": "Beehives are twice as more\naffected by nearby flowers",
+    "upgrade47": "Golden beehive",
+    "upgrade_description47": "Beehives are twice as more\naffected by nearby flowers"
 }{
     "menu": "ĞœĞµĞ½Ñ",
     "settings": "ĞĞ°ÑÑ‚Ñ€Ğ¾Ğ¹ĞºĞ¸",
@@ -740,343 +345,138 @@
     "save_settings": "Ğ¡Ğ¾Ñ…Ñ€Ğ°Ğ½Ğ¸Ñ‚ÑŒ",
     "quit": "Ğ’Ñ‹Ğ¹Ñ‚Ğ¸ Ğ¸Ğ· Ğ¸Ğ³Ñ€Ñ‹",
     "needs_restart": "Ğ¢Ñ€ĞµĞ±ÑƒĞµÑ‚ÑÑ Ğ¿ĞµÑ€ĞµĞ·Ğ°Ğ¿ÑƒÑĞº",
-
     "locked": "ĞÑ‚ĞºÑ€Ğ¾ĞµÑ‚ÑÑ Ğ½Ğ° ÑƒÑ€Ğ¾Ğ²Ğ½Ğµ",
     "level": "Ğ£Ñ€Ğ¾Ğ²ĞµĞ½ÑŒ",
     "thousand": "Ñ‚Ñ‹Ñ",
     "million": "Ğ¼Ğ»Ğ½",
     "billion": "Ğ¼Ğ»Ñ€Ğ´",
     "trillion": "Ñ‚Ñ€Ğ»Ğ½",
-
     "per_harvest": "Ğ·Ğ° ÑĞ±Ğ¾Ñ€",
     "exp_per_harvest": "Ğ¾Ğ¿Ñ‹Ñ‚Ğ° Ğ·Ğ° ÑĞ±Ğ¾Ñ€",
-
     "plants": "Ğ Ğ°ÑÑ‚ĞµĞ½Ğ¸Ñ",
     "trees": "Ğ”ĞµÑ€ĞµĞ²ÑŒÑ",
     "animals": "Ğ–Ğ¸Ğ²Ğ¾Ñ‚Ğ½Ñ‹Ğµ",
-    "misc": "ĞŸÑ€Ğ¾Ñ‡ĞµĞµ"
-}{
-    "crops": [
-        {
-            "tooltip": "ĞœĞ¾Ñ€ĞºĞ¾Ğ²ÑŒ",
-            "unlock_level": 1,
-            "price": 20
-        },
-        {
-            "tooltip": "ĞšĞ°Ğ¿ÑƒÑÑ‚Ğ°",
-            "unlock_level": 3,
-            "price": 50
-        },
-        {
-            "tooltip": "Ğ¢Ñ‹ĞºĞ²Ğ°",
-            "unlock_level": 5,
-            "price": 100
-        },
-        {
-            "tooltip": "ĞšĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ",
-            "unlock_level": 7,
-            "price": 500
-        },
-        {
-            "tooltip": "ĞšĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ°",
-            "unlock_level": 11,
-            "price": 1500
-        }
-    ],
-    "trees": [
-        {
-            "tooltip": "Ğ¯Ğ±Ğ»Ğ¾Ğ½Ñ",
-            "unlock_level": 10,
-            "price": 1000
-        },
-        {
-            "tooltip": "ĞĞ¿ĞµĞ»ÑŒÑĞ¸Ğ½Ğ¾Ğ²Ğ¾Ğµ Ğ´ĞµÑ€ĞµĞ²Ğ¾",
-            "unlock_level": 15,
-            "price": 5000
-        },
-        {
-            "tooltip": "Ğ’Ğ¸ÑˆĞ½Ñ",
-            "unlock_level": 20,
-            "price": 8000
-        },
-        {
-            "tooltip": "Ğ“Ñ€Ğ°Ğ½Ğ°Ñ‚",
-            "unlock_level": 25,
-            "price": 12000
-        },
-        {
-            "tooltip": "ĞšĞ¾ĞºĞ¾ÑĞ¾Ğ²Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ°",
-            "unlock_level": 30,
-            "price": 15000
-        }
-    ],
-    "animals": [
-        {
-            "tooltip": "ĞšÑƒÑ€Ğ¸Ñ†Ğ°",
-            "unlock_level": 14,
-            "price": 5000
-        },
-        {
-            "tooltip": "Ğ¡Ğ²Ğ¸Ğ½ÑŒÑ",
-            "unlock_level": 24,
-            "price": 10000
-        },
-        {
-            "tooltip": "ĞĞ²Ñ†Ğ°",
-            "unlock_level": 32,
-            "price": 20000
-        },
-        {
-            "tooltip": "ĞšĞ¾Ñ€Ğ¾Ğ²Ğ°",
-            "unlock_level": 40,
-            "price": 30000
-        },
-        {
-            "tooltip": "ĞšÑ€Ğ¾Ğ»Ğ¸Ğº",
-            "unlock_level": 48,
-            "price": 40000
-        }
-    ],
-    "misc": [
-        {
-            "tooltip": "Ğ Ğ°Ğ±Ğ¾Ñ‡Ğ¸Ğ¹",
-            "unlock_level": 2,
-            "price": 100
-        },
-        {
-            "tooltip": "Ğ£Ğ±Ñ€Ğ°Ñ‚ÑŒ Ñ€Ğ°ÑÑ‚ĞµĞ½Ğ¸Ñ",
-            "unlock_level": 5,
-            "price": 0
-        }
-    ]
-}{
-    "upgrade_data": [
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ Ğ¼Ğ¾Ñ€ĞºĞ¾Ğ²ÑŒ",
-            "description": "ĞœĞ¾Ñ€ĞºĞ¾Ğ²ÑŒ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 1000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ Ğ¼Ğ¾Ñ€ĞºĞ¾Ğ²ÑŒ",
-            "description": "ĞœĞ¾Ñ€ĞºĞ¾Ğ²ÑŒ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 10000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ Ğ¼Ğ¾Ñ€ĞºĞ¾Ğ²ÑŒ",
-            "description": "ĞœĞ¾Ñ€ĞºĞ¾Ğ²ÑŒ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 100000
-        },
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ ĞºĞ°Ğ¿ÑƒÑÑ‚Ğ°",
-            "description": "ĞšĞ°Ğ¿ÑƒÑÑ‚Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 2000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ ĞºĞ°Ğ¿ÑƒÑÑ‚Ğ°",
-            "description": "ĞšĞ°Ğ¿ÑƒÑÑ‚Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 20000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ ĞºĞ°Ğ¿ÑƒÑÑ‚Ğ°",
-            "description": "ĞšĞ°Ğ¿ÑƒÑÑ‚Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 200000
-        },
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ Ñ‚Ñ‹ĞºĞ²Ğ°",
-            "description": "Ğ¢Ñ‹ĞºĞ²Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 3000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ Ñ‚Ñ‹ĞºĞ²Ğ°",
-            "description": "Ğ¢Ñ‹ĞºĞ²Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 30000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ Ñ‚Ñ‹ĞºĞ²Ğ°",
-            "description": "Ğ¢Ñ‹ĞºĞ²Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 300000
-        },
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ñ‹Ğ¹ ĞºĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ",
-            "description": "ĞšĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 4000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ñ‹Ğ¹ ĞºĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ",
-            "description": "ĞšĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 40000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ¾Ğ¹ ĞºĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ",
-            "description": "ĞšĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 400000
-        },
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ ĞºĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ°",
-            "description": "ĞšĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 5000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ ĞºĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ°",
-            "description": "ĞšĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 50000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ ĞºĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ°",
-            "description": "ĞšĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 500000
-        },
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ ÑĞ±Ğ»Ğ¾Ğ½Ñ",
-            "description": "Ğ¯Ğ±Ğ»Ğ¾Ğ½Ñ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 10000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ ÑĞ±Ğ»Ğ¾Ğ½Ñ",
-            "description": "Ğ¯Ğ±Ğ»Ğ¾Ğ½Ñ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 100000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ ÑĞ±Ğ»Ğ¾Ğ½Ñ",
-            "description": "Ğ¯Ğ±Ğ»Ğ¾Ğ½Ñ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 1000000
-        },
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ñ‹Ğ¹ Ğ°Ğ¿ĞµĞ»ÑŒÑĞ¸Ğ½",
-            "description": "ĞĞ¿ĞµĞ»ÑŒÑĞ¸Ğ½Ğ¾Ğ²Ñ‹Ğµ Ğ´ĞµÑ€ĞµĞ²ÑŒÑ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑÑÑ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 20000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ñ‹Ğ¹ Ğ°Ğ¿ĞµĞ»ÑŒÑĞ¸Ğ½",
-            "description": "ĞĞ¿ĞµĞ»ÑŒÑĞ¸Ğ½Ğ¾Ğ²Ñ‹Ğµ Ğ´ĞµÑ€ĞµĞ²ÑŒÑ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑÑÑ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 200000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ¾Ğ¹ Ğ°Ğ¿ĞµĞ»ÑŒÑĞ¸Ğ½",
-            "description": "ĞĞ¿ĞµĞ»ÑŒÑĞ¸Ğ½Ğ¾Ğ²Ñ‹Ğµ Ğ´ĞµÑ€ĞµĞ²ÑŒÑ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑÑÑ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 2000000
-        },
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ Ğ²Ğ¸ÑˆĞ½Ñ",
-            "description": "Ğ’Ğ¸ÑˆĞ½Ñ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 30000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ Ğ²Ğ¸ÑˆĞ½Ñ",
-            "description": "Ğ’Ğ¸ÑˆĞ½Ñ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 300000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ Ğ²Ğ¸ÑˆĞ½Ñ",
-            "description": "Ğ’Ğ¸ÑˆĞ½Ñ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 3000000
-        },
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ñ‹Ğ¹ Ğ³Ñ€Ğ°Ğ½Ğ°Ñ‚",
-            "description": "Ğ“Ñ€Ğ°Ğ½Ğ°Ñ‚ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 40000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ñ‹Ğ¹ Ğ³Ñ€Ğ°Ğ½Ğ°Ñ‚",
-            "description": "Ğ“Ñ€Ğ°Ğ½Ğ°Ñ‚ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 400000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ¾Ğ¹ Ğ³Ñ€Ğ°Ğ½Ğ°Ñ‚",
-            "description": "Ğ“Ñ€Ğ°Ğ½Ğ°Ñ‚ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 4000000
-        },
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ°",
-            "description": "ĞšĞ¾ĞºĞ¾ÑĞ¾Ğ²Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 50000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ°",
-            "description": "ĞšĞ¾ĞºĞ¾ÑĞ¾Ğ²Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 500000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ°",
-            "description": "ĞšĞ¾ĞºĞ¾ÑĞ¾Ğ²Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 5000000
-        },
-                {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ ĞºÑƒÑ€Ğ¸Ñ†Ğ°",
-            "description": "ĞšÑƒÑ€Ğ¸Ñ†Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 500000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ ĞºÑƒÑ€Ğ¸Ñ†Ğ°",
-            "description": "ĞšÑƒÑ€Ğ¸Ñ†Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 5000000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ ĞºÑƒÑ€Ğ¸Ñ†Ğ°",
-            "description": "ĞšÑƒÑ€Ğ¸Ñ†Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 50000000
-        },
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ ÑĞ²Ğ¸Ğ½ÑŒÑ",
-            "description": "Ğ¡Ğ²Ğ¸Ğ½ÑŒÑ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 600000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ ÑĞ²Ğ¸Ğ½ÑŒÑ",
-            "description": "Ğ¡Ğ²Ğ¸Ğ½ÑŒÑ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 6000000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ ÑĞ²Ğ¸Ğ½ÑŒÑ",
-            "description": "Ğ¡Ğ²Ğ¸Ğ½ÑŒÑ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 60000000
-        },
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ Ğ¾Ğ²Ñ†Ğ°",
-            "description": "ĞĞ²Ñ†Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 700000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ Ğ¾Ğ²Ñ†Ğ°",
-            "description": "ĞĞ²Ñ†Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 7000000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ Ğ¾Ğ²Ñ†Ğ°",
-            "description": "ĞĞ²Ñ†Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 70000000
-        },
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ ĞºĞ¾Ñ€Ğ¾Ğ²Ğ°",
-            "description": "ĞšĞ¾Ñ€Ğ¾Ğ²Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 800000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ ĞšĞ¾Ñ€Ğ¾Ğ²Ğ°",
-            "description": "ĞšĞ¾Ñ€Ğ¾Ğ²Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 8000000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ ĞºĞ¾Ñ€Ğ¾Ğ²Ğ°",
-            "description": "ĞšĞ¾Ñ€Ğ¾Ğ²Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 80000000
-        },
-        {
-            "label": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ñ‹Ğ¹ ĞºÑ€Ğ¾Ğ»Ğ¸Ğº",
-            "description": "ĞšÑ€Ğ¾Ğ»Ğ¸Ğº Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 900000
-        },
-        {
-            "label": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ñ‹Ğ¹ ĞºÑ€Ğ¾Ğ»Ğ¸Ğº",
-            "description": "ĞšÑ€Ğ¾Ğ»Ğ¸Ğº Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 9000000
-        },
-        {
-            "label": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ¾Ğ¹ ĞºÑ€Ğ¾Ğ»Ğ¸Ğº",
-            "description": "ĞšÑ€Ğ¾Ğ»Ğ¸Ğº Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
-            "cost": 90000000
-        }
-    ]
+    "beekeeping": "ĞŸÑ‡ĞµĞ»Ğ¾Ğ²Ğ¾Ğ´ÑÑ‚Ğ²Ğ¾",
+    "misc": "ĞŸÑ€Ğ¾Ñ‡ĞµĞµ",
+    "plant0": "ĞœĞ¾Ñ€ĞºĞ¾Ğ²ÑŒ",
+    "plant1": "ĞšĞ°Ğ¿ÑƒÑÑ‚Ğ°",
+    "plant2": "Ğ¢Ñ‹ĞºĞ²Ğ°",
+    "plant3": "ĞšĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ",
+    "plant4": "ĞšĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ°",
+    "tree0": "Ğ¯Ğ±Ğ»Ğ¾Ğ½Ñ",
+    "tree1": "ĞĞ¿ĞµĞ»ÑŒÑĞ¸Ğ½Ğ¾Ğ²Ğ¾Ğµ Ğ´ĞµÑ€ĞµĞ²Ğ¾",
+    "tree2": "Ğ’Ğ¸ÑˆĞ½Ñ",
+    "tree3": "Ğ“Ñ€Ğ°Ğ½Ğ°Ñ‚",
+    "tree4": "ĞšĞ¾ĞºĞ¾ÑĞ¾Ğ²Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ°",
+    "animal0": "ĞšÑƒÑ€Ğ¸Ñ†Ğ°",
+    "animal1": "Ğ¡Ğ²Ğ¸Ğ½ÑŒÑ",
+    "animal2": "ĞĞ²Ñ†Ğ°",
+    "animal3": "ĞšĞ¾Ñ€Ğ¾Ğ²Ğ°",
+    "animal4": "ĞšÑ€Ğ¾Ğ»Ğ¸Ğº",
+    "beekeeping0": "ĞŸÑ‡ĞµĞ»Ğ¸Ğ½Ñ‹Ğ¹ ÑƒĞ»ĞµĞ¹",
+    "beekeeping1": "ĞĞ´ÑƒĞ²Ğ°Ğ½Ñ‡Ğ¸Ğº",
+    "beekeeping2": "Ğ Ğ¾Ğ¼Ğ°ÑˆĞºĞ¸",
+    "beekeeping3": "Ğ¢ÑĞ»ÑŒĞ¿Ğ°Ğ½",
+    "beekeeping4": "Ğ Ğ¾Ğ·Ğ°",
+    "beekeeping5": "ĞĞµĞ·Ğ°Ğ±ÑƒĞ´ĞºĞ¸",
+    "misc0": "Ğ Ğ°Ğ±Ğ¾Ñ‡Ğ¸Ğ¹",
+    "misc1": "Ğ£Ğ±Ñ€Ğ°Ñ‚ÑŒ Ñ€Ğ°ÑÑ‚ĞµĞ½Ğ¸Ñ",
+    "upgrade0": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ Ğ¼Ğ¾Ñ€ĞºĞ¾Ğ²ÑŒ",
+    "upgrade_description0": "ĞœĞ¾Ñ€ĞºĞ¾Ğ²ÑŒ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade1": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ Ğ¼Ğ¾Ñ€ĞºĞ¾Ğ²ÑŒ",
+    "upgrade_description1": "ĞœĞ¾Ñ€ĞºĞ¾Ğ²ÑŒ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade2": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ Ğ¼Ğ¾Ñ€ĞºĞ¾Ğ²ÑŒ",
+    "upgrade_description2": "ĞœĞ¾Ñ€ĞºĞ¾Ğ²ÑŒ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade3": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ ĞºĞ°Ğ¿ÑƒÑÑ‚Ğ°",
+    "upgrade_description3": "ĞšĞ°Ğ¿ÑƒÑÑ‚Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade4": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ ĞºĞ°Ğ¿ÑƒÑÑ‚Ğ°",
+    "upgrade_description4": "ĞšĞ°Ğ¿ÑƒÑÑ‚Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade5": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ ĞºĞ°Ğ¿ÑƒÑÑ‚Ğ°",
+    "upgrade_description5": "ĞšĞ°Ğ¿ÑƒÑÑ‚Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade6": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ Ñ‚Ñ‹ĞºĞ²Ğ°",
+    "upgrade_description6": "Ğ¢Ñ‹ĞºĞ²Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade7": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ Ñ‚Ñ‹ĞºĞ²Ğ°",
+    "upgrade_description7": "Ğ¢Ñ‹ĞºĞ²Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade8": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ Ñ‚Ñ‹ĞºĞ²Ğ°",
+    "upgrade_description8": "Ğ¢Ñ‹ĞºĞ²Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade9": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ñ‹Ğ¹ ĞºĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ",
+    "upgrade_description9": "ĞšĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade10": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ñ‹Ğ¹ ĞºĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ",
+    "upgrade_description10": "ĞšĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade11": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ¾Ğ¹ ĞºĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ",
+    "upgrade_description11": "ĞšĞ°Ñ€Ñ‚Ğ¾Ñ„ĞµĞ»ÑŒ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade12": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ ĞºĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ°",
+    "upgrade_description12": "ĞšĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade13": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ ĞºĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ°",
+    "upgrade_description13": "ĞšĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade14": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ ĞºĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ°",
+    "upgrade_description14": "ĞšĞ»ÑƒĞ±Ğ½Ğ¸ĞºĞ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade15": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ ÑĞ±Ğ»Ğ¾Ğ½Ñ",
+    "upgrade_description15": "Ğ¯Ğ±Ğ»Ğ¾Ğ½Ñ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade16": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ ÑĞ±Ğ»Ğ¾Ğ½Ñ",
+    "upgrade_description16": "Ğ¯Ğ±Ğ»Ğ¾Ğ½Ñ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade17": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ ÑĞ±Ğ»Ğ¾Ğ½Ñ",
+    "upgrade_description17": "Ğ¯Ğ±Ğ»Ğ¾Ğ½Ñ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade18": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ¾Ğµ Ğ°Ğ¿ĞµĞ»ÑŒÑĞ¸Ğ½Ğ¾Ğ²Ğ¾Ğµ Ğ´ĞµÑ€ĞµĞ²Ğ¾",
+    "upgrade_description18": "ĞĞ¿ĞµĞ»ÑŒÑĞ¸Ğ½Ğ¾Ğ²Ğ¾Ğµ Ğ´ĞµÑ€ĞµĞ²Ğ¾ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade19": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ¾Ğµ Ğ°Ğ¿ĞµĞ»ÑŒÑĞ¸Ğ½Ğ¾Ğ²Ğ¾Ğµ Ğ´ĞµÑ€ĞµĞ²Ğ¾",
+    "upgrade_description19": "ĞĞ¿ĞµĞ»ÑŒÑĞ¸Ğ½Ğ¾Ğ²Ğ¾Ğµ Ğ´ĞµÑ€ĞµĞ²Ğ¾ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade20": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ¾Ğµ Ğ°Ğ¿ĞµĞ»ÑŒÑĞ¸Ğ½Ğ¾Ğ²Ğ¾Ğµ Ğ´ĞµÑ€ĞµĞ²Ğ¾",
+    "upgrade_description20": "ĞĞ¿ĞµĞ»ÑŒÑĞ¸Ğ½Ğ¾Ğ²Ğ¾Ğµ Ğ´ĞµÑ€ĞµĞ²Ğ¾ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade21": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ Ğ²Ğ¸ÑˆĞ½Ñ",
+    "upgrade_description21": "Ğ’Ğ¸ÑˆĞ½Ñ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade22": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ Ğ²Ğ¸ÑˆĞ½Ñ",
+    "upgrade_description22": "Ğ’Ğ¸ÑˆĞ½Ñ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade23": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ Ğ²Ğ¸ÑˆĞ½Ñ",
+    "upgrade_description23": "Ğ’Ğ¸ÑˆĞ½Ñ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade24": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ñ‹Ğ¹ Ğ³Ñ€Ğ°Ğ½Ğ°Ñ‚",
+    "upgrade_description24": "Ğ“Ñ€Ğ°Ğ½Ğ°Ñ‚ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade25": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ñ‹Ğ¹ Ğ³Ñ€Ğ°Ğ½Ğ°Ñ‚",
+    "upgrade_description25": "Ğ“Ñ€Ğ°Ğ½Ğ°Ñ‚ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade26": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ¾Ğ¹ Ğ³Ñ€Ğ°Ğ½Ğ°Ñ‚",
+    "upgrade_description26": "Ğ“Ñ€Ğ°Ğ½Ğ°Ñ‚ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade27": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ ĞºĞ¾ĞºĞ¾ÑĞ¾Ğ²Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ°",
+    "upgrade_description27": "ĞšĞ¾ĞºĞ¾ÑĞ¾Ğ²Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade28": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ ĞºĞ¾ĞºĞ¾ÑĞ¾Ğ²Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ°",
+    "upgrade_description28": "ĞšĞ¾ĞºĞ¾ÑĞ¾Ğ²Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade29": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ ĞºĞ¾ĞºĞ¾ÑĞ¾Ğ²Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ°",
+    "upgrade_description29": "ĞšĞ¾ĞºĞ¾ÑĞ¾Ğ²Ğ°Ñ Ğ¿Ğ°Ğ»ÑŒĞ¼Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade30": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ ĞºÑƒÑ€Ğ¸Ñ†Ğ°",
+    "upgrade_description30": "ĞšÑƒÑ€Ğ¸Ñ†Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade31": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ ĞºÑƒÑ€Ğ¸Ñ†Ğ°",
+    "upgrade_description31": "ĞšÑƒÑ€Ğ¸Ñ†Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade32": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ ĞºÑƒÑ€Ğ¸Ñ†Ğ°",
+    "upgrade_description32": "ĞšÑƒÑ€Ğ¸Ñ†Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade33": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ ÑĞ²Ğ¸Ğ½ÑŒÑ",
+    "upgrade_description33": "Ğ¡Ğ²Ğ¸Ğ½ÑŒÑ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade34": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ ÑĞ²Ğ¸Ğ½ÑŒÑ",
+    "upgrade_description34": "Ğ¡Ğ²Ğ¸Ğ½ÑŒÑ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade35": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ ÑĞ²Ğ¸Ğ½ÑŒÑ",
+    "upgrade_description35": "Ğ¡Ğ²Ğ¸Ğ½ÑŒÑ Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade36": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ Ğ¾Ğ²Ñ†Ğ°",
+    "upgrade_description36": "ĞĞ²Ñ†Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade37": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ Ğ¾Ğ²Ñ†Ğ°",
+    "upgrade_description37": "ĞĞ²Ñ†Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade38": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ Ğ¾Ğ²Ñ†Ğ°",
+    "upgrade_description38": "ĞĞ²Ñ†Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade39": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ğ°Ñ ĞºĞ¾Ñ€Ğ¾Ğ²Ğ°",
+    "upgrade_description39": "ĞšĞ¾Ñ€Ğ¾Ğ²Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade40": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ğ°Ñ ĞºĞ¾Ñ€Ğ¾Ğ²Ğ°",
+    "upgrade_description40": "ĞšĞ¾Ñ€Ğ¾Ğ²Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade41": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ°Ñ ĞºĞ¾Ñ€Ğ¾Ğ²Ğ°",
+    "upgrade_description41": "ĞšĞ¾Ñ€Ğ¾Ğ²Ğ° Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade42": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ñ‹Ğ¹ ĞºÑ€Ğ¾Ğ»Ğ¸Ğº",
+    "upgrade_description42": "ĞšÑ€Ğ¾Ğ»Ğ¸Ğº Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade43": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ñ‹Ğ¹ ĞºÑ€Ğ¾Ğ»Ğ¸Ğº",
+    "upgrade_description43": "ĞšÑ€Ğ¾Ğ»Ğ¸Ğº Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade44": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ¾Ğ¹ ĞºÑ€Ğ¾Ğ»Ğ¸Ğº",
+    "upgrade_description44": "ĞšÑ€Ğ¾Ğ»Ğ¸Ğº Ğ¿Ñ€Ğ¸Ğ½Ğ¾ÑĞ¸Ñ‚ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ°\nĞ±Ğ¾Ğ»ÑŒÑˆĞµ Ğ´ĞµĞ½ĞµĞ³ Ğ¸ Ğ¾Ğ¿Ñ‹Ñ‚Ğ°",
+    "upgrade45": "Ğ‘Ñ€Ğ¾Ğ½Ğ·Ğ¾Ğ²Ñ‹Ğ¹ ÑƒĞ»ĞµĞ¹",
+    "upgrade_description45": "Ğ¦Ğ²ĞµÑ‚Ñ‹ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ° ÑĞ¸Ğ»ÑŒĞ½ĞµĞµ\nĞ²Ğ»Ğ¸ÑÑÑ‚ Ğ½Ğ° ÑƒĞ»ÑŒĞ¸",
+    "upgrade46": "Ğ¡ĞµÑ€ĞµĞ±Ñ€ÑĞ½Ñ‹Ğ¹ ÑƒĞ»ĞµĞ¹",
+    "upgrade_description46": "Ğ¦Ğ²ĞµÑ‚Ñ‹ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ° ÑĞ¸Ğ»ÑŒĞ½ĞµĞµ\nĞ²Ğ»Ğ¸ÑÑÑ‚ Ğ½Ğ° ÑƒĞ»ÑŒĞ¸",
+    "upgrade47": "Ğ—Ğ¾Ğ»Ğ¾Ñ‚Ğ¾Ğ¹ ÑƒĞ»ĞµĞ¹",
+    "upgrade_description47": "Ğ¦Ğ²ĞµÑ‚Ñ‹ Ğ² Ğ´Ğ²Ğ° Ñ€Ğ°Ğ·Ğ° ÑĞ¸Ğ»ÑŒĞ½ĞµĞµ\nĞ²Ğ»Ğ¸ÑÑÑ‚ Ğ½Ğ° ÑƒĞ»ÑŒĞ¸"
 }OggS          o    ’â‹+vorbis    D¬      €8     ¸OggS           o   üßÂaÿÿÿÿÿÿÿÿÿÿÿÿvorbis   Lavf58.76.100       encoder=Lavc58.134.100 libvorbis   DESCRIPTION=Processed by SoXvorbis"BCV @  $s*F¥s„BPãBÎkìBL‚2L[Ë%s!¤ Bˆ[(ĞU  @  ‡Ax„ŠA!„%=X’ƒ'=!„ˆ9x„iA!„B!„B!„E9h’ƒ'A„ã08ƒå8ø„E9Xƒ'Aè „B¸šƒ¬9!„$5HPƒ9è„Â,(Š‚Ä0¸„5(Œ‚ä0ÈÔƒBˆšƒI5ø„gAx„iA!„$AHƒAÈ„FAX’ƒ9¸„ËA¨„*9„ 4d    ¢(Š¢(
 ²
  È  @QÇqÉ‘É±Y      HŠ¤HäH’$Y’%Y’%Y’æ‰ª,Ë²,Ë²,Ë2²
@@ -1444,6 +844,28 @@ l¨],ñŞÁœÁ“‰#ê¾®hâ>\\E›    IEND®B`‚‰PNG
 
    IHDR         óÿa   sRGB ®Îé   ®IDAT8Í‘±ƒ0E¿sŒÁ ìÀP…BO•–KKEo6p*gv` öpšÈ±d|‡;ÔùŸşó—\±\NóMšµ±Y MîŒ¦ÄÏ¬öuÃk~ú7õô]ë½ğ¸7XŞìë†²®"X¨¤ $}×:$R¤ a¶m,3@YW^û¥   Eš}& ÌQĞm¬Ü´#}¦£ËÄ#èYsŒÙæT¢‹Õb¬U6¢mQ    IEND®B`‚‰PNG
 
+   IHDR          w }Y   sRGB ®Îé   ûIDATH‰c``ÀˆÄşO^²õÃùÿ{gIºYİ×PE?Iºh F ÃÿÿIKCŒŒ¨iˆ\ı(¹àÙ?¢4KlbÀ–ÈÑÏ‚.yvÅc¼š#dñÊKæodØbiÄÀÀÀÀàsüÃŸ]¡,n«¶Xaè§Kˆj²10000¼¾şC?Õ!Ì2t ³`Dh ü0‹Î®xÌàsüÃŸ]¡;êïâÕÕÄX„GÈ2üÙÊğúú/‚fÁâ1JÏŞlaÈÀÀÀÀà{â<ŠB4ñT¨ğJõJ©HŠÉõ#§ä<ê°9h|²ô Xw]-Öòe¯    IEND®B`‚‰PNG
+
+   IHDR         óÿa   sRGB ®Îé   ÕIDAT8½Q;‚@œ%coBGC'ÀÊx´±"á"T4ÂM¨8€–À„Â@ÁØ uA1ÑI6Ùß|Ş{ÀŸÁfuĞæËÄBèE>%“$ËÄbè]’ÅHL!_Öi
+6ê4ÜË%¤2¢]:òú|‡Ê„$Y:ËÄê7‹FìÑô¾k¢B@³7Ø^wSı8Ë%ˆÕş6E~jŒ"s#±‡6î2}Œ
+ÈS8ö¦ïtûÌ àÔûBª§}¸4îİ{"-B•À„ò,çˆ„_ş OûŞQhsç0ø    IEND®B`‚‰PNG
+
+   IHDR         óÿa   sRGB ®Îé   ĞIDAT8µ‘±Â0EÿQ¤f‚4NGVHE6q˜ kÉ©É(©`…, [ ÅÑ`ë|qP@âwwòşşş$^{p“23³†,5€™K	IÓ±³ŞÀÂÌ÷óNîÖ™³Éİ„ó±Mİ63ë$QD„¬šPô/Dö¡g– ºÕŒ³ ¢ ,úY5…¾`–àYnåwˆNùIlœºğeúò±:8ÎÇ6×ıEßD© àVw pxƒøœ'	I´f€o4è',A†àëõy~§8ÀÊö…    IEND®B`‚‰PNG
+
+   IHDR         óÿa   sRGB ®Îé   ”IDAT8c` 0â‘ûOŒ:&\š×)›0¼°¶fX§l‚nQ0XI°£Ğ¸ >Éc/~âÕŒ×0ÍAwÏ0+œà¿ò„äÿøü×Ø¤Ä€ÿÊ’±‚Ï Æ»säöëBì6Ëí)&*,°˜PÍ)ØáòVÅØÄqÅ/.æc .Cæ`£  P(÷Uƒœ    IEND®B`‚‰PNG
+
+   IHDR         óÿa   sRGB ®Îé  ƒIDAT8•‘?HQÇ?VB!ÂA”C DÇ©7·´îÑ¦Ò$-A“hMÑ¶)ÔĞtJ‡ÒÔP H$q-¾Çİ³¨~ğxğŞû~ß÷L?Yšˆ
+Vª ,VÔ{ÿ;ÌŒ
+î^6™m?ãæƒ X©2!÷"`¶ıÌİxÇN€å½ßˆ™ÚÑ®O|7ÌgnÃiĞ3véêó’˜NŸlZy) Ø({¤ø²I6­óØéSŞ\a}#f³vZ*„))j»ŒvÄ¯e¨m©ÿÉDıdë€ñÅ“¼tŞ3|æV15‹‘õ
+@ÜL08<—ØPM¢Â”Ó n&Y¯rÿ² ’Î¦u2–MÜLàe4z®	€É´¢Z!€—Ñhß²Â‡Û%Y­È-dAT˜r¡Î^Øšÿ ›Ö1b6 oW7 ‘ A¨$[GDmWza
+â	¸Ô#0@M€ƒ#ˆ‚£*(ªÖN5õlpx^Rêª…ÿLà™î·>DŠ½    IEND®B`‚‰PNG
+
+   IHDR         óÿa   sRGB ®Îé  IDAT8½’¡oÂ@Æ% J‚©ÁL`Àò`Y*—LÎMŒ ÑY°$“M&Ç?0[ì4EBİÄMp´½rG„—\.—÷}ï}ß{w!6¬<²¹ıVU8…k$8A„
+d1EÍ¥ÂNñ<´q‚H*êˆ “ ×æs±qí“ÅBv±çñø	€J»Æ{gÉò8Á±#ÀtåqøÙ²[~éğÊŒMäl3ÏÓ•@ı{€é/¤‡hõ[– Nëâ¯Y¥´Şëx	)óöä={xéR~mPZïùıX ¼ÉÜÜdÁK'*íZÜ]®t¦Ã¥(‰œˆU˜,\E¾IüÍïWí h%    IEND®B`‚‰PNG
+
+   IHDR         óÿa   sRGB ®Îé   ÃIDAT8c` 0"±ÿ“£fÀÿß;CHÒÍê¾†‘‰D[1ÀÀ ƒÿÿICFFH¢ÄÂ³	~Di–*ØÄ€ƒpşÿÿÿÿÿfÃÿ›-ÿÃÀï!pñgüş#G9Q.Õdc````x}ı†0¦À4£l
+Ï®xÌàsüÃŸ]¡;êïÂåŒ#d	 SøgW(Ãëë¿°jBè!ù³…!ƒï‰ó(hâp}„#¶è¢*  QÈPº5¾åT    IEND®B`‚‰PNG
+
    IHDR   0   0   Wù‡   sRGB ®Îé   HIDAThíØÑ	  EQmÿk‡Á9d÷O¬z·Ş¸½‚ÃGH& M@š€4iÒºŞ÷ùø     üãûóú¸²Ä?3W    IEND®B`‚‰PNG
 
    IHDR   @      ¦çy)   sRGB ®Îé  ˜IDATX…í–¿JÃPÆşI†lEt0 ,ˆ‹‹‹[Á¡ >„íP…>@Íì¢>„ ¸Ü\º¸HÀB@H‹th§v¨K’p“ÜØíÎ½ç;9ß—s/%+ÿİÀ1ÅB­Y6@J@¯a—¸ÊßGÖÉ¢©ˆø.Ït4k@µ¤úëøë3k[ĞH(–6;, ÂˆH˜@M‚®z±ó˜€©¿àÎK\>A¢)Ã÷zpëLxBî\H3‚Q5Å5/Ø[ÓiY6¹‚Šrú(¬±šPÈÿHÃt4LG£¦©–T/–Äßô(Ö€Qó"°ƒ&âZ–M·İÇ¿ææ¸ˆ3€†]öI£S4éMO¸†Œ€†]¦òÙC± Üíæ"ˆğşô@® rx¾X#ötGø0€zˆ›$>ğŞ
@@ -1532,32 +954,31 @@ hĞÀ9! 7xW<ß>63› 4Üûé±y ÙÂÆŞW,ÛèSS™x Ğ71Èå¯e÷<ŸŠGAˆëfË3÷òÍve	Ó¬1R•:R•:R²Î·
    IHDR         óÿa   sRGB ®Îé   ÔIDAT8c` 0â“ääùcÿö«Zœpr‰üİÏÀÀÀÀÀzåÃ³ªXÂ0 f«T›?Ão¸Ì dCÑ5#Û
 È†0000¼ö[7„	›f˜&˜F˜a¬W> Œb !€®«èŠ°i"Rmşp§doa````˜ıø-\z,° s¾{Ãø¬j#<îd…ä„¿Å™0Âàû·7Œ0ÅrBØô8¹Dşç©«ÿŸçjù9Uâu©€ {ƒæ  VlW+6k„    IEND®B`‚‰PNG
 
-   IHDR   0   ğ   Fêç3   sRGB ®Îé  –IDATxœí]MhTÉşZş1¢CÙ(´€i¡E"1ˆ˜aÎîÅ	1.c–fˆŠ3à¸P†·qÁI!A™´Ğ‚İˆÁè$ë-¼§úÔ©Ÿ[·uL|s?h¬{íÓ©º÷Ö­ïÔùêcyC%Ÿek_bº» ğõÏãißwÚO<ª vmmmÈ~~¬ °zÏ¯ı
-—ñâÔ0§†1W}ëw_`º»s5•R
-J)ÔfàöåL<ªRc2Ù¿«½Dí¿ÿÆüX35Æ²ÿ—ëşøa  pàR?°ãXüò[ ğı¡NàP§>Å_?}	 Xsìv°c‚P¥\ tNÎ¤}ßiõæ- ÀÑï¾iÈşí•M €µÇŸ{í] `qjX—©/dRõ»M}¡Q{ê.xû aôÕ Şˆèg˜ğôŞC ŞˆÌöwn4ñFD½ÑTO±¨§†OO±ûJTı½ƒJ¢¿w0Ú¾R.Yö•rÉiïìÄh ãJdí¸vÇmr~ÏÛ‰{ŠEì[¿H£‹³³¡ï[öı½ƒØ¼{<Fú2ÙWÊ%´wÍÉc”¼H,ûĞÊÛûÇ—‹}9r|É\†ï/™½“UÊ%,Ncº»ä$Ì4Š
-\½yJ)L<ª‚¸}ÂL£ìß^Ù¥æÇšµ}ÂL-{Ù"U)—ĞÔú àúİ €Ã{7 æª¯½#"¯|Ké+ ÀíË# €ı':  µ™'D­½öo¯lÂŠ– €‘¾U €Á À»ÚK¢ÖÚŞº¼òûÖ¯Ã¾õëtCèÿBà•ß¼{6ïŞ¦Bÿ¯|{×Ú»ætCèÿ8¬;@Tºzí<æª¯­Š'ş±÷
-||µ™'VÅÿ8Õ~a¼ïj/­Š'ş±·/©bQUÊ%M£§»ÛÔâÔ°ª”K1”Zõ÷ª«7oi<ñ¨ª”RêêÍ[1”ZUÊ%ƒNÏ5k:í¢ÔN:=úêFÿsF_¿{Æõ5/Ş{ˆ³‰# ·1’É ~ßµ#)­°Ãû=×­P=Å¢óË‘”Zõ÷:ÿ#’R+òÅ%\/Ï~È‘#G„Øi•FŞ¿ŸÄŞé©›înËâöädğ,ûù±f¯@p²Ñ“ÿ9ƒÃ{7j:pÙöJ)œ=ù#öŸèĞ4ueÿû®è\Ğ4)~~ zŠEÃy!ÍË:­ú{ç…h4/è´ª”K†óB4š—%6¡Ã{7¢õÈ)]áÖ#§€Ä¸~÷æª¯ƒÔş(oÙ®+\Ş²HüÛ—GP›y|¤:°ª­¦+¼ª­ö¾’-0Ò·
-ïj/­GÊ¢ÓÕkçu™ÏPï[¿M­_h'Ç‡ÉÇ÷u™ÏPoŞ½-¥¯´“ãÃÂx‹.óêö®÷!'‡`ÜªÜè«7–7ÆÏù@•{zï¡åñs>PåîÜh²¼1~ÃéÔS…ùô:•cœzª0Ÿ^§rŒSOæÓëT–N½³3y~<d³œìsäÈ‘#ÇÇÅ‡–şv{¯ØƒŒğûüÃ>Íğ5@;5â\ô–¢¿ËŞI%§†&J,4…i{¥”ÁD‰…¦ğ Ã3Qb¡’yÀ8¹;¼wcZ|À²çänÿ‰´ø€eÏÉ]Çà‚åĞ¸¦×/L3ÄÄ!Xö¤bâ¿Lö¤bâ?` iöÃ{7j:ÉŸfß¢CÓé,öt÷;4e£::Ã¢"™:!Eg®Ş¼Õ°ıüX³z{eSĞş³ŸÊ‘#Gÿl¤‘¹e?€I.¤§†ÑS,ºÄŞ1t@)¥Ğß;è{GÛWÊ%—Ø;ÕŞà?Bğ­zŠE5İİúƒÿÁ·êïTª©öÄ„à[UÊ%5?ÖlÙÔuº»sÕ×š>ÿŸînCë‘S8™(X<¢5ñ¨ŠÚÌMŸ‰ÿO<ª¢¼e;Îüğ‹>ÔüX3ŞÕ^júLü~¬«ÚjZÁÂ++BCØ·~:'g g«›Z¿ğ95†Jeóîm8úİ7³Õ-¥¯|N¡RiïšÃÚãÏ!g«W´l0œ£\œÅÅÙYızHVqĞİØ·~]jŒ`àB.ôáìĞé÷5RJßÍ»·¥Æ:'gĞ99ƒƒj{ºí]sÎ3ÈGr3G\Àg§í•RZnæˆDÙ“ÜÌ°ì-Œkå`/A	ıq@hå`/AIµçZ9ØKP,û¬Xwp)ísäøG!KÄpY;kŒƒ/A³rQo/¾QÌÊEÙó%ˆbVÎŠ[ªuÀH3Q½v^ŸwLòZªuÀH31ùø¾>ï˜äµTë4€‘fba¼EŸç“¼Yù\¿û‚:£ò1¸}y„:£ò1é[¥/â
-0=©SH™Bàç‘ğ"ª<©SH™Bàç‘ğ"ª<©SH™Bàç‘ğ"mËˆ”*¤"üñÃ€!~ò”*¤"üò[Å?ù@JÒşúéKCüÄ±@:(¿Ò£¯Şèc"u¼a	õV 
-ÔAù•~zï¡>&RÇ–Po @”_é;7šô1‘:Ş0
-}Ñ(|ıó¸q¥÷­_ç¼#­GN¹úKa×ÖVãJoŞ½ÍyGÊ[¶»úKaõÆ•nïšsŞ‘Um5£¿8ßB¼²ôö‘Lù™³#ó·|¬`ÊÏœ™¿}äc…äÕªûÀKı ë¨HúÏU_c®úÚêĞ„ïu¬£"ét\›y‚ÚÌ«CÖ{°Š¤OĞñ»ÚK¼«½´:´¾|Ğ’^×Kıº1L½hØóAKz]ßêÔaêEÃZÒëZsì™nŒt¬tŒŒ_Qşš}õMLG'ş°¿¢ü5ùôŞCL:yy‚_ùö®úù;7šĞÑÒ"¿nù
-ggõP~±ş–ÑHy.ôÕ©Àı–ÑHy:'gêö“õè(Á÷Í²¢;Æf9Ùçø$Èı}îäş@‚ÜÈıÜÈıÜÈıÜøôö9–Y%’Kjï{0¡‡O³éû#zë‡Ø3¡Gª½åĞ^îœ*@Á¯^;/%
-‰È©BµÄäãûRr 81œ*Ú~a¼«÷<ğS	jb´@”ÿË‹JP#h£¢ü_æØXT‚Aƒ-åÿ®=ş+xå‰&ğ«/#÷|m%5*O4_}¹çk+É*O4_}¹çk+A}@V–>´‚s!YYú@Ğ
-Î…8deéA+8Ò¶ü@r ¦Ö/,†*ï‡ä@-¥¯,†*ï‡µÔ¶eƒÅP­;Â^Y^>p©ßpøÙãîĞğÊòò÷‡:‡Ÿ=>à¯,/¯9öÌpøéñ¡èµ2¼ãòc~Õ‰èq§ÖºğËùU'¢Çz²ç—ó«Nş0½@
-RjZ¹MW^HÎ©Yhå6]y!93¤f¤Êr-~¦+ï’œéÂ—‰0ôë9ï Ø,TâìĞiï Ø,TâàÄŸzğ;9±ª#³½XÕ‘Ù^¬êhŸWÊñwãÿjzİ2tL¯grÓë™ìÓë–½sŞ7[™Æß;[™Æß;[íJãï”ÿ¦Mµ‡ÄÄLµ‡ÄÄLµ{¥Ç±øÀ5Æä2À×ó¨J¹dñ ‰€vZ]½yËâAí´z{e“Åƒ$|Éatåyvéxf¦Êóì6Ò'ğÌL•çÙm¤O g¦y0úê^íÊrƒ„•º$DA»²Ü a¥.‡	Q£EĞ®,7HXiĞ¡áæœŸŸ§Fºú¯0çüü<5ÒÕx…9ççç©‘Ô
-¤ç¤5ü6­ö2PZ3ÀaÓj/¥5ü‚V[o!>}.<¯÷‰TÅ9	>}.</<½÷Ğ:'Á§ÏyåéX³VpĞİúõœ\É­¿ª<İ³C§åJn«®ÊÓİ88ñ§\Ém5P•"§ÅUñbÑ
-rÈJ‘Óâªxï ä•"§ÅUñJ¹d5‚ —]UÊ%í¸P²`¹$Ë5İGË®®Ş¼¥J,—d¹ìÉQz{e“v\Ş^Ù$•E%xôşµ3ÊGøLükgRí{ĞÄØ[?–{^9Ràêüÿ”£ì²[2{#>À³Ù¬Üù­.ÎÎ£¥'IŒ‘¦P(è1aàBŸ^’²<Ë¿H¨SC$Ë3²•;¿ÅÊßIƒäœj„FâB¡€B¡@µÑòN5B#±´'y¿xr$Ö¯%¾óOçäŒ©‘ÜÇuõøÎ?G¿ûÆˆÔHîãóù²C©SŠ†½¾C¿Ãè«7èœœÁâÔ°lóÊ‹ø™³C§ñôŞCıî(¥t`›W^ÄÏœøwn4aíñçPJéÀ6¯¼ˆŸ<R¿rç·
-,şÅ™è¾õë0Ä‰:P(
-
-¨Ç¿8İ¼{Ô
-Åû…ñ´w½4V²ª	eÅ ú€¾-®J²	]ŸO¬í]•dº>ŸXÛ»ÜI6¡ÌÃk¥äá<H¤êq†IeJÎƒDª§½LÉÃyHÕc9õ@2eÂi­¤Ó•r)8¾kk«±’[Òé«7o¯T‰Õ{+¹%~{e“ñJµ@Y8h PSèUJY8h PSèUJY8h P“|•Z¿1İİ¦›Œ™@=63€#zlb28„}I‰s1q©ísäÈ‘`©İÂTû` A8öYCDÒ±Ïl/{§½7U!¥%}õ&Ë¾¬ÚÒ’<½÷0Ë¾¬†=ÍÄeÙ—•*¯h@£+b ã\Ñ€FWÄ fÙÏ5ëË7€y÷f¥”< 0ñW%(%ÜŞ—Rò¼/[Ê]Ë3"OŒö@"¿'1HÊ†RZøÁTØ£U?¸àƒÊ®=Z­>@W}®úZïÇ“&¥®ºTj¥ÍJèªK¥–À9!¾uElÅ9øÖ±çà[W¤1Ooœ˜Ã£òAI¾ïÑ	yí9ß‡G'”şÖÉòÒöì­“å¤íÙ['H¡w@¤kÖHæŒR¯ H·\ÿcCdõQìc¦øb¾¿ÜìsäˆE–%(™Ùä§°÷vb×ÔJ–NèšZÉbïšZ‰<­æñ;§=4bï	4ö•A°	_Dä_—A
-:Gqã´üë>{ŠËüë™[Y÷'–Èº?±DôşÄ®«üõÏãÑû»®ò®­­Ñû»²Ü¯ŞóÀÙ0§KIjEÚ›BÁ˜r`ho2dtjH­H{“A(ƒà‚&¾Âr3.hâ»@ ,7Óà‚&¾<q/™“b¬[XH±GÖ-,¤ØÃ·……Ó¡¡+ßˆ3våqfÀ®¼éÌ4xn}×û6 g>Ò¶ìé™ô…-{zæ}¾pêøä-±ö<œ”²^ÀiÏÃI®PòçbŸ#G>{ ¸;.}Äúâ˜?¬”R X_œÙ^¬/¶Ê9
-bØ¨k&Ä°Q×(LpÆ†à)†°¡b[ ÊGØ8d#*A¹T\s¢RràåRqÍ‰JÉ”KÅ5'*%£<—Š—ŞøÀs©Hpéõ\*ö„.—ŞpX8TÁ˜»ª`Ì]ğ]ißÿyDS
-Yó}Já/Ë!p¾O)üeYÂ»ˆv{åXĞn²ÚíA–%œN=¾@#ûs4²?1G¦ı‰}‚¦XÌ'hŠõÈd€ƒŠ?À5BôñHîö\#DäŞiï¶eöI\_Ìä,±}ÿøÖ±dµY2{g‚$éÌLw·aqj8f®áˆ33ñ¨
-¥TÌ2\Ë~~¬ócÍPJ%ÇTy½#iDyyqj8ô>VÒ’Ü†ÊJ©Ğ‘¶'İ(Ém¨¬”²æˆ:ıÇ…¨§%<ƒëw_àúİ3AFúËoƒBè´„ÁíË#¸‘ #ıë§/
-ñ^z_Ÿèİ‘ĞìF=«´…/Ä,5_ÙJ˜G[øBÌRó•}¡„y´…/Ä,5_Ù7ÒgÎ‘ZlÔ—©õÈ©¨¤©¾$Hå-Û£’¦º’ !i+ÛŸÑ z<ª×Îëø’X™ÏÑç Çcòñ}ßBëò9úÄ8Æ[,{Ÿ£”œÉ²Î-”Z3"Ceıü_H·ç>•µG6YÿåğM•yº6*§ù|Se)9C„?À7U–’3Äúrk;B¬? ·¶#Äúrk;‚Ëæ•¸8;ë]»ƒ}r5k&tNÎÈÕ¬ÑƒMæ ÅÛçÈñ1°Ô1®(û zÇ
-²vÂDu¢Dù£Û;$¹!? õÑ8V}$#0/gµ'? õÑØ²÷\'!51à:	©™ˆ×IHÍGC	’–¼Ùm²Bf·É
-™İÆ/’ÙîÅ¶!¨şŞA+Û½Ø¶"h_)—¬l÷|ÛŠP"GàLÚNä¨Ü‘I[ Á‰5‚;2© àØÂÂwÎ×^®s>¸öpƒŒRr_ ,bÃ³½"°Å5÷À"6<Û+üwÁğÀ"6<Û+Ä]pŞª(Ï¹ã¨¢<çnŒ?L Šòœ»¾ì÷–KIŒ¬°LOå90²Â2=•äÀ¼Ÿ}°Ï§.†¦É-d ãˆ ƒœâ‚':>i{.x¢c—ğ)mn´8ç­ÄÛ^øşqe04¨    IEND®B`‚‰PNG
+   IHDR   0      õõ   sRGB ®Îé  AIDATxœí]OhUGÿ=ıP+İø!Z‚tcá		˜gH!‘F\Ø]‰ÒbCŠ—1KS$bÅ¬¥|»¾R$„I ¤yÂèF$¨nÄ48ßÂ{æ9óçÎ}¶&iï‚÷^ßyoæŞ;3¿3ç7g€+*ù[±ö…€!¦»Û  Ÿÿ4öy§ıÄ£* `Ïg­Ù/Œ5 Öï{àµ_ã2^šÆÒÔ0æª¯qıîLw·Qebî¦RJA)…ÚÌÜ¾<‚‰GUªL&û·µ—¨ıï¿Xk¦ÊXöÿq}Ãïß  ıĞCì<?ÿZ œ8Ú	íÔç±øóÇO  ¾~†]ìÜ…à+T)—  “3iŸwÚ_½y pòËÃÙÏ_Ù
+ øè›ç^{×+ XšÖÇÔ²@©úÓ¦¶Ğ¨=µ¼m€0úêP¯Dô;Lxzï!P¯Dfû;7šx%¢z4ÕS,ª¥©aã¯§XŒíUï ’èïŒ¶¯”K–}¥\rÚ;1h¸Y®„İp›œŸó6âb6m’×èÒìlèó–}ï ¶íİ$¯ÑÀÅ¾Lö•r	í]s@ò%‰eúBù¸b|¥ØçÈ‘#Ç@Ìeøü²Ù;¹P¥\ÂÒÔ0¦»Û@¾AÂL£¨ÀÕ›· ”ÂÄ£*ˆÛ'Ì4Ê~şÊV(¥°0Ö¬ífjÙË©J¹„¦Ö ×ï¾  Û¿ 0W}íyá[JŸ n_ <Õ ¨Í<!jíµŸ¿²kZ6 FúÖ : ok/‰Zk{ë	ğÂØ´6mÔ¡ÿ~ÛŞØ¶w‡®ı_¼ğí]shïšÓ¡ÿã° Qéêµ˜«¾¶
+øÇŞ;HTxòñ}ÔfXOüãTûÅñ¼­½´
+øÇŞ¶¤zŠEU)—4înSKSÃªR.ÅPjÕß;¨®Ş¼¥iğÄ£ªRJ©«7oÅPjU)—:½0Ö¬é´‹R;éôè«7ıê¬>¿~÷¬ëc^<½÷çG nc$“= ü¶gWr´À.ïç\Bõ‹ÎGRjÕß;èüHJ­È—pu «~È‘#Gï…Øi•FúßbïôˆÔMw·eñ{ò2ø–ıÂX³× 8Ùèw_Å±ı[4FF¸l{¥Î}÷=êĞ4ueÿÛ]è\Ô4)~~¢zŠEÃy!ÍtZõ÷ÎÑh~ ÓªR.ÎÑh~,é´ñ
+Û¿­ÇOë·?$şÀõ»/0W}|¥ê@yûN]àòö@âÜ¾<‚ÚÌ“à+Õ1¸ˆum5]àumµw…lÙŒ‘¾ux[{i½R®^» ùõMÑÔú±vr|˜||_óêm{w ¥ô©vr|XoÑÇ|†º½ë]EÈÉ!O€
+7úêåñk>PáŞ{hycüšT¸;7š,oŒ_ãp:õT`>½NÇ1N=˜O¯ÓqŒSOæÓët,zgcò|yÈf%ÙçÈ‘#G¿ï#XúÛí½b2nÀ0ìğû4ÀWíÔˆkÑ?,E—½“J,ML”Xh
+ÒöJ)ƒ‰MáA†=g¢ÄB%òV€Ÿprwlÿ–´ø€eÏÉİÁSiñË“»ÁEË¡qM¯^˜fˆ‰ÿB°ìI3ÄÄ™ìI3ÄÄÁ6@ÓìÇöoÑt:’*>Í~ğT‡¦ÓYìééw.j:ËFut†EE25BŠÎ\½y«aû…±f5ekĞ~ÕÏåÈ‘#G7ÒÈÜŠÀ$RKSÃè)]bï: ”Rèït‰½£í+å’Kìjoğ!øV=Å¢šîn}‰Á„à[õ÷ª‰GÕT{â?Bğ­*å’Zk¶ìê:İİ†¹êkMŸ‰ÿOw·¡õøi|—(X<¢5ñ¨ŠÚÌMŸ‰ÿO<ª¢¼}'Î}÷=à}¨…±f¼­½Ôô™øÿÂX3ÖµÕ´‚…;VV„†p`ÓFtNÎ@ÎV7µ~ìsj•Ê¶½;pòËÃ³Õ-¥O}N¡RiïšÃGß<‡œ­^Ó²ÙpjŒ6piv—fg1ôËy YÅAOãÀ¦©1‚‹}¸Ø‡sCgŞ•H)ı4¶íİ‘#èœœAçä¾˜øCÛÓÓhïšsÆœA>’›9â>;m¯”Òr3G\ Êäf¸€eoyd\+{	JèÇ¡•ƒ½%Õkå`/A±ì³8bİÁå´Ï‘ã_…,ÃIì¬Y0¾QÌÊEõ^|	¢˜•‹²çKÅ¬œ'¶Të4€‘f¢zí‚¾î˜äµTë4€‘fbòñ}}İ1Ék©Öi #ÍÄâx‹¾Î'y²ğ1¸~÷'tFácpûò'tFác0Ò·NßÄ5`zR§2…À¯#áETxR§2…À¯#áETxR§2…À¯#áEÚ–)UH3DøıÛCüä)UH3Døù×Š!~ò”*¤"üùã'†ø‰c€5P~§G_½ÑçDêxÅê­ ¨ò;ıôŞC}N¤W,¡Ş
+@(¿Ówn4és"u¼bú¢'Pøü§qãNØ´ÑùDZŸvµ—ÂÏZ;½mïç)oßéj/…õûwº½kÎùDÖµÕŒöâì…xa©÷‘¯Lù™³!óŞG¾V0ågÎ†Ì{ùZ!éZu8ôC?À*’6AçsÕ×˜«¾¶4áÄÑN€5T$m‚Îk3OP›yb5hÂ†¯Ÿ¬¡"itş¶öok/­­Ÿ ´¤×uè‡~]¦^4ìù %½®G;ue˜zÑ°çƒ–ôº6|ıLWF:V:FÆï(ï&G_½AÓÑ‰Öàw”w“Oï=Ä¤ã—øoïª_¿s£	--òãV¯pivVå—ê½ŒFJ7Z¸ØW§u/£‘Ò:'gêö“õè(Á×fYÑc³’ìs|äş@È>÷r Aîäş@îäş@îäş@î|xûË†¬ÉeµwŠ=˜ĞÃ§Ùôıˆ^Åú>öLè‘jo94¤—€;§
+Dğ«×.HÉBâÄrªP)1ùø¾”($NL §Š¶_oÁú}üT‚*Aƒ-åÿ2ÇÆ¢T	Äh(ÿ—96• JĞ FDù¿}ókxá‰&ğ»/#÷|m%U
+O4ß}¹çk+É
+O4ß}¹çk+Am@–ş hçB²°ôA+8â…¥?ZÁ¹¶å'’5µ~l1TùD8$j)}j1TùD8¬¥¶-›-†j=îĞğÂòãC?ô?{}À^X~|âh§áğ³×Ü¡á…åÇ¾~f8üôúPôZŞpù9¿ëDô¸SOk]xÃåçü®ÑãN=Ùó†ËÏù]'˜:‚”š…VnÓ’3CjZ¹Mw^HÎ©©²\‹ŸéÎ»$gz ğ%G"ırŞ; 6•87tÆ; 6•øbâ=øˆ?±ª#³½XÕ‘Ù^¬êh«Š+åø»ñš^·Óë™ÜAÇôz&{Çôºeïœ§÷ÍVG¦ñ÷ÎVG¦ñ÷ÎV»Òø;å¿iSí¡11Sí¡11Sí^éq,Şsq#9‡ğ5Æ¼ªR.Y<H" VWoŞ²xD@;­æ¯lµx„/9Œ.<Ïn#}ÏÌ´QxİFú™i£ğ<»ô	äÌ4¯ F_½Ñ‹ ]Yn°R—Cƒ„¨Ñ"hW–$¬ÔåĞ !j´Ú•å	+:4¼ÀœóóëTIW;àæœŸ_§JºÚ/0çüü:U’ÚAôœ´f€ŸÃ¦Õ^Jkø9lZíe ´f€ŸCĞj«âÓçÂóz—HU\“àÓçÂóÂÓ{­k|úœÎå5k=¡_ÎË•Üú3¡ÂÓÓ87tF®ä¶*è*<=/&ş+¹­
+R
+²Pä´¸
+ŞS,ZAY(rZ\ïï´‚²Pä´¸
+^)—¬Jô²«J¹¤J,—d¹¦ûhÙÕÕ›·´ãBÉ‚å’,—=9JóW¶jÇeşÊV™0Øp¨,*Á£÷ğ¯Q>*Àgêà_;“jïØƒ&ÆŞú²ÜóÊ‘Wàÿ§Ç.»e³7â<›ÍÚİGô˜pivÖ-=IbŒl4…BA	ûô’Dø“åYö¼#¡F‘,ÏÈÖî>‚µ» Iƒäœj„FâB¡€B¡@¥ÑòN5B#±´'y¿yr$Öİßù§srÆˆÔHîãº{|çŸ“_6"5’ûø<A¾ìGjÄ”¢a¯ŸÀĞ/ç1úê:'g°45¬Û¼ğ"~fàÜĞ<½÷'¿<¥”lóÂ‹ø™/&şÀMøè›çPJéÀ6/¼ˆŸ<R¿v÷ÿâLôÀ¦b‹D(
+Ôã_œ‰nÛ»jH…b†ıâxÚ»^+YÕ„²bm@?W!Ù„®Ï'Öö®B²	]ŸO¬í]î$›ĞæáµRòp$Rõ8Ã¤2%çA"UÓ^¦äá<H¤ê±œz ™2á´VÒéJ¹œßóY«±’[Òé«7o]ªÄú}Œ•Ü’NÏ_Ùjt©V(«j
+u¥”Õ€ƒÆ
+5…ºRÊjÀAã …šdWj}Çtw›~m2f6 ½FôÚdÌl zèµ‰Élàüö!%®Å0Äå¶Ï‘#G‚åvSíƒáØgIÇ>³½pìöŞT…”–dôÕ›,û²j{JKòôŞÃ,û²ö4—e_V*¼¢®ˆŒÿ¸¢®ˆÌ²_kÖ—o óîÍJ)y `:âW%(%ÜŞ—Rò¼;¶”»–gDí9€D~Ob”¥´ğƒ>è8bV-üà‚:víÑjµºësÕ×zG84)t×¥R+mVš@w]*µ|Îù
+ñ­+bÎÁ·®ˆ-8ßº"yzãÄJò}NÈkÏù><:¡4ğ^'K¤íY¯“¥Òö¬×	Rhçéš5’9£Ô;(Ò-×¬`ˆ¬şû˜)¾˜Ï¯4û9b‘e	Jf6ù!ì½Ø5µ’¥º¦V²Ø»¦VbOF­y| ÅÎiÏãØ{†½E%dlÂù×e‚®QÜ8-ÿºÏâÆ2ÿz&ÅVÖı‰%²îO,½?±ë.şÓxôşÄ®»¼ç³Öèı‰]Yî×ï{à¬˜Ó¥$µ"íM¡`L90´72:5¤V¤½É ŒÁ
+pAßa¹™4ñ] –›ipAß¸—ÌI±GÖ-,¤Ø#ëRìáÛÂÂéĞĞoÄ™»ó83`wŞtfš <·>ëíèô…-{zç#}aËŞyŸ/œú>yK¬='¥¬pÚópR£ë”çxµØçÈƒUïwÇ¥?±¾8æ‡•R
+ô'Ög¶ë‹ƒµrÂ„6ê…	1lÔ5
+\£±!xŠ!lJ¨Â¨„ò6Y	ƒJP.×œ¨”¸@¹T\s¢RràåRqÍ‰JÉÁ¨ Ï¥"Á¥7>ğ\*\zãC=—Š=¡Ë¥7V#0æ)„
+ó|wÚ÷ŞÑ”Â_‡Àù>¥ğ—Ç!p¾O)üå±„wíö cA»=ÈãXĞnòXÂéÔÃá4²?1G#ûsdÚŸØ'hŠõÈ|‚¦XL8¡x±ñ\#DÉ½Ók„èÏ#¹wÚ;¤m™}×39$ËlŸ#Ç¿¾u,Ym–ÍŞ™ I:3ÓİmXšY†k8"äÌL<ªB)³×²_kÆÂX3”RAÉ1^ïˆEQ~¼45êt£$·¡c¥ThHÛ“n”ä6t¬”²æˆ:ıû·…¨§%<‹ëw_àúİ³AFúó¯ƒBè´„ÁíË#¸‘ #ıóÇO
+ñNz_Ÿèİ•Ğì]F=«´…/Ä,5_ÙJ˜G[øBÌRó•}¡„y´…/Ä,5_Ù7ÒgÎ‘ZlÔ—©õøé¨¤©¾$Håí;£’¦º’ !©+ÛŸQz=ª×.èø’X™ÏÑç ×còñ}ßBëò9úÄ8Ç[,{Ÿ£”œÉc[(µ(fD†õû1İ;øt¬=²Éúç,€oªÌÓµÑqš?À7U–’3Dø|Se)9C¬? ·¶#Äúrk;B¬? ·¶#¸ü`^‰K³³Şµ»1¸Ø'W³fBçäŒ\Í9ØdP,³}–;ÆeT¯óXAÖF˜¨N”8şËí’Ü€úh«>’˜gµ'? õÑØ²÷\'!51à:	©™ˆ×IHÍGC	’V¼Ùm²Bf·É
+™İÆ/’ÙîÅ¶!¨şŞA+Û½Ø¶"h_)—¬l÷|ÛŠP"G•àLÚNä¨Ü‘I[ Á‰U‚;2© àØÂÂwÍ×^®k>¸öp]ƒŒRr_ ,bÃ³½"°Å5÷À"6<Û+üOÁğÀ"6<Û+ÄSp>*(Ï¹ã¨ <çnŒ?L ‚òœ»¾ì÷–KIŒ,°LOå90²À2=•äÀ¼›}°¯§.†¦É-d óˆ ƒœâ‚':>i{.x¢s—ğ)mn´¸æ-Ä2Ûçø 0ºÑ÷°]6{ıe‘ÃNÙ¥Tái›c”*”²óŸËFWV}ô;è[½çƒXÕç]}çıasU^ÃöF/”–÷œà“œ…’¾pø$g>„„Wr†®“&zJã:i¢§4®#EO^2×(bTY!„[.¬úFìŒĞø^£Ø§ã{bŸï5r=gVÓkäuêåê=q=Õ©—«÷ÄõT§^V²dñFÒc§—Ù~uáÿ¬ËÃàÑşğ    IEND®B`‚‰PNG
 
    IHDR     Â   c­È Q|IDATx^cd3ùÏ ìÜ?¿20Àh8²ˆ.Ï€’&00Ì+`À  s°é'd>1ö#»—a\nƒ…r˜Ğ"|°Å)Ã Èé…TçbsBéÙ˜~XZ&&}Qâ^†Q0£!@Q ç?Bù¹\è ‡Õ©¸Êÿv_t+Ãú.ˆ+¾}d`àâg` Ñ¸ÜR¿´"S¢A"øôá2Pø*OëğD®/°¥3ä6º<¶ö,]`s71úÑÃ_m´ıGİÔ«í0Úş‡3#ƒ¬ı|¤=CáËÄF1Ì\‘ˆì6\æ1€Ï}ØÂælä¸Á&†«ÀÀWX1b€Ş •S	ÙÃ¥3Ï-ôr7Ã(Ñ@	äÊ$­>C/;Ñ£AŠ=u6;°Îr„Zá
 Š/YÈå2,®)±ƒÚæÁÜ‚^ßcKØüóz}B¨½Dl û›}05È~Aj…;²İøâİ=È~ÅøÔT>ÇÈi ÆFvã0oÿ±0 {=qáŠ`†A`	F£»°¹Wæ&TÀPC9Œ)Ln$¦ #&>FÁhŒ† İB 9OâËŸ£â£y¹Sët ÏŒÀfK¨áøH±µOí%Ô@ÅÖ~ ÄİÈõ4Ètûñ¹ÖvAO¿0qBæQŞØÂWø–âl´ıÇÀ@lş„í?ÂK°Ğ12R
@@ -2017,6 +1438,35 @@ t—ÈÉàå%ó
             "sell_price": 750,
             "exp": 500
         }
+    ],
+    "hive_data": [
+        {
+            "time_to_honey": 50,
+            "sell_price": 1000,
+            "exp": 100
+        }
+    ],
+    "flower_data": [
+        {
+            "sell_price": 10000,
+            "exp": 10000
+        },
+        {
+            "sell_price": 20000,
+            "exp": 20000
+        },
+        {
+            "sell_price": 30000,
+            "exp": 30000
+        },
+        {
+            "sell_price": 40000,
+            "exp": 40000
+        },
+        {
+            "sell_price": 50000,
+            "exp": 50000
+        }
     ]
 }     €  pFFTM©À
 ”   ü   GDEF 'U     GPOSbòDë  8  rGSUBÜïãi  ¬  ºOS/2D…õ-  h   `cmapüÏií  È  ²gasp     ®   glyfó@pÒ  
@@ -2257,4 +1707,158 @@ uşlm_*œı˜))h)R¤şèú¦x||  Z…fs   !"'&763!2#
 ÖXˆ¸Úş Jd‚Æğ&f Î0PzªÀş4V¼ì&NzšÎ0^ ¾ 4V–æD”È,N¦ä2RnÆò4d¦Äú4Hf€¨öJ¤ b¨ğ>œæ4tÄL–Ş&pÀN¦ê0zÔ  P   à!"!j!®!ö"&"n"È#$#†#ö$V$¸%%^%°&&Z&®&Ø''6'd'®((H(„(Ä))R)ˆ)Ô**\*¦*î+0+b+¦+º+î,,\,¬--v-À..^.¤.È.ì//B/h//¸0 060l0¼0ì1:1h1 1Ò2 2b2„2´2Ş3343b33ô4<4f4¦4Ü55B5j5–5¸5æ6$6H6v6´6ô7787Z7‚7¨7Ö7ø8.8j8œ8à99N9d99Ê:$:X:€:¾:î;;J;j;Œ;¦;à<<0<Z<¸<ğ==4=V=~=¤=Ò=ô>$>\>Œ>à??>?x?˜?Æ?ğ@(@X@Š@ÒAA0AHAnAAÄAÔAäB BXBŒB¾BôC$C\CC¬CÈCäCşDDHDzDªDàE,E@EnEŞFF2FRF¨FìGGLGˆGˆ   O W                           ö        ^         
  ^        h       + o        š       # ¬        Ï       ) à       	       ™  	   ¼³  	  o  	  ƒ  	  V‘  	  $ç  	  F  	  "Q  	  Rs  	  Å  	  4åCopyright (c) 2011 Juan Montoreano (juan@remolacha.biz), with Reserved Font Names "Lilita One"Lilita OneRegularVersion 1.002;;LilitaOne-Regular;2024;FL842Lilita One RegularVersion 1.002; ttfautohint (v1.8.3)LilitaOne-RegularLilita is a trademark of Juan Montoreano.This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: http://scripts.sil.org/OFLhttp://scripts.sil.org/OFL C o p y r i g h t   ( c )   2 0 1 1   J u a n   M o n t o r e a n o   ( j u a n @ r e m o l a c h a . b i z ) ,   w i t h   R e s e r v e d   F o n t   N a m e s   " L i l i t a   O n e " L i l i t a   O n e R e g u l a r V e r s i o n   1 . 0 0 2 ; ; L i l i t a O n e - R e g u l a r ; 2 0 2 4 ; F L 8 4 2 L i l i t a   O n e   R e g u l a r V e r s i o n   1 . 0 0 2 ;   t t f a u t o h i n t   ( v 1 . 8 . 3 ) L i l i t a O n e - R e g u l a r L i l i t a   i s   a   t r a d e m a r k   o f   J u a n   M o n t o r e a n o . T h i s   F o n t   S o f t w a r e   i s   l i c e n s e d   u n d e r   t h e   S I L   O p e n   F o n t   L i c e n s e ,   V e r s i o n   1 . 1 .   T h i s   l i c e n s e   i s   a v a i l a b l e   w i t h   a   F A Q   a t :   h t t p : / / s c r i p t s . s i l . o r g / O F L h t t p : / / s c r i p t s . s i l . o r g / O F L        ÿ4 f                    O          	 
                         ! " # $ % & ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; < = > ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \ ] ^ _ ` a £ „ … ½ – è †  ‹  © ¤ Š ƒ “ ò ó  ˆ Ã Ş ñ  ª õ ô ö ¢ ­ É Ç ® b c  d Ë e È Ê Ï Ì Í Î é f Ó Ğ Ñ ¯ g ğ ‘ Ö Ô Õ h ë í ‰ j i k m l n   o q p r s u t v w ê x z y { } | ¸ ¡  ~ €  ì î º × â ã ° ± ä å » æ ç ¦ Ø á İ Ù ›	
- !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklm ² ³ ¶ · Ä ´ µ Å ‚ Â ‡ « Æ ¾ ¿ ¼n Œ ï À Áouni0000uni00ADuni00B5uni0394uni03BCuni0401uni0403uni0490uni0405uni0406uni0407uni0408uni0409uni040Auni040Cuni040Euni040Funi0410uni0411uni0412uni0413uni0414uni0415uni0416uni0417uni0418uni0419uni041Auni041Buni041Cuni041Duni041Euni041Funi0420uni0421uni0422uni0423uni0424uni0425uni0426uni0427uni0428uni0429uni042Auni042Buni042Cuni042Duni042Euni042Funi0430uni0431uni0432uni0433uni0434uni0435uni0436uni0437uni0438uni0439uni043Auni043Buni043Cuni043Duni043Euni043Funi0440uni0441uni0442uni0443uni0444uni0445uni0446uni0447uni0448uni0449uni044Auni044Buni044Cuni044Duni044Euni044Funi0451uni0453uni0454uni0455uni0456uni0457uni0458uni0459uni045Auni045Buni045Cuni045Euni045Funi0491uni04AEuni04B0uni04BBuni04C0uni04CFuni04D8uni04D9uni04E2uni04E3uni04E8uni04E9uni04EEuni04EFEuroCR  ÿÿ 
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklm ² ³ ¶ · Ä ´ µ Å ‚ Â ‡ « Æ ¾ ¿ ¼n Œ ï À Áouni0000uni00ADuni00B5uni0394uni03BCuni0401uni0403uni0490uni0405uni0406uni0407uni0408uni0409uni040Auni040Cuni040Euni040Funi0410uni0411uni0412uni0413uni0414uni0415uni0416uni0417uni0418uni0419uni041Auni041Buni041Cuni041Duni041Euni041Funi0420uni0421uni0422uni0423uni0424uni0425uni0426uni0427uni0428uni0429uni042Auni042Buni042Cuni042Duni042Euni042Funi0430uni0431uni0432uni0433uni0434uni0435uni0436uni0437uni0438uni0439uni043Auni043Buni043Cuni043Duni043Euni043Funi0440uni0441uni0442uni0443uni0444uni0445uni0446uni0447uni0448uni0449uni044Auni044Buni044Cuni044Duni044Euni044Funi0451uni0453uni0454uni0455uni0456uni0457uni0458uni0459uni045Auni045Buni045Cuni045Euni045Funi0491uni04AEuni04B0uni04BBuni04C0uni04CFuni04D8uni04D9uni04E2uni04E3uni04E8uni04E9uni04EEuni04EFEuroCR  ÿÿ {
+    "crops": [
+        {
+            "unlock_level": 1,
+            "price": 20
+        },
+        {
+            "unlock_level": 3,
+            "price": 50
+        },
+        {
+            "unlock_level": 5,
+            "price": 100
+        },
+        {
+            "unlock_level": 7,
+            "price": 500
+        },
+        {
+            "unlock_level": 11,
+            "price": 1500
+        }
+    ],
+    "trees": [
+        {
+            "unlock_level": 10,
+            "price": 1000
+        },
+        {
+            "unlock_level": 15,
+            "price": 5000
+        },
+        {
+            "unlock_level": 20,
+            "price": 8000
+        },
+        {
+            "unlock_level": 25,
+            "price": 12000
+        },
+        {
+            "unlock_level": 30,
+            "price": 15000
+        }
+    ],
+    "animals": [
+        {
+            "unlock_level": 14,
+            "price": 5000
+        },
+        {
+            "unlock_level": 24,
+            "price": 10000
+        },
+        {
+            "unlock_level": 32,
+            "price": 20000
+        },
+        {
+            "unlock_level": 40,
+            "price": 30000
+        },
+        {
+            "unlock_level": 48,
+            "price": 40000
+        }
+    ],
+    "beekeeping": [
+        {
+            "unlock_level": 50,
+            "price": 100000
+        },
+        {
+            "unlock_level": 51,
+            "price": 50000
+        },
+        {
+            "unlock_level": 55,
+            "price": 100000
+        },
+        {
+            "unlock_level": 60,
+            "price": 150000
+        },
+        {
+            "unlock_level": 64,
+            "price": 200000
+        },
+        {
+            "unlock_level": 69,
+            "price": 250000
+        }
+    ],
+    "misc": [
+        {
+            "unlock_level": 2,
+            "price": 100
+        },
+        {
+            "unlock_level": 5,
+            "price": 0
+        }
+    ]
+}{
+    "upgrade_costs": [
+        1000,
+        10000,
+        100000,
+        2000,
+        20000,
+        200000,
+        3000,
+        30000,
+        300000,
+        4000,
+        40000,
+        400000,
+        5000,
+        50000,
+        500000,
+        10000,
+        100000,
+        1000000,
+        20000,
+        200000,
+        2000000,
+        30000,
+        300000,
+        3000000,
+        40000,
+        400000,
+        4000000,
+        50000,
+        500000,
+        5000000,
+        100000,
+        1000000,
+        10000000,
+        200000,
+        2000000,
+        20000000,
+        300000,
+        3000000,
+        30000000,
+        400000,
+        4000000,
+        40000000,
+        500000,
+        5000000,
+        50000000,
+        1000000,
+        10000000,
+        100000000
+    ]
+}
