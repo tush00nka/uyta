@@ -73,6 +73,18 @@
         {
             "unlock_level": 51,
             "price": 50000
+        },
+        {
+            "unlock_level": 55,
+            "price": 100000
+        },
+        {
+            "unlock_level": 60,
+            "price": 150000
+        },
+        {
+            "unlock_level": 64,
+            "price": 200000
         }
     ],
     "misc": [
