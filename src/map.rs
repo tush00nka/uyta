@@ -5,12 +5,7 @@ use serde_with::serde_as;
 use std::collections::HashMap;
 
 use crate::{
-    animal::AnimalHandler,
-    localization::LocaleHandler,
-    pause_menu::GameSettigns,
-    player::Player,
-    utils::{parse_json, shrink_number_for_display},
-    worker::WorkerHandler,
+    animal::AnimalHandler, localization::LocaleHandler, pause_menu::GameSettigns, player::Player, upgrades::UpgradeHandler, utils::{parse_json, shrink_number_for_display}, worker::WorkerHandler
 };
 
 pub const CHUNK_WIDTH: usize = 5;
@@ -148,7 +143,7 @@ impl Map {
         }
     }
 
-    pub fn update_tiles(&mut self) {
+    pub fn update_tiles(&mut self, upgrade_handler: &UpgradeHandler, animals_len: usize) {
         let map_tiles = self.dynamic_data.tiles.clone();
 
         for (tile_pos, tile) in self.dynamic_data.tiles.iter_mut() {
@@ -182,6 +177,10 @@ impl Map {
 
                     *stage += 1;
                     if *stage >= self.static_data.hive_data[0].time_to_honey {
+                        let crops_len = self.static_data.crops_data.len();
+                        let trees_len = self.static_data.tree_data.len();
+                        let multiplier = upgrade_handler.get_multiplier_for_beehive(crops_len, trees_len, animals_len);
+
                         *price = self.static_data.hive_data[0].sell_price;
                         *xp = self.static_data.hive_data[0].exp;
                         for i in -1..=1 {
@@ -197,8 +196,8 @@ impl Map {
 
                                 match neighbour {
                                     TileType::Flower { flower } => {
-                                        *price += self.static_data.flower_data[*flower].sell_price;
-                                        *xp += self.static_data.flower_data[*flower].exp;
+                                        *price += self.static_data.flower_data[*flower].sell_price * multiplier;
+                                        *xp += self.static_data.flower_data[*flower].exp * multiplier;
                                     }
                                     _ => {}
                                 }

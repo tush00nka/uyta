@@ -147,5 +147,12 @@
     "upgrade43": "Silver rabbit",
     "upgrade_description43": "Rabbits produce twice as much\nmoney and experience",
     "upgrade44": "Golden rabbit",
-    "upgrade_description44": "Rabbits produce twice as much\nmoney and experience"
+    "upgrade_description44": "Rabbits produce twice as much\nmoney and experience",
+
+    "upgrade45": "Bronze beehive",
+    "upgrade_description45": "Beehives are twice as more\naffected by nearby flowers",
+    "upgrade46": "Silver beehive",
+    "upgrade_description46": "Beehives are twice as more\naffected by nearby flowers",
+    "upgrade47": "Golden beehive",
+    "upgrade_description47": "Beehives are twice as more\naffected by nearby flowers"
 }

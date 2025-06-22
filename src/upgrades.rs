@@ -164,6 +164,38 @@ impl UpgradeHandler {
         temp
     }
 
+    pub fn get_multiplier_for_beehive(
+        &self,
+        crops_len: usize,
+        trees_len: usize,
+        animals_len: usize,
+    ) -> usize {
+        let mut temp = 1;
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crops_len * 3 + trees_len * 3 + animals_len * 3))
+        {
+            temp *= 2;
+        }
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crops_len * 3 + trees_len * 3 + animals_len * 3 + 1))
+        {
+            temp *= 2;
+        }
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crops_len * 3 + trees_len * 3 + animals_len * 3 + 2))
+        {
+            temp *= 2;
+        }
+
+        temp
+    }
+
     pub fn draw(
         &mut self,
         rl: &mut RaylibDrawHandle,

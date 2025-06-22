@@ -275,7 +275,10 @@ fn main() {
         if timer >= TILE_UPDATE_TIME {
             timer = 0.;
 
-            map.update_tiles();
+            map.update_tiles(
+                &upgrade_handler,
+                animal_handler.static_data.animal_data.len(),
+            );
 
             worker_handler.advance_workers(
                 &mut player,
@@ -354,7 +357,7 @@ fn handle_input(
                 player.spawn_animals(canvas, map, &selected_tile, animal_handler);
             }
             MenuMode::Beekeeping => {
-                player.perform_beekeeping(canvas, &selected_tile, map);   
+                player.perform_beekeeping(canvas, &selected_tile, map);
             }
             MenuMode::Misc => {
                 player.perform_misc(canvas, worker_handler, &selected_tile, map);

@@ -572,6 +572,9 @@ impl Canvas {
                 };
                 CheckCollisionPointRec(mouse_pos, rect)
             } {
+                let crops_len = self.toolbar_data.static_data.crops.len();
+                let trees_len = self.toolbar_data.static_data.trees.len();
+                let animals_len = animal_handler.static_data.animal_data.len();
                 let (toolbar_item, amount, output_price, output_exp) = match self.mode {
                     MenuMode::Crops => (
                         &self.toolbar_data.static_data.crops[i],
@@ -585,15 +588,9 @@ impl Canvas {
                         &self.toolbar_data.static_data.trees[i],
                         self.toolbar_data.dynamic_data.tree_amount.get(&i).unwrap(),
                         map.static_data.tree_data[i].sell_price
-                            * upgrade_handler.get_multiplier_for_tree(
-                                i,
-                                self.toolbar_data.static_data.crops.len(),
-                            ),
+                            * upgrade_handler.get_multiplier_for_tree(i, crops_len),
                         map.static_data.tree_data[i].exp
-                            * upgrade_handler.get_multiplier_for_tree(
-                                i,
-                                self.toolbar_data.static_data.crops.len(),
-                            ),
+                            * upgrade_handler.get_multiplier_for_tree(i, crops_len),
                     ),
                     MenuMode::Animals => (
                         &self.toolbar_data.static_data.animals[i],
@@ -603,17 +600,9 @@ impl Canvas {
                             .get(&i)
                             .unwrap(),
                         animal_handler.static_data.animal_data[i].drop_cost
-                            * upgrade_handler.get_multiplier_for_animal(
-                                i,
-                                self.toolbar_data.static_data.crops.len(),
-                                self.toolbar_data.static_data.trees.len(),
-                            ),
+                            * upgrade_handler.get_multiplier_for_animal(i, crops_len, trees_len),
                         animal_handler.static_data.animal_data[i].exp
-                            * upgrade_handler.get_multiplier_for_animal(
-                                i,
-                                self.toolbar_data.static_data.crops.len(),
-                                self.toolbar_data.static_data.trees.len(),
-                            ),
+                            * upgrade_handler.get_multiplier_for_animal(i, crops_len, trees_len),
                     ),
                     MenuMode::Beekeeping => {
                         let (price, exp) = if i == 0 {
@@ -623,8 +612,18 @@ impl Canvas {
                             )
                         } else {
                             (
-                                map.static_data.flower_data[i - 1].sell_price,
-                                map.static_data.flower_data[i - 1].exp,
+                                map.static_data.flower_data[i - 1].sell_price
+                                    * upgrade_handler.get_multiplier_for_beehive(
+                                        crops_len,
+                                        trees_len,
+                                        animals_len,
+                                    ),
+                                map.static_data.flower_data[i - 1].exp
+                                    * upgrade_handler.get_multiplier_for_beehive(
+                                        crops_len,
+                                        trees_len,
+                                        animals_len,
+                                    ),
                             )
                         };
                         (
