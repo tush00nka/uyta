@@ -52,8 +52,6 @@ impl AnimalHandler {
                 dynamic_data,
             },
             Err(_) => {
-                println!("no animal");
-
                 Self {
                     static_data,
                     dynamic_data: AnimalDynamic { animals: vec![] },
@@ -95,8 +93,11 @@ impl Animal {
     }
 
     fn move_randomly(&mut self, map: &mut Map, animal_data: &AnimalData) {
-        let directions = [(0, 1), (1, 0), (0, -1), (-1, 0)];
-        self.direction = directions[rand::random_range(0..4)];
+
+        if rand::random_bool(0.5) {
+            let directions = [(0, 1), (1, 0), (0, -1), (-1, 0)];
+            self.direction = directions[rand::random_range(0..4)];
+        }
 
         let new_pos = (
             self.position.0 + self.direction.0,
@@ -135,12 +136,12 @@ impl Animal {
         self.display_position.0 = lerp(
             self.display_position.0,
             pixel_position.x,
-            10. * rl.get_frame_time(),
+            1. * rl.get_frame_time(),
         );
         self.display_position.1 = lerp(
             self.display_position.1,
             pixel_position.y,
-            10. * rl.get_frame_time(),
+            1. * rl.get_frame_time(),
         );
 
         let pixel_position = Vector2::new(self.display_position.0, self.display_position.1);
