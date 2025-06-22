@@ -21,8 +21,8 @@
     "plants": "planten",
     "trees": "bomen",
     "animals": "dieren",
+    "beekeeping": "Beekeeping",
     "misc": "divers",
-
 
     "plant0": "Carrot",
     "plant1": "Cabbage",
@@ -41,6 +41,9 @@
     "animal2": "Sheep",
     "animal3": "Cow",
     "animal4": "Rabbit",
+
+    "beekeeping0": "Beehive",
+    "beekeeping1": "Dandelion",
 
     "misc0": "Worker",
     "misc1": "Remove plants",

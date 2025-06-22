@@ -136,6 +136,10 @@ fn draw_placing_tooltip(
                 toolbar_static.animals[sel].tooltip.clone(),
                 canvas.toolbar_data.get_price_for_animal(sel),
             ),
+            crate::shop_ui::MenuMode::Beekeeping => (
+                toolbar_static.beekeeping[sel].tooltip.clone(),
+                canvas.toolbar_data.get_price_for_beekeeping(sel),
+            ),
             crate::shop_ui::MenuMode::Misc => (
                 toolbar_static.misc[sel].tooltip.clone(),
                 canvas.toolbar_data.get_price_for_misc(sel),

@@ -47,14 +47,17 @@ pub struct ToolbarStatic {
     pub crops: Vec<ToolbarItem>,
     pub trees: Vec<ToolbarItem>,
     pub animals: Vec<ToolbarItem>,
+    pub beekeeping: Vec<ToolbarItem>,
     pub misc: Vec<ToolbarItem>,
 }
 
 impl ToolbarStatic {
     fn new(language_data: &HashMap<String, String>) -> Self {
-        let data: HashMap<String, Vec<ToolbarItemData>> = parse_json("static/toolbar.json").expect("no toolbar");
+        let data: HashMap<String, Vec<ToolbarItemData>> =
+            parse_json("static/toolbar.json").expect("no toolbar");
 
-        let (mut crops, mut trees, mut animals, mut misc) = (vec![], vec![], vec![], vec![]);
+        let (mut crops, mut trees, mut animals, mut beekeeping, mut misc) =
+            (vec![], vec![], vec![], vec![], vec![]);
 
         let crops_data = data.get("crops").unwrap();
         for (index, data) in crops_data.iter().enumerate() {
@@ -83,6 +86,15 @@ impl ToolbarStatic {
             animals.push(ToolbarItem::new(tooltip, *data));
         }
 
+        let beekeeping_data = data.get("beekeeping").unwrap();
+        for (index, data) in beekeeping_data.iter().enumerate() {
+            let tooltip = language_data
+                .get(&format!("beekeeping{index}"))
+                .unwrap()
+                .to_string();
+            beekeeping.push(ToolbarItem::new(tooltip, *data));
+        }
+
         let misc_data = data.get("misc").unwrap();
         for (index, data) in misc_data.iter().enumerate() {
             let tooltip = language_data
@@ -96,6 +108,7 @@ impl ToolbarStatic {
             crops,
             trees,
             animals,
+            beekeeping,
             misc,
         }
     }
@@ -106,6 +119,7 @@ pub struct ToolbarDynamic {
     pub crop_amount: HashMap<usize, usize>,
     pub tree_amount: HashMap<usize, usize>,
     pub animal_amount: HashMap<usize, usize>,
+    pub beekeeping_amount: HashMap<usize, usize>,
     pub misc_amount: HashMap<usize, usize>,
 }
 
@@ -123,6 +137,10 @@ impl ToolbarDynamic {
         for i in 0..static_data.animals.len() {
             animal_amount.insert(i, 0);
         }
+        let mut beekeeping_amount = HashMap::new();
+        for i in 0..static_data.beekeeping.len() {
+            beekeeping_amount.insert(i, 0);
+        }
         let mut misc_amount = HashMap::new();
         for i in 0..static_data.misc.len() {
             misc_amount.insert(i, 0);
@@ -132,6 +150,7 @@ impl ToolbarDynamic {
             crop_amount,
             tree_amount,
             animal_amount,
+            beekeeping_amount,
             misc_amount,
         }
     }
@@ -181,6 +200,14 @@ impl ToolbarData {
         price
     }
 
+    pub fn get_price_for_beekeeping(&self, index: usize) -> usize {
+        let mut price = self.static_data.beekeeping[index].price;
+        for _ in 0..*self.dynamic_data.beekeeping_amount.get(&index).unwrap() {
+            price = (price as f32 * 1.1) as usize;
+        }
+        price
+    }
+
     pub fn get_price_for_misc(&self, index: usize) -> usize {
         let mut price = self.static_data.misc[index].price;
         for _ in 0..*self.dynamic_data.misc_amount.get(&index).unwrap() {
@@ -206,6 +233,7 @@ pub enum MenuMode {
     Crops,
     Trees,
     Animals,
+    Beekeeping,
     Misc,
 }
 
@@ -247,6 +275,12 @@ impl Canvas {
                     UI_BUTTON_SIZE,
                     UI_BUTTON_SIZE,
                 ),
+                Rectangle::new(
+                    10.,
+                    5. * UI_BUTTON_SIZE + UI_GAPS * 3.,
+                    UI_BUTTON_SIZE,
+                    UI_BUTTON_SIZE,
+                ),
             ],
             subcontent: vec![],
             toolbar_data: ToolbarData::new(language_data),
@@ -266,95 +300,62 @@ impl Canvas {
         player: &Player,
         font: &Font,
     ) {
-        // draw mode selection buttons (submenus)
-        rl.draw_rectangle_rec(
-            self.content[0],
-            if self.mode == MenuMode::Crops {
-                Color::RAYWHITE.alpha(0.9)
-            } else {
-                Color::BLACK.alpha(0.5)
-            },
-        );
-        let position = Vector2::new(self.content[0].x, self.content[0].y);
-        rl.draw_texture_ex(
-            texture_handler.textures.get("crop_menu").unwrap(),
-            position,
-            0.,
-            UI_BUTTON_SIZE / TILE_PIXEL_SIZE as f32,
-            Color::WHITE,
-        );
+        let modes = [
+            MenuMode::Crops,
+            MenuMode::Trees,
+            MenuMode::Animals,
+            MenuMode::Beekeeping,
+            MenuMode::Misc,
+        ];
 
-        let position = Vector2::new(self.content[1].x, self.content[1].y);
-        let color = if self.toolbar_data.static_data.trees[0].unlock_level > player.level {
-            Color::GRAY
-        } else {
-            Color::WHITE
-        };
-        rl.draw_rectangle_rec(
-            self.content[1],
-            if self.mode == MenuMode::Trees {
-                Color::RAYWHITE.alpha(0.9)
-            } else {
-                Color::BLACK.alpha(0.5)
-            },
-        );
-        rl.draw_texture_ex(
-            texture_handler.textures.get("tree_menu").unwrap(),
-            position,
-            0.,
-            UI_BUTTON_SIZE / TILE_PIXEL_SIZE as f32,
-            color,
-        );
+        let texture_ids = [
+            "crop_menu",
+            "tree_menu",
+            "animals_menu",
+            "beekeeping_menu",
+            "misc_menu",
+        ];
 
-        let position = Vector2::new(self.content[2].x, self.content[2].y);
-        let color = if self.toolbar_data.static_data.animals[0].unlock_level > player.level {
-            Color::GRAY
-        } else {
-            Color::WHITE
-        };
-        rl.draw_rectangle_rec(
-            self.content[2],
-            if self.mode == MenuMode::Animals {
-                Color::RAYWHITE.alpha(0.9)
-            } else {
-                Color::BLACK.alpha(0.5)
-            },
-        );
-        rl.draw_texture_ex(
-            texture_handler.textures.get("animals_menu").unwrap(),
-            position,
-            0.,
-            UI_BUTTON_SIZE / TILE_PIXEL_SIZE as f32,
-            color,
-        );
+        let unlock_levels = [
+            self.toolbar_data.static_data.crops[0].unlock_level,
+            self.toolbar_data.static_data.trees[0].unlock_level,
+            self.toolbar_data.static_data.animals[0].unlock_level,
+            self.toolbar_data.static_data.beekeeping[0].unlock_level,
+            self.toolbar_data.static_data.misc[0].unlock_level,
+        ];
 
-        let position = Vector2::new(self.content[3].x, self.content[3].y);
-        let color = if self.toolbar_data.static_data.misc[0].unlock_level > player.level {
-            Color::GRAY
-        } else {
-            Color::WHITE
-        };
-        rl.draw_rectangle_rec(
-            self.content[3],
-            if self.mode == MenuMode::Misc {
-                Color::RAYWHITE.alpha(0.9)
+        for i in 0..5 {
+            let position = Vector2::new(self.content[i].x, self.content[i].y);
+            let color = if unlock_levels[i] > player.level {
+                Color::BLACK
             } else {
-                Color::BLACK.alpha(0.5)
-            },
-        );
-        rl.draw_texture_ex(
-            texture_handler.textures.get("misc_menu").unwrap(),
-            position,
-            0.,
-            UI_BUTTON_SIZE / TILE_PIXEL_SIZE as f32,
-            color,
-        );
+                Color::WHITE
+            };
+            rl.draw_rectangle_rec(
+                self.content[i],
+                if self.mode == modes[i] {
+                    Color::RAYWHITE.alpha(0.9)
+                } else {
+                    Color::BLACK.alpha(0.5)
+                },
+            );
+            rl.draw_texture_ex(
+                texture_handler.textures.get(texture_ids[i]).unwrap(),
+                position,
+                0.,
+                UI_BUTTON_SIZE / TILE_PIXEL_SIZE as f32,
+                color,
+            );
+        }
 
         let submenu_button_amount = match self.mode {
             MenuMode::Crops => map.static_data.crops_data.len(),
-            MenuMode::Misc => 2,
             MenuMode::Trees => map.static_data.tree_data.len(),
             MenuMode::Animals => animal_handler.static_data.animal_data.len(),
+            MenuMode::Beekeeping => {
+                map.static_data.hive_data.len() + map.static_data.flower_data.len()
+            }
+            MenuMode::Misc => 2,
         };
         self.subcontent.clear();
 
@@ -417,6 +418,13 @@ impl Canvas {
                     source =
                         Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32);
                 }
+                MenuMode::Beekeeping => {
+                    tooltip_pool = &self.toolbar_data.static_data.beekeeping;
+                    amount_pool = &mut self.toolbar_data.dynamic_data.beekeeping_amount;
+                    texture_id = format!("beekeeping{i}");
+                    source =
+                        Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32);
+                }
                 MenuMode::Misc => {
                     tooltip_pool = &self.toolbar_data.static_data.misc;
                     amount_pool = &mut self.toolbar_data.dynamic_data.misc_amount;
@@ -427,7 +435,7 @@ impl Canvas {
             }
 
             let color = if tooltip_pool[i].unlock_level > player.level {
-                Color::GRAY
+                Color::BLACK
             } else {
                 Color::WHITE
             };
@@ -496,6 +504,11 @@ impl Canvas {
                         &self.toolbar_data.static_data.animals,
                         MenuMode::Animals,
                         locale_handler.language_data.get("animals").unwrap(),
+                    ),
+                    3 => (
+                        &self.toolbar_data.static_data.beekeeping,
+                        MenuMode::Beekeeping,
+                        locale_handler.language_data.get("beekeeping").unwrap(),
                     ),
                     _ => (
                         &self.toolbar_data.static_data.misc,
@@ -602,6 +615,29 @@ impl Canvas {
                                 self.toolbar_data.static_data.trees.len(),
                             ),
                     ),
+                    MenuMode::Beekeeping => {
+                        let (price, exp) = if i == 0 {
+                            (
+                                map.static_data.hive_data[0].sell_price,
+                                map.static_data.hive_data[0].exp,
+                            )
+                        } else {
+                            (
+                                map.static_data.flower_data[i - 1].sell_price,
+                                map.static_data.flower_data[i - 1].exp,
+                            )
+                        };
+                        (
+                            &self.toolbar_data.static_data.beekeeping[i],
+                            self.toolbar_data
+                                .dynamic_data
+                                .beekeeping_amount
+                                .get(&i)
+                                .unwrap(),
+                            price,
+                            exp,
+                        )
+                    }
                     MenuMode::Misc => (
                         &self.toolbar_data.static_data.misc[i],
                         self.toolbar_data.dynamic_data.misc_amount.get(&i).unwrap(),

@@ -113,7 +113,6 @@ impl Worker {
                         Vector2::new(tile_position.0 as f32, tile_position.1 as f32);
 
                     match tile {
-                        TileType::Grass => {}
                         TileType::Farmland { crop, stage } => {
                             if *stage >= map.static_data.crops_data[*crop].time_to_grow {
                                 let worker_position =
@@ -151,6 +150,21 @@ impl Worker {
                                 shortest_distance = tile_position_vec.distance_to(worker_position);
                             }
                         }
+                        TileType::Beehive { stage, .. } => {
+                            if *stage >= map.static_data.hive_data[0].time_to_honey {
+                                let worker_position =
+                                    Vector2::new(self.position.0 as f32, self.position.1 as f32);
+
+                                if tile_position_vec.distance_to(worker_position)
+                                    < shortest_distance
+                                {
+                                    closest = *tile_position;
+                                    shortest_distance =
+                                        tile_position_vec.distance_to(worker_position);
+                                }
+                            }
+                        }
+                        _ => {}
                     }
                 }
 
@@ -226,7 +240,8 @@ impl Worker {
             TileType::AnimalDrop { animal } => {
                 let crops_len = map.static_data.crops_data.len();
                 let trees_len = map.static_data.tree_data.len();
-                let multiplier = upgrade_handler.get_multiplier_for_animal(*animal, crops_len, trees_len);
+                let multiplier =
+                    upgrade_handler.get_multiplier_for_animal(*animal, crops_len, trees_len);
 
                 money =
                     animal_handler.static_data.animal_data[*animal as usize].drop_cost * multiplier;
@@ -245,6 +260,21 @@ impl Worker {
                 map.dynamic_data
                     .tiles
                     .insert(self.position, TileType::Grass);
+            }
+            TileType::Beehive { stage, price, xp } => {
+                if *stage >= map.static_data.hive_data[0].time_to_honey {
+                    if let Some(occupation_tile) =
+                        map.dynamic_data.occupation_map.get_mut(&self.position)
+                    {
+                        *occupation_tile = false;
+                    };
+
+                    money = *price;
+                    exp = *xp;
+
+                    *stage = 0;
+                    // *price = 0;
+                }
             }
             _ => {}
         }

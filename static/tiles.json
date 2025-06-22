@@ -67,5 +67,18 @@
             "sell_price": 750,
             "exp": 500
         }
+    ],
+    "hive_data": [
+        {
+            "time_to_honey": 100,
+            "sell_price": 1000,
+            "exp": 100
+        }
+    ],
+    "flower_data": [
+        {
+            "sell_price": 1000,
+            "exp": 1000
+        }
     ]
 }

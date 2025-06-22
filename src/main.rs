@@ -353,6 +353,9 @@ fn handle_input(
             MenuMode::Animals => {
                 player.spawn_animals(canvas, map, &selected_tile, animal_handler);
             }
+            MenuMode::Beekeeping => {
+                player.perform_beekeeping(canvas, &selected_tile, map);   
+            }
             MenuMode::Misc => {
                 player.perform_misc(canvas, worker_handler, &selected_tile, map);
             }

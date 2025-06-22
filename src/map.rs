@@ -37,7 +37,20 @@ pub struct Tree {
     pub exp: usize,
 }
 
-#[derive(PartialEq, PartialOrd, Eq, Ord, Serialize, Deserialize)]
+#[derive(Deserialize)]
+pub struct Beehive {
+    pub time_to_honey: usize,
+    pub sell_price: usize,
+    pub exp: usize,
+}
+
+#[derive(Deserialize)]
+pub struct Flower {
+    pub sell_price: usize,
+    pub exp: usize,
+}
+
+#[derive(PartialEq, PartialOrd, Eq, Ord, Serialize, Deserialize, Copy, Clone)]
 pub enum TileType {
     Grass,
     Tree {
@@ -52,12 +65,22 @@ pub enum TileType {
     AnimalDrop {
         animal: usize,
     },
+    Beehive {
+        stage: usize,
+        price: usize,
+        xp: usize,
+    },
+    Flower {
+        flower: usize,
+    },
 }
 
 #[derive(Deserialize)]
 pub struct MapStaticData {
     pub crops_data: Vec<Crop>,
     pub tree_data: Vec<Tree>,
+    pub hive_data: Vec<Beehive>,
+    pub flower_data: Vec<Flower>,
 }
 
 #[serde_as]
@@ -126,7 +149,9 @@ impl Map {
     }
 
     pub fn update_tiles(&mut self) {
-        for tile in self.dynamic_data.tiles.values_mut() {
+        let map_tiles = self.dynamic_data.tiles.clone();
+
+        for (tile_pos, tile) in self.dynamic_data.tiles.iter_mut() {
             match tile {
                 TileType::Farmland { crop, stage } => {
                     if *stage >= self.static_data.crops_data[*crop].time_to_grow {
@@ -149,6 +174,37 @@ impl Map {
                     }
 
                     *grow += 1;
+                }
+                TileType::Beehive { stage, price, xp } => {
+                    if *stage >= self.static_data.hive_data[0].time_to_honey {
+                        continue;
+                    }
+
+                    *stage += 1;
+                    if *stage >= self.static_data.hive_data[0].time_to_honey {
+                        *price = self.static_data.hive_data[0].sell_price;
+                        *xp = self.static_data.hive_data[0].exp;
+                        for i in -1..=1 {
+                            for j in -1..=1 {
+                                if j == 0 && i == 0 {
+                                    continue;
+                                }
+
+                                let neighbour_pos = (tile_pos.0 + i, tile_pos.1 + j);
+                                let Some(neighbour) = map_tiles.get(&neighbour_pos) else {
+                                    continue;
+                                };
+
+                                match neighbour {
+                                    TileType::Flower { flower } => {
+                                        *price += self.static_data.flower_data[*flower].sell_price;
+                                        *xp += self.static_data.flower_data[*flower].exp;
+                                    }
+                                    _ => {}
+                                }
+                            }
+                        }
+                    }
                 }
                 _ => {}
             }
@@ -393,6 +449,57 @@ impl Map {
                     );
 
                     let id: &str = &format!("animal_drop{}", *animal as usize);
+
+                    rl.draw_texture_pro(
+                        textures.get(id).unwrap_or(textures.get("error").unwrap()),
+                        source,
+                        destination,
+                        Vector2::zero(),
+                        0.,
+                        Color::WHITE,
+                    );
+                }
+                TileType::Beehive { stage, .. } => {
+                    let source = if *stage >= self.static_data.hive_data[0].time_to_honey {
+                        Rectangle::new(
+                            TILE_PIXEL_SIZE as f32,
+                            0.,
+                            TILE_PIXEL_SIZE as f32,
+                            TILE_PIXEL_SIZE as f32,
+                        )
+                    } else {
+                        Rectangle::new(0., 0., TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32)
+                    };
+
+                    let destination = Rectangle::new(
+                        (position.0 * TILE_SIZE) as f32,
+                        (position.1 * TILE_SIZE) as f32,
+                        TILE_SIZE as f32,
+                        TILE_SIZE as f32,
+                    );
+
+                    let id = &format!("beekeeping0");
+
+                    rl.draw_texture_pro(
+                        textures.get(id).unwrap_or(textures.get("error").unwrap()),
+                        source,
+                        destination,
+                        Vector2::zero(),
+                        0.,
+                        Color::WHITE,
+                    );
+                }
+                TileType::Flower { flower } => {
+                    let source =
+                        Rectangle::new(0., 0., TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32);
+                    let destination = Rectangle::new(
+                        (position.0 * TILE_SIZE) as f32,
+                        (position.1 * TILE_SIZE) as f32,
+                        TILE_SIZE as f32,
+                        TILE_SIZE as f32,
+                    );
+
+                    let id: &str = &format!("beekeeping{}", *flower as usize + 1);
 
                     rl.draw_texture_pro(
                         textures.get(id).unwrap_or(textures.get("error").unwrap()),

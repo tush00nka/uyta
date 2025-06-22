@@ -65,6 +65,16 @@
             "price": 40000
         }
     ],
+    "beekeeping": [
+        {
+            "unlock_level": 50,
+            "price": 100000
+        },
+        {
+            "unlock_level": 51,
+            "price": 50000
+        }
+    ],
     "misc": [
         {
             "unlock_level": 2,
