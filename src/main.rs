@@ -130,8 +130,8 @@ fn main() {
     let mut locale_handler = LocaleHandler::new();
     locale_handler.set_locale(game_settings.language.clone());
 
-    let mut canvas = Canvas::new(game_settings.language.clone());
-    let mut upgrade_handler = UpgradeHandler::new(game_settings.language.clone());
+    let mut canvas = Canvas::new(&locale_handler.language_data);
+    let mut upgrade_handler = UpgradeHandler::new(&locale_handler.language_data);
 
     let mut pause_menu = PauseMenu::new(&mut rl, &locale_handler);
 
@@ -264,8 +264,8 @@ fn main() {
                     locale_handler.set_locale(codes[index].clone());
                     pause_menu.switch_state(&mut rl, pause_menu.state, &locale_handler);
                     game_settings.language = codes[index].clone();
-                    canvas.reload_toolbar_static(game_settings.language.clone());
-                    upgrade_handler.reload_static(game_settings.language.clone());
+                    canvas.reload_toolbar_static(&locale_handler.language_data);
+                    upgrade_handler.reload_static(&locale_handler.language_data);
                 }
                 if pause_menu.buttons[4].state == ButtonState::Pressed {
                     rl.toggle_fullscreen();
@@ -309,7 +309,10 @@ fn main() {
         if timer >= TILE_UPDATE_TIME {
             timer = 0.;
 
-            map.update_tiles();
+            map.update_tiles(
+                &upgrade_handler,
+                animal_handler.static_data.animal_data.len(),
+            );
 
             worker_handler.advance_workers(
                 &mut player,
@@ -397,6 +400,9 @@ fn handle_input(
             }
             MenuMode::Animals => {
                 player.spawn_animals(canvas, map, &selected_tile, animal_handler);
+            }
+            MenuMode::Beekeeping => {
+                player.perform_beekeeping(canvas, &selected_tile, map);
             }
             MenuMode::Misc => {
                 player.perform_misc(canvas, worker_handler, &selected_tile, map);

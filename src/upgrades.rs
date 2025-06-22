@@ -1,8 +1,15 @@
+use std::collections::HashMap;
+
 use raylib::{ffi::CheckCollisionPointRec, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    localization::LocaleHandler, map::TILE_PIXEL_SIZE, pause_menu::GameSettigns, player::Player, utils::{get_game_width, parse_json, shrink_number_for_display}, UI_BUTTON_SIZE, UI_GAPS
+    UI_BUTTON_SIZE, UI_GAPS,
+    localization::LocaleHandler,
+    map::TILE_PIXEL_SIZE,
+    pause_menu::GameSettigns,
+    player::Player,
+    utils::{get_game_width, parse_json, shrink_number_for_display},
 };
 
 #[derive(Deserialize)]
@@ -17,6 +24,30 @@ pub struct UpgradeStatic {
     pub upgrade_data: Vec<UpgradeData>,
 }
 
+impl UpgradeStatic {
+    fn new(language_data: &HashMap<String, String>) -> Self {
+        let upgrade_costs: HashMap<String, Vec<usize>> =
+            parse_json("static/upgrades.json").expect("no upgrade data");
+        let upgrade_costs = upgrade_costs.get("upgrade_costs").unwrap();
+        let mut upgrade_data = vec![];
+        for (index, cost) in upgrade_costs.iter().enumerate() {
+            let upgrade_datum = UpgradeData {
+                label: language_data
+                    .get(&format!("upgrade{index}"))
+                    .unwrap()
+                    .to_string(),
+                description: language_data
+                    .get(&format!("upgrade_description{index}"))
+                    .unwrap()
+                    .to_string(),
+                cost: *cost,
+            };
+            upgrade_data.push(upgrade_datum);
+        }
+        Self { upgrade_data }
+    }
+}
+
 #[derive(Serialize, Deserialize)]
 pub struct UpgradeDynamic {
     pub purchased_upgrades: Vec<usize>,
@@ -29,9 +60,8 @@ pub struct UpgradeHandler {
 }
 
 impl UpgradeHandler {
-    pub fn new(language_code: String) -> Self {
-        let static_data = parse_json(&format!("static/{}/upgrades.json", language_code))
-            .expect("no upgrade data??");
+    pub fn new(language_data: &HashMap<String, String>) -> Self {
+        let static_data = UpgradeStatic::new(language_data);
 
         let res = parse_json("dynamic/upgrades_save.json");
         let dynamic_data = match res {
@@ -44,14 +74,12 @@ impl UpgradeHandler {
         Self {
             static_data,
             dynamic_data,
-            ui_blocks_mouse: false
+            ui_blocks_mouse: false,
         }
     }
 
-    pub fn reload_static(&mut self, language_code: String) {
-        let static_data = parse_json(&format!("static/{}/upgrades.json", language_code))
-            .expect("no upgrade data??");
-        self.static_data = static_data;
+    pub fn reload_static(&mut self, language_data: &HashMap<String, String>) {
+        self.static_data = UpgradeStatic::new(language_data);
     }
 
     pub fn get_multiplier_for_crop(&self, crop: usize) -> usize {
@@ -129,6 +157,38 @@ impl UpgradeHandler {
             .dynamic_data
             .purchased_upgrades
             .contains(&(crops_len * 3 + trees_len * 3 + animal * 3 + 2))
+        {
+            temp *= 2;
+        }
+
+        temp
+    }
+
+    pub fn get_multiplier_for_beehive(
+        &self,
+        crops_len: usize,
+        trees_len: usize,
+        animals_len: usize,
+    ) -> usize {
+        let mut temp = 1;
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crops_len * 3 + trees_len * 3 + animals_len * 3))
+        {
+            temp *= 2;
+        }
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crops_len * 3 + trees_len * 3 + animals_len * 3 + 1))
+        {
+            temp *= 2;
+        }
+        if self
+            .dynamic_data
+            .purchased_upgrades
+            .contains(&(crops_len * 3 + trees_len * 3 + animals_len * 3 + 2))
         {
             temp *= 2;
         }

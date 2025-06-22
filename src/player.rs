@@ -148,19 +148,15 @@ impl Player {
 
         match tile {
             TileType::Grass => {
-                let amount = canvas
-                    .toolbar_data
-                    .dynamic_data
-                    .crop_amount
-                    .get_mut(&canvas.selected)
-                    .unwrap();
-
-                let mut price = canvas.toolbar_data.static_data.crops[canvas.selected].price;
-                for _ in 0..*amount {
-                    price = (price as f32 * 1.1) as usize;
-                }
+                let price = canvas.toolbar_data.get_price_for_crop(canvas.selected);
                 if self.money >= price {
                     self.money -= price;
+                    let amount = canvas
+                        .toolbar_data
+                        .dynamic_data
+                        .crop_amount
+                        .get_mut(&canvas.selected)
+                        .unwrap();
                     *amount += 1;
                     *tile = TileType::Farmland {
                         crop: canvas.selected,
@@ -174,18 +170,7 @@ impl Player {
                 }
 
                 if *crop != canvas.selected {
-                    let amount = canvas
-                        .toolbar_data
-                        .dynamic_data
-                        .crop_amount
-                        .get(&canvas.selected)
-                        .unwrap();
-
-                    let mut price = canvas.toolbar_data.static_data.crops[canvas.selected].price;
-                    for _ in 0..*amount {
-                        price = (price as f32 * 1.1) as usize;
-                    }
-
+                    let price = canvas.toolbar_data.get_price_for_crop(canvas.selected);
                     if self.money >= price {
                         let replaced_amount = canvas
                             .toolbar_data
@@ -224,19 +209,15 @@ impl Player {
 
         match tile {
             TileType::Grass => {
-                let amount = canvas
-                    .toolbar_data
-                    .dynamic_data
-                    .tree_amount
-                    .get_mut(&canvas.selected)
-                    .unwrap();
-
-                let mut price = canvas.toolbar_data.static_data.trees[canvas.selected].price;
-                for _ in 0..*amount {
-                    price = (price as f32 * 1.1) as usize;
-                }
+                let price = canvas.toolbar_data.get_price_for_tree(canvas.selected);
                 if self.money >= price {
                     self.money -= price;
+                    let amount = canvas
+                        .toolbar_data
+                        .dynamic_data
+                        .tree_amount
+                        .get_mut(&canvas.selected)
+                        .unwrap();
                     *amount += 1;
                     *tile = TileType::Tree {
                         tree: canvas.selected,
@@ -262,19 +243,15 @@ impl Player {
 
         match tile {
             TileType::Grass => {
-                let amount = canvas
-                    .toolbar_data
-                    .dynamic_data
-                    .animal_amount
-                    .get_mut(&canvas.selected)
-                    .unwrap();
-
-                let mut price = canvas.toolbar_data.static_data.animals[canvas.selected].price;
-                for _ in 0..*amount {
-                    price = (price as f32 * 1.1) as usize;
-                }
+                let price = canvas.toolbar_data.get_price_for_animal(canvas.selected);
                 if self.money >= price {
                     self.money -= price;
+                    let amount = canvas
+                        .toolbar_data
+                        .dynamic_data
+                        .animal_amount
+                        .get_mut(&canvas.selected)
+                        .unwrap();
                     *amount += 1;
                     animal_handler.add_animal(Animal::new(
                         canvas.selected,
@@ -285,6 +262,73 @@ impl Player {
             }
             _ => {}
         }
+    }
+
+    pub fn perform_beekeeping(
+        &mut self,
+        canvas: &mut Canvas,
+        selected_tile: &(i32, i32),
+        map: &mut Map,
+    ) {
+        let Some(tile) = map.dynamic_data.tiles.get_mut(selected_tile) else {
+            return;
+        };
+
+        match tile {
+            TileType::Grass => {
+                let price = canvas
+                    .toolbar_data
+                    .get_price_for_beekeeping(canvas.selected);
+
+                if self.money >= price {
+                    self.money -= price;
+                    let amount = canvas
+                        .toolbar_data
+                        .dynamic_data
+                        .beekeeping_amount
+                        .get_mut(&canvas.selected)
+                        .unwrap();
+                    *amount += 1;
+                    if canvas.selected == 0 {
+                        *tile = TileType::Beehive {
+                            stage: 0,
+                            price: 0,
+                            xp: 0,
+                        };
+                    } else {
+                        *tile = TileType::Flower {
+                            flower: canvas.selected - 1,
+                        };
+                    }
+                }
+            }
+            TileType::Flower { flower } => {
+                if canvas.selected != 0 && *flower != canvas.selected - 1 {
+                    let price = canvas.toolbar_data.get_price_for_beekeeping(canvas.selected);
+                    if self.money >= price {
+                        let replaced_amount = canvas
+                            .toolbar_data
+                            .dynamic_data
+                            .beekeeping_amount
+                            .get_mut(&(*flower+1))
+                            .unwrap();
+                        *replaced_amount -= 1;
+
+                        let amount = canvas
+                            .toolbar_data
+                            .dynamic_data
+                            .beekeeping_amount
+                            .get_mut(&canvas.selected)
+                            .unwrap();
+                        *amount += 1;
+
+                        self.money -= price;
+                        *flower = canvas.selected - 1;
+                    }
+                }
+            }
+            _ => {}
+        };
     }
 
     pub fn perform_misc(
@@ -341,6 +385,26 @@ impl Player {
                         .dynamic_data
                         .crop_amount
                         .get_mut(crop)
+                        .unwrap();
+                    *replaced_amount -= 1;
+                    *tile = TileType::Grass;
+                }
+                TileType::Beehive { .. } => {
+                    let replaced_amount = canvas
+                        .toolbar_data
+                        .dynamic_data
+                        .beekeeping_amount
+                        .get_mut(&0)
+                        .unwrap();
+                    *replaced_amount -= 1;
+                    *tile = TileType::Grass;
+                }
+                TileType::Flower { flower } => {
+                    let replaced_amount = canvas
+                        .toolbar_data
+                        .dynamic_data
+                        .beekeeping_amount
+                        .get_mut(&(*flower + 1))
                         .unwrap();
                     *replaced_amount -= 1;
                     *tile = TileType::Grass;
