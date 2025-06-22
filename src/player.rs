@@ -299,6 +299,31 @@ impl Player {
                     }
                 }
             }
+            TileType::Flower { flower } => {
+                if canvas.selected != 0 && *flower != canvas.selected - 1 {
+                    let price = canvas.toolbar_data.get_price_for_beekeeping(canvas.selected);
+                    if self.money >= price {
+                        let replaced_amount = canvas
+                            .toolbar_data
+                            .dynamic_data
+                            .beekeeping_amount
+                            .get_mut(&(*flower+1))
+                            .unwrap();
+                        *replaced_amount -= 1;
+
+                        let amount = canvas
+                            .toolbar_data
+                            .dynamic_data
+                            .beekeeping_amount
+                            .get_mut(&canvas.selected)
+                            .unwrap();
+                        *amount += 1;
+
+                        self.money -= price;
+                        *flower = canvas.selected - 1;
+                    }
+                }
+            }
             _ => {}
         };
     }
@@ -376,7 +401,7 @@ impl Player {
                         .toolbar_data
                         .dynamic_data
                         .beekeeping_amount
-                        .get_mut(&(*flower+1))
+                        .get_mut(&(*flower + 1))
                         .unwrap();
                     *replaced_amount -= 1;
                     *tile = TileType::Grass;
