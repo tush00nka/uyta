@@ -1,8 +1,6 @@
 use raylib::prelude::*;
 
-use crate::{
-    tutorial::Tutorial, SCREEN_HEIGHT, SCREEN_WIDTH
-};
+use crate::{SCREEN_HEIGHT, SCREEN_WIDTH, tutorial::Tutorial};
 
 pub struct CameraController {
     pub position: Vector2,
@@ -16,7 +14,7 @@ impl CameraController {
         Self {
             position: Vector2 { x: 0., y: 0. },
             speed: 500.0,
-            target_zoom: 1.0, 
+            target_zoom: 1.0,
             camera: Camera2D {
                 target: Vector2::zero(),
                 offset: Vector2 {
@@ -53,8 +51,17 @@ impl CameraController {
             }
         }
 
-        self.position += direction.normalized() * self.speed * rl.get_frame_time();
-        self.camera.zoom = lerp(self.camera.zoom, self.target_zoom, 10. * rl.get_frame_time());
+        if rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_RIGHT) {
+            self.position -= rl.get_mouse_delta();
+        } else {
+            self.position += direction.normalized() * self.speed * rl.get_frame_time();
+        }
+
+        self.camera.zoom = lerp(
+            self.camera.zoom,
+            self.target_zoom,
+            10. * rl.get_frame_time(),
+        );
 
         if rl.is_key_down(KEY_C) {
             tutorial.complete_step(1);
@@ -68,18 +75,22 @@ impl CameraController {
             self.target_zoom = (self.target_zoom / 1.1).max(0.5);
         }
 
-        self.camera.target = Vector2 {
-            x: lerp(
-                self.camera.target.x,
-                self.position.x,
-                10.0 * rl.get_frame_time(),
-            ),
-            y: lerp(
-                self.camera.target.y,
-                self.position.y,
-                10.0 * rl.get_frame_time(),
-            ),
-        };
+        if rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_RIGHT) {
+            self.camera.target = self.position;
+        } else {
+            self.camera.target = Vector2 {
+                x: lerp(
+                    self.camera.target.x,
+                    self.position.x,
+                    10.0 * rl.get_frame_time(),
+                ),
+                y: lerp(
+                    self.camera.target.y,
+                    self.position.y,
+                    10.0 * rl.get_frame_time(),
+                ),
+            };
+        }
 
         if rl.is_window_resized() {
             self.camera.offset = Vector2 {
