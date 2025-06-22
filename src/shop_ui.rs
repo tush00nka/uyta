@@ -421,7 +421,7 @@ impl Canvas {
                 MenuMode::Beekeeping => {
                     tooltip_pool = &self.toolbar_data.static_data.beekeeping;
                     amount_pool = &mut self.toolbar_data.dynamic_data.beekeeping_amount;
-                    texture_id = format!("beekeeping{i}");
+                    texture = texture_handler.textures.get(&format!("beekeeping{i}")).unwrap();
                     source =
                         Rectangle::new(0.0, 0.0, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32);
                 }
