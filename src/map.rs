@@ -5,7 +5,13 @@ use serde_with::serde_as;
 use std::collections::HashMap;
 
 use crate::{
-    animal::AnimalHandler, localization::LocaleHandler, pause_menu::GameSettigns, player::Player, upgrades::UpgradeHandler, utils::{parse_json, shrink_number_for_display}, worker::WorkerHandler
+    animal::AnimalHandler,
+    localization::LocaleHandler,
+    pause_menu::GameSettigns,
+    player::Player,
+    upgrades::UpgradeHandler,
+    utils::{parse_json, shrink_number_for_display},
+    worker::WorkerHandler,
 };
 
 pub const CHUNK_WIDTH: usize = 5;
@@ -15,10 +21,18 @@ pub const TILE_SCALE: i32 = 4;
 
 pub const TILE_SIZE: i32 = TILE_PIXEL_SIZE * TILE_SCALE;
 
+#[derive(Deserialize, PartialEq)]
+pub enum Climate {
+    Cold,
+    Temperate,
+    Warm,
+}
+
 #[derive(Deserialize)]
 pub struct Crop {
     pub time_to_grow: usize,
     grow_step: usize,
+    pub climate: Climate,
     pub sell_price: usize,
     pub exp: usize,
 }
@@ -27,6 +41,7 @@ pub struct Crop {
 pub struct Tree {
     pub time_to_grow: usize,
     grow_step: usize,
+    pub climate: Climate,
     pub time_to_fruit: usize,
     pub sell_price: usize,
     pub exp: usize,
@@ -179,7 +194,11 @@ impl Map {
                     if *stage >= self.static_data.hive_data[0].time_to_honey {
                         let crops_len = self.static_data.crops_data.len();
                         let trees_len = self.static_data.tree_data.len();
-                        let multiplier = upgrade_handler.get_multiplier_for_beehive(crops_len, trees_len, animals_len);
+                        let multiplier = upgrade_handler.get_multiplier_for_beehive(
+                            crops_len,
+                            trees_len,
+                            animals_len,
+                        );
 
                         *price = self.static_data.hive_data[0].sell_price;
                         *xp = self.static_data.hive_data[0].exp;
@@ -196,8 +215,10 @@ impl Map {
 
                                 match neighbour {
                                     TileType::Flower { flower } => {
-                                        *price += self.static_data.flower_data[*flower].sell_price * multiplier;
-                                        *xp += self.static_data.flower_data[*flower].exp * multiplier;
+                                        *price += self.static_data.flower_data[*flower].sell_price
+                                            * multiplier;
+                                        *xp +=
+                                            self.static_data.flower_data[*flower].exp * multiplier;
                                     }
                                     _ => {}
                                 }
@@ -334,11 +355,20 @@ impl Map {
                 (position.0 * TILE_SIZE) as f32,
                 (position.1 * TILE_SIZE) as f32,
             );
-            rl.draw_texture_ex(
+            let offset = if position.1 < -7 {
+                0.
+            } else if position.1 > 7 {
+                2. * TILE_PIXEL_SIZE as f32
+            } else {
+                TILE_PIXEL_SIZE as f32
+            };
+            let source = Rectangle::new(0., offset, TILE_PIXEL_SIZE as f32, TILE_PIXEL_SIZE as f32);
+            rl.draw_texture_pro(
                 textures.get(texture_id).unwrap(),
-                pixel_pos,
+                source,
+                Rectangle::new(pixel_pos.x, pixel_pos.y, TILE_SIZE as f32, TILE_SIZE as f32),
+                Vector2::zero(),
                 0.,
-                TILE_SCALE as f32,
                 Color::WHITE,
             );
 

@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     animal::AnimalHandler,
-    map::{Map, TILE_PIXEL_SIZE, TILE_SIZE, TileType},
+    map::{Climate, Map, TILE_PIXEL_SIZE, TILE_SIZE, TileType},
     player::Player,
     upgrades::UpgradeHandler,
     utils::parse_json,
@@ -198,12 +198,27 @@ impl Worker {
         // harvest
         match tile {
             TileType::Farmland { crop, stage } => {
-                if *stage >= map.static_data.crops_data[*crop].time_to_grow {
+				let crop_data = &map.static_data.crops_data[*crop];
+                if *stage >= crop_data.time_to_grow {
                     let multiplier = upgrade_handler.get_multiplier_for_crop(*crop);
 
-                    money = map.static_data.crops_data[*crop].sell_price * multiplier;
-                    exp = map.static_data.crops_data[*crop].exp * multiplier;
+                    money = crop_data.sell_price * multiplier;
+                    exp = crop_data.exp * multiplier;
                     *stage = 0;
+
+                    let tile_climate = if self.position.1 > 7 {
+                        Climate::Warm
+                    } else if self.position.1 < -7 {
+                        Climate::Cold
+                    } else {
+                        Climate::Temperate
+                    };
+
+					if tile_climate == crop_data.climate {
+						money *= 2;
+						exp *= 2;
+					}
+
                     // free this tile from work
                     if let Some(occupation_tile) =
                         map.dynamic_data.occupation_map.get_mut(&self.position)
@@ -217,14 +232,28 @@ impl Worker {
                 }
             }
             TileType::Tree { tree, stage, .. } => {
-                if *stage >= map.static_data.tree_data[*tree].time_to_fruit {
+				let tree_data = &map.static_data.tree_data[*tree];
+                if *stage >= tree_data.time_to_fruit {
                     // we're basically offsetting the upgrade thingy, so uhh, still kinda hardcoded but idc
                     let crops_len = map.static_data.crops_data.len();
                     let multiplier = upgrade_handler.get_multiplier_for_tree(*tree, crops_len);
 
-                    money = map.static_data.tree_data[*tree].sell_price * multiplier;
-                    exp = map.static_data.tree_data[*tree].exp * multiplier;
+                    money = tree_data.sell_price * multiplier;
+                    exp = tree_data.exp * multiplier;
                     *stage = 0;
+
+                    let tile_climate = if self.position.1 > 7 {
+                        Climate::Warm
+                    } else if self.position.1 < -7 {
+                        Climate::Cold
+                    } else {
+                        Climate::Temperate
+                    };
+
+					if tile_climate == tree_data.climate {
+						money *= 2;
+						exp *= 2;
+					}
 
                     if let Some(occupation_tile) =
                         map.dynamic_data.occupation_map.get_mut(&self.position)
