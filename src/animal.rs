@@ -136,12 +136,12 @@ impl Animal {
         self.display_position.0 = lerp(
             self.display_position.0,
             pixel_position.x,
-            1. * rl.get_frame_time(),
+            10. * rl.get_frame_time(),
         );
         self.display_position.1 = lerp(
             self.display_position.1,
             pixel_position.y,
-            1. * rl.get_frame_time(),
+            10. * rl.get_frame_time(),
         );
 
         let pixel_position = Vector2::new(self.display_position.0, self.display_position.1);

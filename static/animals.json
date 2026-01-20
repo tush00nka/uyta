@@ -12,13 +12,13 @@
         },
         {
             "time_to_drop": 25,
-            "drop_cost": 10000,
-            "exp": 10000
+            "drop_cost": 20000,
+            "exp": 20000
         },
         {
             "time_to_drop": 50,
-            "drop_cost": 25000,
-            "exp": 25000
+            "drop_cost": 40000,
+            "exp": 40000
         },
         {
             "time_to_drop": 100,

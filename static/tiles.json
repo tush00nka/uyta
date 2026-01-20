@@ -51,21 +51,21 @@
             "grow_step": 5,
             "time_to_fruit": 10,
             "sell_price": 100,
-            "exp": 300
+            "exp": 400
         },
         {
             "time_to_grow": 40,
             "grow_step": 10,
             "time_to_fruit": 30,
             "sell_price": 500,
-            "exp": 400
+            "exp": 800
         },
         { 
             "time_to_grow": 20,
             "grow_step": 5,
             "time_to_fruit": 30,
             "sell_price": 750,
-            "exp": 500
+            "exp": 1600
         }
     ],
     "hive_data": [

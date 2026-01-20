@@ -50,7 +50,7 @@ impl GameSettigns {
                     master_volume: 0.5,
                     is_fullscreen: true,
                     short_numbers: true,
-                    language: "en".to_owned(),
+                    language: "ru".to_owned(),
                 };
             }
         }
