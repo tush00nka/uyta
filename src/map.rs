@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use noise::{NoiseFn, Perlin};
 use raylib::prelude::*;
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
@@ -102,36 +103,39 @@ pub struct MapDynamicData {
     pub occupation_map: HashMap<(i32, i32), bool>,
     land_expansion_points: Vec<(i32, i32)>,
     next_expansion_cost: usize,
+    biome_seed: u32,
 }
 
 pub struct Map {
     pub static_data: MapStaticData,
     pub dynamic_data: MapDynamicData,
+    pub noise: Perlin,
 }
 
 impl Map {
     pub fn new() -> Self {
         let static_data: MapStaticData =
             parse_json("static/tiles.json").expect("Can't deserialize");
-        let dynamic_data = parse_json("dynamic/map_save.json");
+        let dynamic_data = parse_json::<MapDynamicData>("dynamic/map_save.json");
 
-        let has_save_file = match dynamic_data {
-            Ok(_) => true,
-            Err(_) => false,
+        match dynamic_data {
+            Ok(dynamic_data) => {
+                let seed = dynamic_data.biome_seed;
+                return Self {
+                    static_data,
+                    dynamic_data: dynamic_data,
+                    noise: Perlin::new(seed),
+                };
+            }
+            Err(_) => {}
         };
-
-        if has_save_file {
-            return Self {
-                static_data,
-                dynamic_data: dynamic_data.unwrap(),
-            };
-        }
 
         let mut dynamic_data = MapDynamicData {
             tiles: HashMap::new(),
             occupation_map: HashMap::new(),
             land_expansion_points: vec![],
             next_expansion_cost: 1000,
+            biome_seed: rand::random::<u32>(),
         };
 
         let half_width = CHUNK_WIDTH as i32 / 2;
@@ -152,9 +156,12 @@ impl Map {
             ));
         }
 
+        let seed = dynamic_data.biome_seed;
+
         Self {
             static_data,
             dynamic_data,
+            noise: Perlin::new(seed),
         }
     }
 
@@ -355,9 +362,10 @@ impl Map {
                 (position.0 * TILE_SIZE) as f32,
                 (position.1 * TILE_SIZE) as f32,
             );
-            let offset = if position.1 < -7 {
+            let sample = self.noise.get([position.0 as f64 * 0.05, position.1 as f64 * 0.05]);
+            let offset = if sample < -0.5 {
                 0.
-            } else if position.1 > 7 {
+            } else if sample > 0.5 {
                 2. * TILE_PIXEL_SIZE as f32
             } else {
                 TILE_PIXEL_SIZE as f32

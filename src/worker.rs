@@ -3,6 +3,7 @@ use std::{
     f32::INFINITY,
 };
 
+use noise::NoiseFn;
 use raylib::prelude::*;
 use serde::{Deserialize, Serialize};
 
@@ -198,7 +199,7 @@ impl Worker {
         // harvest
         match tile {
             TileType::Farmland { crop, stage } => {
-				let crop_data = &map.static_data.crops_data[*crop];
+                let crop_data = &map.static_data.crops_data[*crop];
                 if *stage >= crop_data.time_to_grow {
                     let multiplier = upgrade_handler.get_multiplier_for_crop(*crop);
 
@@ -206,18 +207,21 @@ impl Worker {
                     exp = crop_data.exp * multiplier;
                     *stage = 0;
 
-                    let tile_climate = if self.position.1 > 7 {
-                        Climate::Warm
-                    } else if self.position.1 < -7 {
+                    let sample = map
+                        .noise
+                        .get([self.position.0 as f64 * 0.05, self.position.1 as f64 * 0.05]);
+                    let tile_climate = if sample < -0.5 {
                         Climate::Cold
+                    } else if sample > 0.5 {
+                        Climate::Warm
                     } else {
-                        Climate::Temperate
+						Climate::Temperate
                     };
 
-					if tile_climate == crop_data.climate {
-						money *= 2;
-						exp *= 2;
-					}
+                    if tile_climate == crop_data.climate {
+                        money *= 2;
+                        exp *= 2;
+                    }
 
                     // free this tile from work
                     if let Some(occupation_tile) =
@@ -232,7 +236,7 @@ impl Worker {
                 }
             }
             TileType::Tree { tree, stage, .. } => {
-				let tree_data = &map.static_data.tree_data[*tree];
+                let tree_data = &map.static_data.tree_data[*tree];
                 if *stage >= tree_data.time_to_fruit {
                     // we're basically offsetting the upgrade thingy, so uhh, still kinda hardcoded but idc
                     let crops_len = map.static_data.crops_data.len();
@@ -250,10 +254,10 @@ impl Worker {
                         Climate::Temperate
                     };
 
-					if tile_climate == tree_data.climate {
-						money *= 2;
-						exp *= 2;
-					}
+                    if tile_climate == tree_data.climate {
+                        money *= 2;
+                        exp *= 2;
+                    }
 
                     if let Some(occupation_tile) =
                         map.dynamic_data.occupation_map.get_mut(&self.position)
