@@ -22,9 +22,11 @@ pub const TILE_SCALE: i32 = 4;
 
 pub const TILE_SIZE: i32 = TILE_PIXEL_SIZE * TILE_SCALE;
 
-#[derive(Deserialize, PartialEq)]
+#[derive(Deserialize, PartialEq, Default, Copy, Clone)]
 pub enum Climate {
-    Cold,
+	#[default]
+	Unapplicable,
+	Cold,
     Temperate,
     Warm,
 }

@@ -3,14 +3,14 @@
         {
             "time_to_grow": 3,
             "grow_step": 1,
-			"climate": "Temperate",
+			"climate": "Cold",
             "sell_price": 5,
             "exp": 1
         },
         {
             "time_to_grow": 6,
             "grow_step": 2,
-			"climate": "Temperate",
+			"climate": "Cold",
             "sell_price": 15,
             "exp": 3
         },
@@ -31,7 +31,7 @@
         {
             "time_to_grow": 9,
             "grow_step": 3,
-			"climate": "Temperate",
+			"climate": "Warm",
             "sell_price": 100,
             "exp": 50
         }
@@ -40,7 +40,7 @@
         {
             "time_to_grow": 20,
             "grow_step": 5,
-			"climate": "Temperate",
+			"climate": "Cold",
             "time_to_fruit": 10,
             "sell_price": 100,
             "exp": 100
@@ -64,7 +64,7 @@
         {
             "time_to_grow": 40,
             "grow_step": 10,
-			"climate": "Temperate",
+			"climate": "Warm",
             "time_to_fruit": 30,
             "sell_price": 500,
             "exp": 800

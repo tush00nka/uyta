@@ -11,7 +11,7 @@ use crate::{
     UI_BUTTON_SIZE, UI_GAPS,
     animal::AnimalHandler,
     localization::LocaleHandler,
-    map::{Map, TILE_PIXEL_SIZE},
+    map::{Climate, Map, TILE_PIXEL_SIZE},
     pause_menu::GameSettigns,
     player::Player,
     texture_handler::TextureHandler,
@@ -24,6 +24,7 @@ pub struct ToolbarItem {
     pub tooltip: String,
     unlock_level: usize,
     pub price: usize,
+    pub climate: Climate,
 }
 
 impl ToolbarItem {
@@ -32,6 +33,7 @@ impl ToolbarItem {
             tooltip,
             unlock_level: data.unlock_level,
             price: data.price,
+            climate: data.climate,
         }
     }
 }
@@ -40,6 +42,7 @@ impl ToolbarItem {
 struct ToolbarItemData {
     unlock_level: usize,
     price: usize,
+    climate: Climate,
 }
 
 #[derive(Deserialize)]
@@ -488,7 +491,7 @@ impl Canvas {
     ) {
         for i in 0..self.content.len() {
             let rect = self.content[i];
-            if unsafe { CheckCollisionPointRec(rl.get_mouse_position().into(), rect.into()) } {
+            if rect.check_collision_point_rec(rl.get_mouse_position()) {
                 let (pool, mode, label) = match i {
                     0 => (
                         &self.toolbar_data.static_data.crops,
@@ -668,14 +671,30 @@ impl Canvas {
                     }
                 };
 
+                let lang = &locale_handler.language_data;
+
+                let mut climate_string = match toolbar_item.climate {
+                    Climate::Unapplicable => "".to_string(),
+                    Climate::Cold => lang.get("cold").unwrap().to_string(),
+                    Climate::Temperate => lang.get("temperate").unwrap().to_string(),
+                    Climate::Warm => lang.get("warm").unwrap().to_string(),
+                };
+
+                if climate_string != "" {
+                    let old = climate_string.clone();
+                    climate_string =
+                        format!("{}: {}\n", lang.get("climate").unwrap().to_string(), old);
+                }
+
                 let tooltip_extra = if output_price > 0 && toolbar_item.unlock_level <= player.level
                 {
                     format!(
-                        "{} {}\n{} {}",
-                        output_price,
-                        locale_handler.language_data.get("per_harvest").unwrap(),
+                        "{}{} {}\n{} {}",
+						climate_string,
+						output_price,
+                        lang.get("per_harvest").unwrap(),
                         output_exp,
-                        locale_handler.language_data.get("exp_per_harvest").unwrap(),
+                        lang.get("exp_per_harvest").unwrap(),
                     )
                 } else {
                     "".to_string()

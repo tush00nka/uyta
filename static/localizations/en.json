@@ -56,6 +56,11 @@
     "misc0": "Worker",
     "misc1": "Remove plants",
 
+	"climate": "Climate",
+	"cold": "cold",
+	"temperate": "temperate",
+	"warm": "warm",
+
     "upgrade0": "Bronze Carrot",
     "upgrade_description0": "Carrots produce twice as much\nmoney and experience",
     "upgrade1": "Silver Carrot",

@@ -2,103 +2,126 @@
     "crops": [
         {
             "unlock_level": 1,
-            "price": 20
+            "price": 20,
+			"climate": "Cold"
         },
         {
             "unlock_level": 3,
-            "price": 50
+            "price": 50,
+			"climate": "Cold"
         },
         {
             "unlock_level": 5,
-            "price": 100
+            "price": 100,
+			"climate": "Temperate"
         },
         {
             "unlock_level": 7,
-            "price": 500
+            "price": 500,
+			"climate": "Temperate"
         },
         {
             "unlock_level": 11,
-            "price": 1500
+            "price": 1500,
+			"climate": "Warm"
         }
     ],
     "trees": [
         {
             "unlock_level": 10,
-            "price": 1000
+            "price": 1000,
+			"climate": "Cold"
         },
         {
             "unlock_level": 15,
-            "price": 5000
+            "price": 5000,
+			"climate": "Temperate"
         },
         {
             "unlock_level": 20,
-            "price": 8000
+            "price": 8000,
+			"climate": "Temperate"
         },
         {
             "unlock_level": 25,
-            "price": 12000
+            "price": 12000,
+			"climate": "Warm"
         },
         {
             "unlock_level": 30,
-            "price": 15000
+            "price": 15000,
+			"climate": "Warm"
         }
     ],
     "animals": [
         {
             "unlock_level": 14,
-            "price": 5000
+            "price": 5000,
+			"climate": "Unapplicable"
         },
         {
             "unlock_level": 24,
-            "price": 10000
+            "price": 10000,
+			"climate": "Unapplicable"
         },
         {
             "unlock_level": 32,
-            "price": 20000
+            "price": 20000,
+			"climate": "Unapplicable"
         },
         {
             "unlock_level": 40,
-            "price": 30000
+            "price": 30000,
+			"climate": "Unapplicable"
         },
         {
             "unlock_level": 48,
-            "price": 40000
+            "price": 40000,
+			"climate": "Unapplicable"
         }
     ],
     "beekeeping": [
         {
             "unlock_level": 50,
-            "price": 100000
+            "price": 100000,
+			"climate": "Unapplicable"
         },
         {
             "unlock_level": 51,
-            "price": 50000
+            "price": 50000,
+			"climate": "Unapplicable"
         },
         {
             "unlock_level": 55,
-            "price": 100000
+            "price": 100000,
+			"climate": "Unapplicable"
         },
         {
             "unlock_level": 60,
-            "price": 150000
+            "price": 150000,
+			"climate": "Unapplicable"
         },
         {
             "unlock_level": 64,
-            "price": 200000
+            "price": 200000,
+			"climate": "Unapplicable"
         },
         {
             "unlock_level": 69,
-            "price": 250000
+            "price": 250000,
+			"climate": "Unapplicable"
         }
     ],
     "misc": [
         {
             "unlock_level": 2,
-            "price": 100
+            "price": 100,
+			"climate": "Unapplicable"
         },
         {
             "unlock_level": 5,
-            "price": 0
+            "price": 0,
+			"climate": "Unapplicable"
         }
     ]
 }
